@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragment_login">
+
+
+
+    <fragment
+        android:id="@+id/fragment_login"
+        android:name="com.ulc.tbr.fragments.common.login.Login"
+        android:label="Login" >
+            <action
+                android:id="@+id/action_login"
+                app:destination="@id/fragment_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_home"
+        android:name="com.ulc.tbr.fragments.common.home.Home"
+        android:label="Home" >
+            <action
+            android:id="@+id/action_home_to_home"
+            app:destination="@id/fragment_home" />
+            <action
+                android:id="@+id/action_home_to_get_a_tutor"
+                app:destination="@id/fragment_get_a_tutor" />
+            <action
+                android:id="@+id/action_home_to_my_sessions"
+                app:destination="@id/fragment_my_sessions" />
+            <action
+                android:id="@+id/action_home_to_set_tutor_availability"
+                app:destination="@id/fragment_set_tutor_availability" />
+            <action
+                android:id="@+id/action_home_to_set_tutor_courses"
+                app:destination="@id/fragment_set_tutor_courses" />
+            <action
+                android:id="@+id/action_home_logout"
+                app:destination="@id/fragment_login" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_get_a_tutor"
+        android:name="com.ulc.tbr.fragments.student.getatutor.Get_A_Tutor"
+        android:label="Get A Tutor" >
+        <action
+            android:id="@+id/action_get_a_tutor_to_home"
+            app:destination="@id/fragment_home" />
+        <action
+            android:id="@+id/action_get_a_tutor_to_get_a_tutor"
+            app:destination="@id/fragment_get_a_tutor" />
+        <action
+            android:id="@+id/action_get_a_tutor_to_my_sessions"
+            app:destination="@id/fragment_my_sessions" />
+        <action
+            android:id="@+id/action_get_a_tutor_to_set_tutor_availability"
+            app:destination="@id/fragment_set_tutor_availability" />
+        <action
+            android:id="@+id/action_get_a_tutor_to_set_tutor_courses"
+            app:destination="@id/fragment_set_tutor_courses" />
+        <action
+            android:id="@+id/action_get_a_tutor_logout"
+            app:destination="@id/fragment_login" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_my_sessions"
+        android:name="com.ulc.tbr.fragments.common.mysessions.My_Sessions"
+        android:label="My Sessions" >
+        <action
+            android:id="@+id/action_my_sessions_to_home"
+            app:destination="@id/fragment_home" />
+        <action
+            android:id="@+id/action_my_sessions_to_get_a_tutor"
+            app:destination="@id/fragment_get_a_tutor" />
+        <action
+            android:id="@+id/action_my_sessions_to_my_sessions"
+            app:destination="@id/fragment_my_sessions" />
+        <action
+            android:id="@+id/action_my_sessions_to_set_tutor_availability"
+            app:destination="@id/fragment_set_tutor_availability" />
+        <action
+            android:id="@+id/action_my_sessions_to_set_tutor_courses"
+            app:destination="@id/fragment_set_tutor_courses" />
+        <action
+            android:id="@+id/action_my_sessions_logout"
+            app:destination="@id/fragment_login" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_set_tutor_availability"
+        android:name="com.ulc.tbr.fragments.tutor.setTutorAvailability.SetTutorAvailability"
+        android:label="Change Availability" >
+        <action
+            android:id="@+id/action_set_tutor_availability_to_home"
+            app:destination="@id/fragment_home" />
+        <action
+            android:id="@+id/action_set_tutor_availability_to_get_a_tutor"
+            app:destination="@id/fragment_get_a_tutor" />
+        <action
+            android:id="@+id/action_set_tutor_availability_to_my_sessions"
+            app:destination="@id/fragment_my_sessions" />
+        <action
+            android:id="@+id/action_set_tutor_availability_to_set_tutor_availability"
+            app:destination="@id/fragment_set_tutor_availability" />
+        <action
+            android:id="@+id/action_set_tutor_availability_to_set_tutor_courses"
+            app:destination="@id/fragment_set_tutor_courses" />
+        <action
+            android:id="@+id/action_set_tutor_availability_logout"
+            app:destination="@id/fragment_login" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_set_tutor_courses"
+        android:name="com.ulc.tbr.fragments.tutor.setTutorCourses.TutorSetCourses"
+        android:label="Change Courses" >
+        <action
+            android:id="@+id/action_set_tutor_courses_to_home"
+            app:destination="@id/fragment_home" />
+        <action
+            android:id="@+id/action_set_tutor_courses_to_get_a_tutor"
+            app:destination="@id/fragment_get_a_tutor" />
+        <action
+            android:id="@+id/action_set_tutor_courses_to_my_sessions"
+            app:destination="@id/fragment_my_sessions" />
+        <action
+            android:id="@+id/action_set_tutor_courses_to_set_tutor_availability"
+            app:destination="@id/fragment_set_tutor_availability" />
+        <action
+            android:id="@+id/action_set_tutor_courses_to_set_tutor_courses"
+            app:destination="@id/fragment_set_tutor_courses" />
+        <action
+            android:id="@+id/action_set_tutor_courses_logout"
+            app:destination="@id/fragment_login" />
+    </fragment>
+
+
+
+
+
+</navigation>

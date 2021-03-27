@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/main_menu_home"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/main_menu_my_sessions"
+        android:title="My Sessions" />
+
+    <item
+        android:id="@+id/main_menu_set_availability"
+        android:title="Change Availability" />
+
+    <item
+        android:id="@+id/main_menu_set_courses"
+        android:title="Change Courses" />
+
+    <item
+        android:id="@+id/main_menu_student_logout"
+        android:title="Logout" />
+
+</menu>
