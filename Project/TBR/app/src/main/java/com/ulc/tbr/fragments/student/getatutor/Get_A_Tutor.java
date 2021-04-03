@@ -344,10 +344,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 first = false;
 
             } else {
-                if(test) {
-                    // available_week.remove(0);
-                    test = false;
-                }
+
                 spinner_subject.setEnabled(true);
                 spinner_subject.setClickable(true);
                 button_prevWeek.setEnabled(true);
@@ -358,20 +355,27 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 button_nextWeek.setBackgroundColor(Color.RED);
 
 
-                String week;
-                String subject;
-                String course;
 
-                week = (String) spinner_week.getSelectedItem();
-                subject = (String) spinner_subject.getSelectedItem();
-                course = (String) spinner_course.getSelectedItem();
-                course = course.substring(course.lastIndexOf(" ")+1);
 
-                tutorAvailablity_session = populateAvailableTutorSessions(week, subject, course);
-                available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
-                adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
-                listView_session.setAdapter(adapter_session);
-                listViewHelper();
+                if (spinner_subject.getSelectedItemPosition() != 0 && spinner_course.getSelectedItemPosition() != 0) {
+                    String week;
+                    String subject;
+                    String course;
+
+                    week = (String) spinner_week.getSelectedItem();
+                    subject = (String) spinner_subject.getSelectedItem();
+                    course = (String) spinner_course.getSelectedItem();
+                    course = course.substring(course.lastIndexOf(" ")+1);
+
+                    tutorAvailablity_session = populateAvailableTutorSessions(week, subject, course);
+                    available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
+                    adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
+                    listView_session.setAdapter(adapter_session);
+
+                    listViewHelper();
+
+                    // updateCalendar();
+                }
 
 
             }
@@ -423,7 +427,10 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
         }
         if (parent.getId() == R.id.spinner_course) {
-            populateSessionListView();
+            if (spinner_course.getSelectedItemPosition() != 0) { // If a subject is selected
+                populateSessionListView();
+            }
+
         }
 
     }
