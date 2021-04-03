@@ -1,0 +1,114 @@
+_____________Team Section______________
+
+2/28:
+Today we had our initial meeting to plan creating the TBR app.  We created our rough draft of the
+schema we'll be using for the database.  We also gave ourselves a rough idea of what the program
+will look like in the nav graph.  And we decided how to divide the labor.  Ryan and Edwin will be
+working together to develop the database.  Harrison will be doing the Login Activity.  Azzed will
+be doing the Tutor Activity.  And Evan will be doing the Student Activity.
+
+
+
+
+____________Personal Section______________
+
+Azzed:
+3/23/2021
+-Started Implementing frontend for TutorAvailability
+3/24/2021
+-Created a Calendar class to implement tutor calendar
+3/25/2021
+-Implementing clickability into calender
+-Implementing uploading to weeks
+-Implementing downloading data for weeks
+3/26/2021
+-Testing Calendar to to check implementations
+-Adding different colours signifying different modes of selectability
+-Fixing SelectClasses to add the delete courses from database
+-Testing SelectClasses
+
+Ryan:
+3/21/2021 - 8:38PM
+-Created users databases and
+
+Edwin:
+3/17
+- began tutoravailability database table
+
+3/21
+- added Get A Tutor page
+
+3/22
+- discussed tutorAvailability schema with Ryan and redesigned it to only store available session times
+  assuming each session block is 30 min long and starts at each half hour. pushed new tutoravailabilityhelper and tutorcourseavailability
+  TutorAvailability DB Table
+    Schema: TutorID|Date|StartTime|isBooked
+    Format: numeric|MM/DD/YYYY|HH:MM|"0" or "1"
+
+  TutorCourseAvailability DB Table (holds all the courses each tutor is avaialable to teach)
+      Schema: TutorID|Subject|CourseNumber
+      Format: numeric|alpha|numeric
+
+  Began Tutor Actor object model. imports and acts upon the database tables that the tutor is intended
+  to act on (read/write/modify). still some work to do.
+
+3/25
+ - get a tutor now loads and writes to necessary database tables
+ - added methods in database helper to return object models representing a row based on different querys
+ - added methods in database helper to return lists of object models representing matching rows from query
+
+3/26
+ - completed get a tutor page
+ - completed my sessions page
+ - helped complete tutor set classes page
+
+
+Harrison:
+3/25/2021
+Mostly debugging. Cleaned up the navigation between fragments. Started doing intensive UI
+Testing.
+
+3/25/2021
+Merging and testing the five databases into one database with multiple tables. Started on
+cleaning up the overal design to improve visual aesthetic.
+
+3/24/2021 
+Expanded testing for all new database methods. Finished full testing for the login screen.
+Starting more general database testing
+
+3/23/2021
+Finished the navigation between the login screen and the various user screens. Added
+Testing for various login scenarios. Began creating database methods to access information
+for login.
+
+
+3/21/2021
+Had to restart the login screen backend to work with the current verison of the database. 
+Finished setting up the full test directory
+
+3/19/2021 
+Created the test directory and set up the automated testing for the database. Constructed a few
+simple tests to ensure the database is functional at this point. Started the backend set up for 
+the login activity 
+
+3/18/2021
+Started and completed the front end for the login screen.
+
+
+
+
+Evan:
+3/20/2021 - 9:20
+-Created new skeleton code due to the startup cost of learning how to navigate within a tabbed
+activity.  We can try implementing that later however in order to get a minimum viable product
+completed I'm simplifying the layout.
+
+3/16/2021 - 9:00
+-Added activities for tutor, student, and student/tutor.
+-Creating skeleton for everyone to build on.
+
+3/16/2021 - 10:15
+-Added indicators for tabs so that user knows where they're at.
+-Still not sure why the labels aren't showing up for the tabs.  I'm going to leave it
+for now since it's not totally necessary for a minimum viable product.
+

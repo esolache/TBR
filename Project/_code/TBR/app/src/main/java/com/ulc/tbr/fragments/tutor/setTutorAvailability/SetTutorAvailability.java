@@ -2,11 +2,6 @@ package com.ulc.tbr.fragments.tutor.setTutorAvailability;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +14,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import com.ulc.tbr.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.ulc.tbr.activities.MainActivity;
+import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
-import com.ulc.tbr.models.users.*;
 import com.ulc.tbr.models.util.*;
-
-
-
+import com.ulc.tbr.models.users.*;
 
 
 import java.util.ArrayList;
@@ -36,10 +31,15 @@ import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link SetTutorAvailability#newInstance} factory method to
+ * Use the {@link com.ulc.tbr.fragments.tutor.setTutorAvailability.SetTutorAvailability#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SetTutorAvailability extends Fragment {
+public class SetTutorAvailability extends Fragment implements AdapterView.OnItemSelectedListener {
+
+    // UPPER MENU BEGIN
+    Spinner spinner_homeMenu;
+    ArrayList<String> homeMenu;
+    ArrayAdapter<String> adapter_homeMenu;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -161,6 +161,56 @@ public class SetTutorAvailability extends Fragment {
 
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+        spinner_homeMenu = (Spinner) view.findViewById(R.id.spinner_homeMenu);
+
+        homeMenu = new ArrayList<String>();
+
+        int currFragmentIndex;
+
+        if (user.isTutor() && user.isTutee()) { // StudentTutor
+            homeMenu.add("Home");
+            homeMenu.add("Get A Tutor");
+            homeMenu.add("My Sessions");
+            homeMenu.add("Change Availability");
+            homeMenu.add("Change Courses");
+            homeMenu.add("Logout");
+
+            currFragmentIndex = 3;
+        }
+        else if (user.isTutor()) { // Tutor
+            homeMenu.add("Home");
+            homeMenu.add("My Sessions");
+            homeMenu.add("Change Availability");
+            homeMenu.add("Change Courses");
+            homeMenu.add("Logout");
+
+            currFragmentIndex = 2;
+        }
+        else if (user.isTutee()) { // Student
+            homeMenu.add("Home");
+            homeMenu.add("Get A Tutor");
+            homeMenu.add("My Sessions");
+            homeMenu.add("Logout");
+
+            currFragmentIndex = 0; // student should not be able to navigate here
+        }
+        else {
+            // ERROR UNREACHABLE CASE
+            homeMenu = null;
+            currFragmentIndex = 0;
+        }
+
+        adapter_homeMenu = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, homeMenu);
+        spinner_homeMenu.setAdapter(adapter_homeMenu);
+
+        spinner_homeMenu.setOnItemSelectedListener(this);
+        spinner_homeMenu.setSelection(currFragmentIndex, true);
+        spinner_homeMenu.setEnabled(true);
+        spinner_homeMenu.setClickable(true);
+
+
         Calendar adapter = new Calendar(getContext(),slotText);
         Calendar headerAdapter = new Calendar(getContext(),headerText);
 
@@ -307,6 +357,68 @@ public class SetTutorAvailability extends Fragment {
         });
 
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (parent.getId() == R.id.spinner_homeMenu) {
+            String menuSelection = (String) spinner_homeMenu.getSelectedItem();
+
+            Bundle userData = new Bundle();
+            userData.putSerializable("user", user);
+
+            switch(menuSelection) {
+                case "Home":
+                    NavHostFragment.findNavController(SetTutorAvailability.this)
+                            .navigate(R.id.action_set_tutor_availability_to_home, userData);
+
+                    break;
+                case "Get A Tutor":
+                    NavHostFragment.findNavController(SetTutorAvailability.this)
+                            .navigate(R.id.action_set_tutor_availability_to_get_a_tutor, userData);
+
+                    break;
+                case "My Sessions":
+                    NavHostFragment.findNavController(SetTutorAvailability.this)
+                            .navigate(R.id.action_set_tutor_availability_to_my_sessions, userData);
+
+                    break;
+//                case "Change Availability":
+//                    NavHostFragment.findNavController(SetTutorAvailability.this)
+//                            .navigate(R.id.action_set_tutor_availability_to_set_tutor_availability, userData);
+//
+//                    break;
+                case "Change Courses":
+                    NavHostFragment.findNavController(SetTutorAvailability.this)
+                            .navigate(R.id.action_set_tutor_availability_to_set_tutor_courses, userData);
+
+                    break;
+                case "Logout" :
+                    NavHostFragment.findNavController(SetTutorAvailability.this)
+                            .navigate(R.id.action_set_tutor_availability_logout, userData);
+
+                    break;
+                default :
+//                    NavHostFragment.findNavController(com.ulc.tbr.fragments.common.home.Home.this)
+//                            .navigate(R.id.action_home_to_home, userData);
+                    // do nothing
+                    // refresh home?
+                    break;
+            }
+
+
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        if (parent.getId() == R.id.spinner_homeMenu) {
+
+        }
+
+    }
+
+
+
     public String dateConverter(String week, int col){
 //        03/28 - 04/03
         String toReturn = "";
@@ -397,6 +509,8 @@ public class SetTutorAvailability extends Fragment {
 
         return toReturn;
     }
+
+
 
 
     public class Calendar extends BaseAdapter {

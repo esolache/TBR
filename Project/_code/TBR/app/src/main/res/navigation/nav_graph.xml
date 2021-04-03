@@ -9,8 +9,9 @@
 
     <fragment
         android:id="@+id/fragment_login"
-        android:name="com.ulc.tbr.fragments.common.login.Login"
-        android:label="Login" >
+        android:name="com.ulc.tbr.fragments.common.login.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
             <action
                 android:id="@+id/action_login"
                 app:destination="@id/fragment_home" />
@@ -19,7 +20,8 @@
     <fragment
         android:id="@+id/fragment_home"
         android:name="com.ulc.tbr.fragments.common.home.Home"
-        android:label="Home" >
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
             <action
             android:id="@+id/action_home_to_home"
             app:destination="@id/fragment_home" />
@@ -43,7 +45,8 @@
     <fragment
         android:id="@+id/fragment_get_a_tutor"
         android:name="com.ulc.tbr.fragments.student.getatutor.Get_A_Tutor"
-        android:label="Get A Tutor" >
+        android:label="Get A Tutor"
+        tools:layout="@layout/fragment_get__a__tutor">
         <action
             android:id="@+id/action_get_a_tutor_to_home"
             app:destination="@id/fragment_home" />
@@ -67,7 +70,8 @@
     <fragment
         android:id="@+id/fragment_my_sessions"
         android:name="com.ulc.tbr.fragments.common.mysessions.My_Sessions"
-        android:label="My Sessions" >
+        android:label="My Sessions"
+        tools:layout="@layout/fragment_my__sessions">
         <action
             android:id="@+id/action_my_sessions_to_home"
             app:destination="@id/fragment_home" />
@@ -91,7 +95,8 @@
     <fragment
         android:id="@+id/fragment_set_tutor_availability"
         android:name="com.ulc.tbr.fragments.tutor.setTutorAvailability.SetTutorAvailability"
-        android:label="Change Availability" >
+        android:label="Change Availability"
+        tools:layout="@layout/fragment_tutor_set_date_and_time">
         <action
             android:id="@+id/action_set_tutor_availability_to_home"
             app:destination="@id/fragment_home" />
@@ -114,8 +119,9 @@
 
     <fragment
         android:id="@+id/fragment_set_tutor_courses"
-        android:name="com.ulc.tbr.fragments.tutor.setTutorCourses.TutorSetCourses"
-        android:label="Change Courses" >
+        android:name="com.ulc.tbr.fragments.tutor.setTutorCourses.SetTutorCourses"
+        android:label="Change Courses"
+        tools:layout="@layout/fragment_tutor_set_classes">
         <action
             android:id="@+id/action_set_tutor_courses_to_home"
             app:destination="@id/fragment_home" />

@@ -1,6 +1,5 @@
 package com.ulc.tbr.fragments.common.home;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
@@ -16,16 +14,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-
 import com.ulc.tbr.R;
-
-import com.ulc.tbr.models.users.*;
+import com.ulc.tbr.models.users.User;
 
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Home#newInstance} factory method to
+ * Use the {@link com.ulc.tbr.fragments.common.home.Home#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class Home extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -117,6 +113,8 @@ public class Home extends Fragment implements AdapterView.OnItemSelectedListener
 
         homeMenu = new ArrayList<String>();
 
+        int currFragmentIndex;
+
         if (user.isTutor() && user.isTutee()) { // StudentTutor
             homeMenu.add("Home");
             homeMenu.add("Get A Tutor");
@@ -148,9 +146,11 @@ public class Home extends Fragment implements AdapterView.OnItemSelectedListener
         spinner_homeMenu.setAdapter(adapter_homeMenu);
 
         spinner_homeMenu.setOnItemSelectedListener(this);
-        spinner_homeMenu.setSelection(0, true);
-        spinner_homeMenu.setEnabled(false);
-        spinner_homeMenu.setClickable(false);
+
+        currFragmentIndex = 0; // home always 0
+        spinner_homeMenu.setSelection(currFragmentIndex, true);
+        spinner_homeMenu.setEnabled(true);
+        spinner_homeMenu.setClickable(true);
 
 
     }
@@ -171,27 +171,27 @@ public class Home extends Fragment implements AdapterView.OnItemSelectedListener
                     // refresh home?
                     break;
                 case "Get A Tutor":
-                    NavHostFragment.findNavController(com.ulc.tbr.fragments.common.home.Home.this)
+                    NavHostFragment.findNavController(Home.this)
                             .navigate(R.id.action_home_to_get_a_tutor, userData);
 
                     break;
                 case "My Sessions":
-                    NavHostFragment.findNavController(com.ulc.tbr.fragments.common.home.Home.this)
+                    NavHostFragment.findNavController(Home.this)
                             .navigate(R.id.action_home_to_my_sessions, userData);
 
                     break;
                 case "Change Availability":
-                    NavHostFragment.findNavController(com.ulc.tbr.fragments.common.home.Home.this)
+                    NavHostFragment.findNavController(Home.this)
                             .navigate(R.id.action_home_to_set_tutor_availability, userData);
 
                     break;
                 case "Change Courses":
-                    NavHostFragment.findNavController(com.ulc.tbr.fragments.common.home.Home.this)
+                    NavHostFragment.findNavController(Home.this)
                             .navigate(R.id.action_home_to_set_tutor_courses, userData);
 
                     break;
                 case "Logout" :
-                    NavHostFragment.findNavController(com.ulc.tbr.fragments.common.home.Home.this)
+                    NavHostFragment.findNavController(Home.this)
                             .navigate(R.id.action_home_logout, userData);
 
                     break;

@@ -2,37 +2,40 @@ package com.ulc.tbr.fragments.tutor.setTutorCourses;
 
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
-
-import com.ulc.tbr.R;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.ulc.tbr.activities.MainActivity;
+import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
-
-import com.ulc.tbr.models.users.*;
 import com.ulc.tbr.models.util.*;
-
+import com.ulc.tbr.models.users.*;
 
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link com.ulc.tbr.fragments.tutor.setTutorCourses.TutorSetCourses#newInstance} factory method to
+ * Use the {@link com.ulc.tbr.fragments.tutor.setTutorCourses.SetTutorCourses#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TutorSetCourses extends Fragment {
+public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelectedListener {
+
+    // UPPER MENU BEGIN
+    Spinner spinner_homeMenu;
+    ArrayList<String> homeMenu;
+    ArrayAdapter<String> adapter_homeMenu;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,7 +65,7 @@ public class TutorSetCourses extends Fragment {
     ArrayAdapter<String> myClassesAdapter;
 
 
-    public TutorSetCourses() {
+    public SetTutorCourses() {
         // Required empty public constructor
     }
 
@@ -75,8 +78,8 @@ public class TutorSetCourses extends Fragment {
      * @return A new instance of fragment TutorSetClasses.
      */
     // TODO: Rename and change types and number of parameters
-    public static com.ulc.tbr.fragments.tutor.setTutorCourses.TutorSetCourses newInstance(String param1, String param2) {
-        com.ulc.tbr.fragments.tutor.setTutorCourses.TutorSetCourses fragment = new com.ulc.tbr.fragments.tutor.setTutorCourses.TutorSetCourses();
+    public static SetTutorCourses newInstance(String param1, String param2) {
+        SetTutorCourses fragment = new SetTutorCourses();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -106,6 +109,58 @@ public class TutorSetCourses extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+        spinner_homeMenu = (Spinner) view.findViewById(R.id.spinner_homeMenu);
+
+        homeMenu = new ArrayList<String>();
+
+        int currFragmentIndex;
+
+        if (user.isTutor() && user.isTutee()) { // StudentTutor
+            homeMenu.add("Home");
+            homeMenu.add("Get A Tutor");
+            homeMenu.add("My Sessions");
+            homeMenu.add("Change Availability");
+            homeMenu.add("Change Courses");
+            homeMenu.add("Logout");
+
+            currFragmentIndex = 4;
+        }
+        else if (user.isTutor()) { // Tutor
+            homeMenu.add("Home");
+            homeMenu.add("My Sessions");
+            homeMenu.add("Change Availability");
+            homeMenu.add("Change Courses");
+            homeMenu.add("Logout");
+
+            currFragmentIndex = 3;
+        }
+        else if (user.isTutee()) { // Student
+            homeMenu.add("Home");
+            homeMenu.add("Get A Tutor");
+            homeMenu.add("My Sessions");
+            homeMenu.add("Logout");
+
+            currFragmentIndex = 0; // student should not be able to navigate here
+        }
+        else {
+            // ERROR UNREACHABLE CASE
+            homeMenu = null;
+            currFragmentIndex = 0;
+        }
+
+        adapter_homeMenu = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, homeMenu);
+        spinner_homeMenu.setAdapter(adapter_homeMenu);
+
+        spinner_homeMenu.setOnItemSelectedListener(this);
+        spinner_homeMenu.setSelection(currFragmentIndex, true);
+        spinner_homeMenu.setEnabled(true);
+        spinner_homeMenu.setClickable(true);
+
+
+
+
         selectListView = (ListView) view.findViewById(R.id.listView_availableClasses);
         myClasses = (ListView) view.findViewById(R.id.listView_myClasses);
 
@@ -265,6 +320,66 @@ public class TutorSetCourses extends Fragment {
 
 
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (parent.getId() == R.id.spinner_homeMenu) {
+            String menuSelection = (String) spinner_homeMenu.getSelectedItem();
+
+            Bundle userData = new Bundle();
+            userData.putSerializable("user", user);
+
+            switch(menuSelection) {
+                case "Home":
+                    NavHostFragment.findNavController(SetTutorCourses.this)
+                            .navigate(R.id.action_set_tutor_courses_to_home, userData);
+
+                    break;
+                case "Get A Tutor":
+                    NavHostFragment.findNavController(SetTutorCourses.this)
+                            .navigate(R.id.action_set_tutor_courses_to_get_a_tutor, userData);
+
+                    break;
+                case "My Sessions":
+                    NavHostFragment.findNavController(SetTutorCourses.this)
+                            .navigate(R.id.action_set_tutor_courses_to_my_sessions, userData);
+
+                    break;
+                case "Change Availability":
+                    NavHostFragment.findNavController(SetTutorCourses.this)
+                            .navigate(R.id.action_set_tutor_courses_to_set_tutor_availability, userData);
+
+                    break;
+//                case "Change Courses":
+//                    NavHostFragment.findNavController(TutorSetCourses.this)
+//                            .navigate(R.id.action_set_tutor_courses_to_set_tutor_courses, userData);
+//
+//                    break;
+                case "Logout" :
+                    NavHostFragment.findNavController(SetTutorCourses.this)
+                            .navigate(R.id.action_set_tutor_courses_logout, userData);
+
+                    break;
+                default :
+//                    NavHostFragment.findNavController(com.ulc.tbr.fragments.common.home.Home.this)
+//                            .navigate(R.id.action_home_to_home, userData);
+                    // do nothing
+                    // refresh home?
+                    break;
+            }
+
+
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        if (parent.getId() == R.id.spinner_homeMenu) {
+
+        }
+
+    }
+    // UPPER MENU END
 
 
 }

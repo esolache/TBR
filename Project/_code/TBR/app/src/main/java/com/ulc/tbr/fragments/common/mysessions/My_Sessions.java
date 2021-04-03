@@ -2,11 +2,6 @@ package com.ulc.tbr.fragments.common.mysessions;
 
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,31 +9,34 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-
-import com.ulc.tbr.R;
-
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.ulc.tbr.activities.MainActivity;
+import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
-
-import com.ulc.tbr.models.users.*;
-import com.ulc.tbr.models.util.*;
+import com.ulc.tbr.models.util.Session;
+import com.ulc.tbr.models.users.User;
 
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link My_Sessions#newInstance} factory method to
+ * Use the {@link com.ulc.tbr.fragments.common.mysessions.My_Sessions#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class My_Sessions extends Fragment {
+public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedListener {
+
+    // UPPER MENU BEGIN
+    Spinner spinner_homeMenu;
+    ArrayList<String> homeMenu;
+    ArrayAdapter<String> adapter_homeMenu;
 
     ViewGroup view_viewGroup;
 
@@ -114,6 +112,55 @@ public class My_Sessions extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        spinner_homeMenu = (Spinner) view.findViewById(R.id.spinner_homeMenu);
+
+        homeMenu = new ArrayList<String>();
+
+        int currFragmentIndex;
+
+        if (user.isTutor() && user.isTutee()) { // StudentTutor
+            homeMenu.add("Home");
+            homeMenu.add("Get A Tutor");
+            homeMenu.add("My Sessions");
+            homeMenu.add("Change Availability");
+            homeMenu.add("Change Courses");
+            homeMenu.add("Logout");
+
+            currFragmentIndex = 2;
+        }
+        else if (user.isTutor()) { // Tutor
+            homeMenu.add("Home");
+            homeMenu.add("My Sessions");
+            homeMenu.add("Change Availability");
+            homeMenu.add("Change Courses");
+            homeMenu.add("Logout");
+
+            currFragmentIndex = 1;
+        }
+        else if (user.isTutee()) { // Student
+            homeMenu.add("Home");
+            homeMenu.add("Get A Tutor");
+            homeMenu.add("My Sessions");
+            homeMenu.add("Logout");
+
+            currFragmentIndex = 2;
+        }
+        else {
+            // ERROR UNREACHABLE CASE
+            homeMenu = null;
+            currFragmentIndex = 0;
+        }
+
+        adapter_homeMenu = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, homeMenu);
+        spinner_homeMenu.setAdapter(adapter_homeMenu);
+
+        spinner_homeMenu.setOnItemSelectedListener(this);
+        spinner_homeMenu.setSelection(currFragmentIndex, true);
+        spinner_homeMenu.setEnabled(true);
+        spinner_homeMenu.setClickable(true);
+
+
 
         listView_sessions = view.findViewById(R.id.listView_sessions);
 
@@ -215,6 +262,67 @@ public class My_Sessions extends Fragment {
 
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (parent.getId() == R.id.spinner_homeMenu) {
+            String menuSelection = (String) spinner_homeMenu.getSelectedItem();
+
+            Bundle userData = new Bundle();
+            userData.putSerializable("user", user);
+
+            switch(menuSelection) {
+                case "Home":
+                    NavHostFragment.findNavController(My_Sessions.this)
+                            .navigate(R.id.action_my_sessions_to_home, userData);
+                    break;
+                case "Get A Tutor":
+                    NavHostFragment.findNavController(My_Sessions.this)
+                            .navigate(R.id.action_my_sessions_to_get_a_tutor, userData);
+
+                    break;
+//                case "My Sessions":
+//                    NavHostFragment.findNavController(My_Sessions.this)
+//                            .navigate(R.id.action_my_sessions_to_my_sessions, userData);
+//
+//                    break;
+                case "Change Availability":
+                    NavHostFragment.findNavController(My_Sessions.this)
+                            .navigate(R.id.action_my_sessions_to_set_tutor_availability, userData);
+
+                    break;
+                case "Change Courses":
+                    NavHostFragment.findNavController(My_Sessions.this)
+                            .navigate(R.id.action_my_sessions_to_set_tutor_courses, userData);
+
+                    break;
+                case "Logout" :
+                    NavHostFragment.findNavController(My_Sessions.this)
+                            .navigate(R.id.action_my_sessions_logout, userData);
+
+                    break;
+                default :
+//                    NavHostFragment.findNavController(com.ulc.tbr.fragments.common.home.Home.this)
+//                            .navigate(R.id.action_home_to_home, userData);
+                    // do nothing
+                    // refresh home?
+                    break;
+            }
+
+
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        if (parent.getId() == R.id.spinner_homeMenu) {
+
+        }
+
+    }
+    // UPPER MENU END
+
+
+
 
     // CONFIRMATION AND ADD DESCRIPTION FOR CREATE SESSION
     public void showSessionDetailsPopup(View view, Session session) {
@@ -269,4 +377,6 @@ public class My_Sessions extends Fragment {
 
 
     }
+
+
 }

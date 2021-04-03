@@ -1,15 +1,44 @@
 package com.ulc.tbr.activities;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 
 import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
+
+//import com.ulc.tbr.fragments.common.login.util.LoggedInUserView;
+//import com.ulc.tbr.fragments.common.login.util.LoginFormState;
+//import com.ulc.tbr.fragments.common.login.util.LoginResult;
+//import com.ulc.tbr.fragments.common.login.util.LoginViewModel;
+//import com.ulc.tbr.fragments.common.login.util.LoginViewModelFactory;
+import com.ulc.tbr.models.users.User;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -21,23 +50,15 @@ public class MainActivity extends AppCompatActivity {
     private final String tutor3ID = "1111111113";
     private final String tutor4ID = "1111111114";
 
-    //    private CoursesDBHelper coursesDB;
-//    private TutorCoursesDBHelper tutorCourseDB;
-//    private TutorAvailabilityDBHelper tutorAvailabilityDB;
-//    private UsersDBHelper usersDB;
-//    private MySessionsDBHelper mySessionsDB;
     private DatabaseHelper database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_login);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-//        coursesDB = new CoursesDBHelper(this);
-//        tutorCourseDB = new TutorCoursesDBHelper(this);
-//        tutorAvailabilityDB = new TutorAvailabilityDBHelper(this);
-//        usersDB = new UsersDBHelper(this);
-//        mySessionsDB = new MySessionsDBHelper(this);
+        setContentView(R.layout.activity_main);
+
+
+
         database = new DatabaseHelper(this);
 
         populateSessions();
@@ -45,31 +66,48 @@ public class MainActivity extends AppCompatActivity {
         populateAvailability();
         populateUsers();
         populateTutorCoursesAvailability();
-
-        setSupportActionBar(toolbar);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+    protected void onStart() {
+        super.onStart();
+//        FragmentManager manager = getFragmentManager();
+//
+//
+//        Fragment fragment_login = new com.ulc.tbr.fragments.common.login.Login();
+//
+//
+//        FragmentTransaction transaction = manager.beginTransaction().replace(R.id.fragmentContainer_login, fragment_login, "fragmentTag_login");
+//
+//        // manager.beginTransaction().replace(R.id.fragmentContainer_login, fragment_login);
+//
+//        // FragmentTransaction replace = transaction.replace(R.id.fragmentContainer_login, fragment_login);// , R.layout.fragment_login);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
 //    public CoursesDBHelper getCoursesDB() { return coursesDB; }
 //
@@ -1145,4 +1183,5 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 }

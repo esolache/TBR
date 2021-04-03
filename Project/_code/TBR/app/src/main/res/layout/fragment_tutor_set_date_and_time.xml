@@ -1,95 +1,170 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".tutor.tutorSetDateAndTime" >
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    tools:context=".fragments.tutor.setTutorAvailability.SetTutorAvailability">
 
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="315dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:text="Tutor Calendar"
-            android:textAlignment="center"
-            android:textSize="32sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.06" />
-
-        <Spinner
-            android:id="@+id/selectWeek"
-            android:layout_width="287dp"
-            android:layout_height="42dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.132" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            app:layout_constraintBottom_toTopOf="@+id/calendarScroller"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="MissingConstraints">
 
-            <GridView
-                android:id="@+id/calendar_header"
+
+
+            <TextView
+                android:id="@+id/textView_TBR"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:columnWidth="45dp"
-                android:gravity="center"
-                android:listSelector="#0f0"
-                android:numColumns="8"
-                android:stretchMode="columnWidth"
-                android:visibility="visible" />
-        </LinearLayout>
-
-        <ScrollView
-            android:id="@+id/calendarScroller"
-            android:layout_width="wrap_content"
-            android:layout_height="501dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/selectWeek">
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="ULC TBR"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:layout_marginTop="15dp"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                >
 
-                <GridView
-                    android:visibility="visible"
-                    android:id="@+id/calendar"
-                    android:numColumns="8"
-                    android:layout_width="match_parent"
-                    android:layout_height="1320dp"
-                    android:columnWidth="45dp"
-                    android:gravity="center"
-                    android:stretchMode="columnWidth"
-                    android:listSelector="#0f0"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="200dp"
+
+                    android:layout_marginRight="25dp"
+
+                    android:text="MENU ">
+
+                </TextView>
+
+                <Spinner
+                    android:id="@+id/spinner_homeMenu"
+                    android:layout_width="136dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp" />
+
             </LinearLayout>
-        </ScrollView>
 
-        <Button
-            android:id="@+id/confirm_availability"
-            android:layout_width="wrap_content"
-            android:layout_height="55dp"
-            android:text="Confirm"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp"
+            android:paddingTop="75dp" >
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="315dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:text="Tutor Calendar"
+                        android:textAlignment="center"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.074" />
+
+                    <Spinner
+                        android:id="@+id/selectWeek"
+                        android:layout_width="287dp"
+                        android:layout_height="42dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.132" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="45dp"
+                        app:layout_constraintBottom_toTopOf="@+id/calendarScroller"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+                        <GridView
+                            android:id="@+id/calendar_header"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:columnWidth="45dp"
+                            android:gravity="center"
+                            android:listSelector="#0f0"
+                            android:numColumns="8"
+                            android:stretchMode="columnWidth"
+                            android:visibility="visible" />
+                    </LinearLayout>
+
+                    <ScrollView
+                        android:id="@+id/calendarScroller"
+                        android:layout_width="wrap_content"
+                        android:layout_height="501dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/selectWeek">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <GridView
+                                android:visibility="visible"
+                                android:id="@+id/calendar"
+                                android:numColumns="8"
+                                android:layout_width="match_parent"
+                                android:layout_height="1320dp"
+                                android:columnWidth="45dp"
+                                android:gravity="center"
+                                android:stretchMode="columnWidth"
+                                android:listSelector="#0f0"/>
+                        </LinearLayout>
+                    </ScrollView>
+
+                    <Button
+                        android:id="@+id/confirm_availability"
+                        android:layout_width="wrap_content"
+                        android:layout_height="55dp"
+                        android:text="Confirm"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+</FrameLayout>
+
+
+
+
+
