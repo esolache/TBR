@@ -24,6 +24,8 @@ import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
 import com.ulc.tbr.models.util.*;
 import com.ulc.tbr.models.users.*;
+import com.ulc.tbr.fragments.common.Adapters.CalendarAdapter;
+import static com.ulc.tbr.fragments.common.Adapters.CalendarAdapter.gridSlots;
 
 
 import java.util.ArrayList;
@@ -211,8 +213,8 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
         spinner_homeMenu.setClickable(true);
 
 
-        Calendar adapter = new Calendar(getContext(),slotText);
-        Calendar headerAdapter = new Calendar(getContext(),headerText);
+        CalendarAdapter adapter = new CalendarAdapter(getContext(),slotText);
+        CalendarAdapter headerAdapter = new CalendarAdapter(getContext(),headerText);
 
         Button confirm = (Button) view.findViewById(R.id.confirm_availability);
 
@@ -231,14 +233,14 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
                 if(!spinner_week.getSelectedItem().toString().equals("Select a week")) {
                     int row = (position / 8);
                     int col = position % 8;
-                    if (selectedSlot2[row][col] == 1) {
-                        selectedSlot2[row][col] = 0;
-                    } else if(selectedSlot2[row][col] == 0) {
-                        selectedSlot2[row][col] = 1;
-                    }else if(selectedSlot2[row][col] == 2){
-                        selectedSlot2[row][col] = 3;
-                    }else if(selectedSlot2[row][col] == 3) {
-                        selectedSlot2[row][col] = 2;
+                    if (gridSlots[row][col] == 1) {
+                        gridSlots[row][col] = 0;
+                    } else if(gridSlots[row][col] == 0) {
+                        gridSlots[row][col] = 1;
+                    }else if(gridSlots[row][col] == 2){
+                        gridSlots[row][col] = 3;
+                    }else if(gridSlots[row][col] == 3) {
+                        gridSlots[row][col] = 2;
                     }else{
 
                     }
@@ -283,7 +285,7 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                for (int[] row : selectedSlot2) {
+                for (int[] row : gridSlots) {
                     Arrays.fill(row, 0);
                 }
                 adapter.notifyDataSetChanged();
@@ -300,11 +302,11 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
                                 if (!tempBooked) {
                                     int col = dayToColumn(tempDate, spinner_week.getSelectedItem().toString());
                                     int row = timeToRow(tempTime);
-                                    selectedSlot2[row][col] = 2;
+                                    gridSlots[row][col] = 2;
                                 } else {
                                     int col = dayToColumn(tempDate, spinner_week.getSelectedItem().toString());
                                     int row = timeToRow(tempTime);
-                                    selectedSlot2[row][col] = 4;
+                                    gridSlots[row][col] = 4;
                                 }
                                 adapter.notifyDataSetChanged();
                             }
@@ -335,20 +337,20 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
             public void onClick(View v) {
                 for(int i = 0; i < 26; i++){
                     for(int j= 0; j < 8; j++){
-                        if(selectedSlot2[i][j]==1){
+                        if(gridSlots[i][j]==1){
                             String time = timeConverter(slotText[i*8]);
                             String date = dateConverter(spinner_week.getSelectedItem().toString(), j);
 //                            String date = spinner_week.getSelectedItem().toString();
                             String tutorID = user.getStudentID();
                             dbHelper.addAvailability(tutorID,date,time);
-                            selectedSlot2[i][j] = 2;
-                        }else if(selectedSlot2[i][j]==3){
+                            gridSlots[i][j] = 2;
+                        }else if(gridSlots[i][j]==3){
                             String time = timeConverter(slotText[i*8]);
                             String date = dateConverter(spinner_week.getSelectedItem().toString(), j);
 //                            String date = spinner_week.getSelectedItem().toString();
                             String tutorID = user.getStudentID();
                             dbHelper.deleteAvailability(tutorID,date,time);
-                            selectedSlot2[i][j] = 0;
+                            gridSlots[i][j] = 0;
                         }
                         adapter.notifyDataSetChanged();
                     }
@@ -422,9 +424,9 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
     public String dateConverter(String week, int col){
 //        03/28 - 04/03
         String toReturn = "";
-        int daysLeft = 7 - Integer.parseInt(week.substring(8,10));
-        if(!week.substring(0,2).equals(week.substring(8,10)) && daysLeft < col-1) {
-            int date = col - daysLeft -1;
+        int daysLeft = 7 - Integer.parseInt(week.substring(11));
+        if(!week.substring(0,2).equals(week.substring(8,10)) && daysLeft < col) {
+            int date = col - daysLeft ;
             if(date >= 10) {
                 toReturn = week.substring(8, 11) + String.valueOf(date) + "/2021";
             }else{
