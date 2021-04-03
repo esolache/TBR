@@ -9,12 +9,11 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import java.util.ArrayList;
-
-
 import com.ulc.tbr.models.users.*;
 import com.ulc.tbr.models.util.*;
 
+
+import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -255,8 +254,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     public boolean addDataSession(String studentID, String tutorID, String date, String time,
-                           String subject, int courseNum, String location,
-                           String description, int sessionID) throws Exception {
+                                  String subject, int courseNum, String location,
+                                  String description, int sessionID) throws Exception {
         long result;
 
         try {
