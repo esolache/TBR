@@ -10,10 +10,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,8 +25,11 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.ulc.tbr.activities.MainActivity;
 import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
+import com.ulc.tbr.fragments.common.Adapters.CalendarAdapter;
 import com.ulc.tbr.models.util.*;
 import com.ulc.tbr.models.users.*;
+
+import static com.ulc.tbr.fragments.common.Adapters.CalendarAdapter.gridSlots;
 
 import java.util.ArrayList;
 
@@ -40,6 +45,43 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
     DatabaseHelper database;
 
     ViewGroup view_viewGroup;
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private GridView calendar;
+    private CalendarAdapter adapter;
+
+    String[] slotText = {
+            "07:00am","","","","","","","",
+            "07:30am","","","","","","","",
+            "08:00am","","","","","","","",
+            "08:30am","","","","","","","",
+            "09:00am","","","","","","","",
+            "09:30am","","","","","","","",
+            "10:00am","","","","","","","",
+            "10:30am","","","","","","","",
+            "11:00am","","","","","","","",
+            "11:30am","","","","","","","",
+            "12:00pm","","","","","","","",
+            "12:30pm","","","","","","","",
+            "01:00pm","","","","","","","",
+            "01:30pm","","","","","","","",
+            "02:00pm","","","","","","","",
+            "02:30pm","","","","","","","",
+            "03:00pm","","","","","","","",
+            "03:30pm","","","","","","","",
+            "04:00pm","","","","","","","",
+            "04:30pm","","","","","","","",
+            "05:00pm","","","","","","","",
+            "05:30pm","","","","","","","",
+            "06:00pm","","","","","","","",
+            "06:30pm","","","","","","","",
+            "07:00pm","","","","","","","",
+            "07:30pm","","","","","","",""
+    } ;
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
     User user;
     boolean isTutor;
@@ -152,6 +194,35 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+        adapter = new CalendarAdapter(getContext(),slotText);
+        Button confirm = (Button) view.findViewById(R.id.confirm_calendar);
+
+        calendar=(GridView) view.findViewById(R.id.get_A_Tutor_calendar);
+        calendar.setAdapter(adapter);
+        calendar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(!spinner_week.getSelectedItem().toString().equals("Select a course")) {
+                    int row = (position / 8);
+                    int col = position % 8;
+                    if(gridSlots[row][col] == 0) {
+                        gridSlots[row][col] = 1;
+                    }
+                    if(gridSlots[row][col] == 2){
+                        gridSlots[row][col] = 4;
+                    }else{
+                        Toast.makeText(getContext(), "not available " +slotText[+ position], Toast.LENGTH_SHORT).show();
+                    }
+                    adapter.notifyDataSetChanged();
+
+                }
+            }
+        });
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
         user = (User) this.getArguments().getSerializable("user");
         boolean isTutor = user.isTutor(); // use this to erase entries of self
