@@ -59,36 +59,6 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
     private ArrayList<String> available_week;
     private ArrayAdapter<String> adapter_week;
     private GridView calendar;
-
-
-    static int[][] selectedSlot2 = {
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0}
-    };
     String[] headerText = {"Time","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
     String[] slotText = {
             "07:00am","","","","","","","",
@@ -340,14 +310,12 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
                         if(gridSlots[i][j]==1){
                             String time = timeConverter(slotText[i*8]);
                             String date = dateConverter(spinner_week.getSelectedItem().toString(), j);
-//                            String date = spinner_week.getSelectedItem().toString();
                             String tutorID = user.getStudentID();
                             dbHelper.addAvailability(tutorID,date,time);
                             gridSlots[i][j] = 2;
                         }else if(gridSlots[i][j]==3){
                             String time = timeConverter(slotText[i*8]);
                             String date = dateConverter(spinner_week.getSelectedItem().toString(), j);
-//                            String date = spinner_week.getSelectedItem().toString();
                             String tutorID = user.getStudentID();
                             dbHelper.deleteAvailability(tutorID,date,time);
                             gridSlots[i][j] = 0;
@@ -384,11 +352,6 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
                             .navigate(R.id.action_set_tutor_availability_to_my_sessions, userData);
 
                     break;
-//                case "Change Availability":
-//                    NavHostFragment.findNavController(SetTutorAvailability.this)
-//                            .navigate(R.id.action_set_tutor_availability_to_set_tutor_availability, userData);
-//
-//                    break;
                 case "Change Courses":
                     NavHostFragment.findNavController(SetTutorAvailability.this)
                             .navigate(R.id.action_set_tutor_availability_to_set_tutor_courses, userData);
@@ -400,10 +363,6 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
 
                     break;
                 default :
-//                    NavHostFragment.findNavController(com.ulc.tbr.fragments.common.home.Home.this)
-//                            .navigate(R.id.action_home_to_home, userData);
-                    // do nothing
-                    // refresh home?
                     break;
             }
 
@@ -422,7 +381,6 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
 
 
     public String dateConverter(String week, int col){
-//        03/28 - 04/03
         String toReturn = "";
         int daysLeft = 7 - Integer.parseInt(week.substring(11));
         if(!week.substring(0,2).equals(week.substring(8,10)) && daysLeft < col) {
@@ -440,7 +398,6 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
                 toReturn = week.substring(0,3) + "0" + String.valueOf(date) + "/2021";
             }
         }
-
         return toReturn;
     }
 
@@ -458,10 +415,7 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
         return toReturn;
     }
     public int timeToRow(String time){
-//        13:30
-//        01234
         int row = (Integer.parseInt(time.substring(0,2)) - 7)*2;
-
         if(time.substring(3,5).equals("30")){
             row += 1;
         }
@@ -469,9 +423,6 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
         return row;
     }
     public int dayToColumn(String day, String week){
-        //        03/28 - 04/03
-        //        03/30
-        //        04/01
         int col = 0;
         if(week.substring(0,2).equals(day.substring(0,2))){
             int start = Integer.parseInt(week.substring(3,5));
@@ -483,7 +434,6 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
         return col;
     }
     public String[] weekConverter(String week){
-//        03/28 - 04/03
         String[] toReturn = new String[7];
         int day = Integer.parseInt(week.substring(11));
         int i = 0;
@@ -511,74 +461,5 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
 
         return toReturn;
     }
-
-
-
-
-    public class Calendar extends BaseAdapter {
-        private Context mContext;
-        private final String[] slot;
-
-        public Calendar(Context c, String[] slot) {
-            mContext = c;
-            this.slot = slot;
-        }
-
-        @Override
-        public int getCount() {
-            return slot.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            // TODO Auto-generated method stub
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // TODO Auto-generated method stub
-            View grid;
-            LayoutInflater inflater = (LayoutInflater) mContext
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-
-
-
-            if (convertView == null) {
-
-                grid = new View(mContext);
-                grid = inflater.inflate(R.layout.calendar_slot, null);
-                TextView textView = (TextView) grid.findViewById(R.id.grid_text);
-                textView.setText(slot[position]);
-            } else {
-                grid = (View) convertView;
-                TextView textView = (TextView) grid.findViewById(R.id.grid_text);
-                if(selectedSlot2[position /8][position %8] == 1){
-                    textView.setBackgroundResource(R.drawable.select);
-                }else if(selectedSlot2[position /8][position %8] == 2){
-                    textView.setBackgroundResource(R.drawable.selected);
-                }else if(selectedSlot2[position /8][position %8] == 3) {
-                    textView.setBackgroundResource(R.drawable.cancellable);
-                }else if(selectedSlot2[position /8][position %8] == 4){
-                    textView.setBackgroundResource(R.drawable.booked);
-                }else{
-                    textView.setBackgroundResource(R.drawable.border);
-                }
-            }
-            return grid;
-        }
-    }
-
-
-
-
-
-
 
 }
