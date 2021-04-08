@@ -17,17 +17,15 @@
             tools:ignore="MissingConstraints">
 
 
-
             <TextView
                 android:id="@+id/textView_TBR"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
                 android:layout_weight="1"
                 android:text="ULC TBR"
-                android:textSize="18sp"
                 android:textColor="@color/black"
-                android:layout_marginTop="15dp"
-                />
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -52,7 +50,9 @@
                     android:id="@+id/spinner_homeMenu"
                     android:layout_width="136dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp" />
+                    android:layout_marginLeft="5dp"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
 
             </LinearLayout>
 
