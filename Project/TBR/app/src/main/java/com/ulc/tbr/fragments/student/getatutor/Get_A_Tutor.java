@@ -352,7 +352,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
     public void showPopup(View view) {
         LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.popup_get_a_tutor. view_viewGroup, false);
+        View popupView = inflater.inflate(R.layout.popup_get_a_tutor, view_viewGroup, false);
 
         final PopupWindow popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         ((ListView)popupWindow.getContentView().findViewById(R.id.popup_timeblock)).setAdapter(adapter_session);
