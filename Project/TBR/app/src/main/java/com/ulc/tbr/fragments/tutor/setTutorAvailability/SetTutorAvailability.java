@@ -27,9 +27,8 @@ import com.ulc.tbr.models.users.*;
 import com.ulc.tbr.fragments.common.Adapters.CalendarAdapter;
 import static com.ulc.tbr.fragments.common.Adapters.CalendarAdapter.gridSlots;
 
-
+import java.util.Calendar;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -127,7 +126,6 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
         dbHelper = ma.getDatabase();
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
-//        user = (User) getActivity().getIntent().getSerializableExtra("user");
         return inflater.inflate(R.layout.fragment_tutor_set_date_and_time, container, false);
     }
 
@@ -183,8 +181,8 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
         spinner_homeMenu.setClickable(true);
 
 
-        CalendarAdapter adapter = new CalendarAdapter(getContext(),slotText);
-        CalendarAdapter headerAdapter = new CalendarAdapter(getContext(),headerText);
+        CalendarAdapter adapter = new CalendarAdapter(getContext(), slotText, dbHelper);
+        CalendarAdapter headerAdapter = new CalendarAdapter(getContext(), headerText, dbHelper);
 
         Button confirm = (Button) view.findViewById(R.id.confirm_availability);
 
@@ -211,11 +209,8 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
                         gridSlots[row][col] = 3;
                     }else if(gridSlots[row][col] == 3) {
                         gridSlots[row][col] = 2;
-                    }else{
-
                     }
                     adapter.notifyDataSetChanged();
-
                 }
             }
         });
@@ -255,34 +250,13 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                for (int[] row : gridSlots) {
-                    Arrays.fill(row, 0);
-                }
-                adapter.notifyDataSetChanged();
+                adapter.clearCalendar();
                 if(!spinner_week.getSelectedItem().toString().equals("Select a week")) {
 //                    03/28 - 04/03
                     String[] week = weekConverter(spinner_week.getSelectedItem().toString());
                     for (String date : week) {
                         ArrayList<TutorAvailablity> availList = dbHelper.getTutorAvailabilityOnDate(user.getStudentID(), date);
-                        try {
-                            for (TutorAvailablity avail : availList) {
-                                String tempDate = avail.getDate();
-                                String tempTime = avail.getTime();
-                                Boolean tempBooked = avail.isBooked();
-                                if (!tempBooked) {
-                                    int col = dayToColumn(tempDate, spinner_week.getSelectedItem().toString());
-                                    int row = timeToRow(tempTime);
-                                    gridSlots[row][col] = 2;
-                                } else {
-                                    int col = dayToColumn(tempDate, spinner_week.getSelectedItem().toString());
-                                    int row = timeToRow(tempTime);
-                                    gridSlots[row][col] = 4;
-                                }
-                                adapter.notifyDataSetChanged();
-                            }
-                        } catch (Exception e) {
-
-                        }
+                       adapter.populateCalendar(availList, spinner_week.getSelectedItem().toString());
                     }
                 }
             }
@@ -305,24 +279,7 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for(int i = 0; i < 26; i++){
-                    for(int j= 0; j < 8; j++){
-                        if(gridSlots[i][j]==1){
-                            String time = timeConverter(slotText[i*8]);
-                            String date = dateConverter(spinner_week.getSelectedItem().toString(), j);
-                            String tutorID = user.getStudentID();
-                            dbHelper.addAvailability(tutorID,date,time);
-                            gridSlots[i][j] = 2;
-                        }else if(gridSlots[i][j]==3){
-                            String time = timeConverter(slotText[i*8]);
-                            String date = dateConverter(spinner_week.getSelectedItem().toString(), j);
-                            String tutorID = user.getStudentID();
-                            dbHelper.deleteAvailability(tutorID,date,time);
-                            gridSlots[i][j] = 0;
-                        }
-                        adapter.notifyDataSetChanged();
-                    }
-                }
+                adapter.update(spinner_week.getSelectedItem().toString(), user);
             }
         });
 

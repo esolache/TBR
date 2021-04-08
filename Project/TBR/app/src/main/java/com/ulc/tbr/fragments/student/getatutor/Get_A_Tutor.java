@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -197,7 +198,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-        adapter = new CalendarAdapter(getContext(),slotText);
+        adapter = new CalendarAdapter(getContext(),slotText, database);
         Button confirm = (Button) view.findViewById(R.id.confirm_calendar);
 
         calendar=(GridView) view.findViewById(R.id.get_A_Tutor_calendar);
@@ -205,14 +206,11 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         calendar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(!spinner_week.getSelectedItem().toString().equals("Select a course")) {
+                if(!spinner_course.getSelectedItem().toString().equals("Select a course")) {
                     int row = (position / 8);
                     int col = position % 8;
-                    if(gridSlots[row][col] == 0) {
-                        gridSlots[row][col] = 1;
-                    }
                     if(gridSlots[row][col] == 2){
-                        gridSlots[row][col] = 4;
+                        showPopup(view);
                     }else{
                         Toast.makeText(getContext(), "not available " +slotText[+ position], Toast.LENGTH_SHORT).show();
                     }
@@ -349,6 +347,27 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         listViewHelper();
 
 
+    }
+
+
+    public void showPopup(View view) {
+        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.popup_get_a_tutor. view_viewGroup, false);
+
+        final PopupWindow popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        ((ListView)popupWindow.getContentView().findViewById(R.id.popup_timeblock)).setAdapter(adapter_session);
+
+
+
+        Button btnDismiss = (Button) popupView.findViewById(R.id.popup_confirm);
+        btnDismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //confirm session and upload to data base
+            }
+        });
+
+        popupWindow.showAtLocation(popupView, Gravity.AXIS_Y_SHIFT, 0, 10);
     }
 
 
@@ -501,6 +520,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
             if (spinner_course.getSelectedItemPosition() != 0) { // If a subject is selected
                 populateSessionListView();
             }
+
+        }
+        if (parent.getId() == R.id.get_A_Tutor_calendar){
 
         }
 

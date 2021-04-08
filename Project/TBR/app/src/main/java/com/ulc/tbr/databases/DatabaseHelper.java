@@ -597,6 +597,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
+
+    public Cursor getTutorsFromCourseCursor(String course){
+        Cursor result;
+
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            result = db.rawQuery("SELECT u.name, t.tutor_id, a.date, a.time, a.booked FROM user_table u, " + TABLE_NAME_TUTOR_C + " t, " + TABLE_NAME_TUTOR_A + " a WHERE " + COL_3_TUTOR_C + " = ? and t.tutor_id = u.student_id and t.tutor_id = a.tutorid", new String[] {course});
+        } catch (Exception e){
+            return null;
+        }
+        return result;
+    }
+    public ArrayList<TutorAvailablity> getTutorsFromCourse(String course){
+        ArrayList<TutorAvailablity> result;
+        Cursor data;
+        result = new ArrayList<TutorAvailablity>();
+        data = this.getTutorsFromCourseCursor(course);
+        while(data.moveToNext()){
+            String tutorName = data.getString(0);
+            String tutorID = data.getString(1);
+            String date = data.getString(2);
+            String time = data.getString(3);
+            String booked = data.getString(4);
+            result.add(new TutorAvailablity(tutorName, tutorID, date, time, booked.equals("TRUE") ));
+        }
+        return result;
+    }
+
     public ArrayList<TutorAvailablity> getTutorAvailabilityOnDate(String TutorID, String Date) {
         ArrayList<TutorAvailablity> result;
         Cursor data;
