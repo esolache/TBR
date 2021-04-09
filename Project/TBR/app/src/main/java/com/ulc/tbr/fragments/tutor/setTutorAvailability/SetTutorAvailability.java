@@ -2,6 +2,7 @@ package com.ulc.tbr.fragments.tutor.setTutorAvailability;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -307,6 +308,7 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
                     for(int j= 0; j < 8; j++){
                         if(gridSlots[i][j]==1){
                             String time = timeConverter(slotText[i*8]);
+                            Log.d("DAT","Date");
                             String date = dateConverter(spinner_week.getSelectedItem().toString(), j);
                             String tutorID = user.getStudentID();
                             dbHelper.addAvailability(tutorID,date,time);
