@@ -43,8 +43,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -70,10 +72,8 @@ public class UITest {
         onView(withId(R.id.login)).perform(click());
         onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
 
-        //  onView(withId(R.id.spinner_homeMenu)).perform(click());
-
-        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable()))).perform(
-                new ViewAction() {
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
                     @Override
                     public Matcher<View> getConstraints() {
                         return ViewMatchers.isEnabled(); // no constraints, they are checked above
@@ -86,64 +86,14 @@ public class UITest {
                     public void perform(UiController uiController, View view) {
                         view.performClick();
                     }
-                }
-        );
-        onData(allOf(is(instanceOf(String.class)))).atPosition(0).perform(new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return ViewMatchers.isEnabled(); // no constraints, they are checked above
-            }
-            @Override
-            public String getDescription() {
-                return "click button";
-            }
-            @Override
-            public void perform(UiController uiController, View view) {
-                view.performClick();
-            }
-        });
-        onData(allOf(is(instanceOf(String.class)))).atPosition(1).perform(new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return ViewMatchers.isEnabled(); // no constraints, they are checked above
-            }
-            @Override
-            public String getDescription() {
-                return "click button";
-            }
-            @Override
-            public void perform(UiController uiController, View view) {
-                view.performClick();
-            }
-        });
-        onData(allOf(is(instanceOf(String.class)))).atPosition(2).perform(new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return ViewMatchers.isEnabled(); // no constraints, they are checked above
-            }
-            @Override
-            public String getDescription() {
-                return "click button";
-            }
-            @Override
-            public void perform(UiController uiController, View view) {
-                view.performClick();
-            }
-        });
-        onData(allOf(is(instanceOf(String.class)))).atPosition(3).perform(new ViewAction() {
-            @Override
-            public Matcher<View> getConstraints() {
-                return ViewMatchers.isEnabled(); // no constraints, they are checked above
-            }
-            @Override
-            public String getDescription() {
-                return "click button";
-            }
-            @Override
-            public void perform(UiController uiController, View view) {
-                view.performClick();
-            }
-        });
+                });
+
+        onData(is("Get A Tutor")).perform(click());
+
+        onView(withId(R.id.button_nextWeek)).perform(click());
+        onView(withId(R.id.button_nextWeek)).perform(click());
+        onView(withId(R.id.button_nextWeek)).perform(click());
+        onView(withId(R.id.button_nextWeek)).perform(click());
 
     }
 
