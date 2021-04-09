@@ -180,6 +180,20 @@ public class MainActivity extends AppCompatActivity {
 //_______Populate users database__________________________________________________________________________________
     public void populateUsers(){
         try {
+            database.addData("8888888888", "testTutor", "testTutor", "Testing Tutor", "testtutor@wisc.edu", true, false);
+        } catch (Exception e) {
+            // La di da I have nothing to say.
+        }
+
+        try {
+            database.addData("9999999999", "testStutor", "testStutor", "Testing Stutor", "teststutor@wisc.edu", true, true);
+        } catch (Exception e) {
+            // La di da I have nothing to say.
+        }
+
+
+
+        try {
             database.addData("0000000000", "student", "student", "Stu Dent", "student@wisc.edu", false, true);
         } catch (Exception e) {
             // La di da I have nothing to say.
