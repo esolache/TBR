@@ -260,14 +260,17 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
                     if(gridSlots[row][col] == 2){
                         gridSlots[row][col] = 1;
+
                     }else if(gridSlots[row][col] == 1) {
                         gridSlots[row][col] = 2;
-                        String date = dateConverter(spinner_week.getSelectedItem().toString(), col);
+                       /* String date = dateConverter(spinner_week.getSelectedItem().toString(), col);
                         String time= timeConverter(timeConverter(slotText[row*8]));
                         String course = spinner_course.getSelectedItem().toString();
                         course = course.substring(course.length()-3);
                         selectSessionPopup(view, date, course, time);
+                    */
                     }
+
                     adapter_calendar.notifyDataSetChanged();
 
                 }
