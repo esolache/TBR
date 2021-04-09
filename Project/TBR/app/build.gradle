@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
+    id 'jacoco'
 }
+
 
 android {
     compileSdkVersion 30
@@ -17,6 +19,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            testCoverageEnabled = true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

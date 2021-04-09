@@ -142,12 +142,12 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        try {
-            database.addDataSession("0000000000", "1111111114", "04/20/2021", "10:30", "Data Science and Engineering", 204, "Coffee Shop", "Wo yao cafe.", -3);
-        } catch (Exception e) {
-            // La di da I have nothing to say.
-
-        }
+//        try {
+//            database.addDataSession("0000000000", "1111111114", "04/20/2021", "10:30", "Data Science and Engineering", 204, "Coffee Shop", "Wo yao cafe.", -3);
+//        } catch (Exception e) {
+//            // La di da I have nothing to say.
+//
+//        }
 
         // BEGIN STUTOR SESSIONS
             // tutor sessions

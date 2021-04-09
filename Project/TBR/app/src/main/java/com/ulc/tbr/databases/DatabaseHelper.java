@@ -141,10 +141,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put(COL_3_SESSION, session.getDate());
             contentValues.put(COL_4_SESSION, session.getTime());
             contentValues.put(COL_5_SESSION, session.getSubject());
-            contentValues.put(COL_6_SESSION, session.getCourseNo());
+            contentValues.put(COL_6_SESSION, String.valueOf(session.getCourseNo()));
             contentValues.put(COL_7_SESSION, session.getLocation());
             contentValues.put(COL_8_SESSION, session.getDescription());
-            contentValues.put(COL_9_SESSION, session.getSessionID());
+            contentValues.put(COL_9_SESSION, String.valueOf(session.getSessionID()));
             result = db.insert(TABLE_NAME_SESSION,null,contentValues);
 
         }
@@ -231,7 +231,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor data;
         SQLiteDatabase db = this.getWritableDatabase();
 
-        data = db.rawQuery("SELECT * FROM " + TABLE_NAME_SESSION + " WHERE " + COL_1_SESSION + " = ?", new String[]{tutorID});
+        data = db.rawQuery("SELECT * FROM " + TABLE_NAME_SESSION + " WHERE " + COL_2_SESSION + " = ?", new String[]{tutorID});
 
         ArrayList<Session> sessionList = new ArrayList<Session>();
         while(data.moveToNext()){
@@ -244,7 +244,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String location = data.getString(6);
             String description = data.getString(7);
             int sessionID = Integer.parseInt(data.getString(8));
-
 
             sessionList.add(new Session(studentID,tutorID,date,time,subject,courseNum,location,description,sessionID));
         }
@@ -761,10 +760,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public String getPassword(String NetID) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Log.d("net",NetID);
         Cursor data = db.rawQuery("SELECT " +COL_3_USERS+" FROM " + TABLE_NAME_USERS + " WHERE " + COL_2_USERS + " = ?", new String[] {NetID});
         data.moveToFirst();
-        Log.d("names length", String.valueOf(data.getCount()));
         if (data.getCount() > 0) return data.getString(0);
         else return "___________________ERROR__________________";
     }
