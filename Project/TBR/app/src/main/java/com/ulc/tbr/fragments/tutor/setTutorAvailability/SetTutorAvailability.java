@@ -211,8 +211,6 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
                         gridSlots[row][col] = 3;
                     }else if(gridSlots[row][col] == 3) {
                         gridSlots[row][col] = 2;
-                    }else{
-
                     }
                     adapter.notifyDataSetChanged();
 
