@@ -205,8 +205,50 @@ public class UIGetATutorTest {
 
     @Test
     public void buttons_work() {
-        navigate();
-        onView(withId(R.id.button_prevWeek)).perform(click());
+        try {
+            navigate();
+            onView(withId(R.id.button_prevWeek)).perform(click());
+            onView(withId(R.id.button_nextWeek)).perform(click());
+        } catch (Exception e){
+            fail();
+        }
+
+    }
+
+    @Test
+    public void subject_spinners_work() {
+        String spinnerText = "Computer Science";
+        try {
+            navigate();
+            onView(withId(R.id.button_nextWeek)).perform(click());
+            onView(withId(R.id.spinner_subject)).perform(click());
+            onData(allOf(is(instanceOf(String.class)), is(spinnerText))).perform(click());
+            onView(withId(R.id.spinner_subject)).check(matches(withSpinnerText(containsString(spinnerText))));
+
+        } catch (Exception e){
+            fail();
+        }
+
+    }
+
+    @Test
+    public void course_spinner_should_work() {
+        String spinnerText = "Computer Science";
+        String courseSpinnerText = "Programming 1 200";
+        try {
+            navigate();
+            onView(withId(R.id.button_nextWeek)).perform(click());
+            // Subject Spinner
+            onView(withId(R.id.spinner_subject)).perform(click());
+            onData(allOf(is(instanceOf(String.class)), is(spinnerText))).perform(click());
+            onView(withId(R.id.spinner_subject)).check(matches(withSpinnerText(containsString(spinnerText))));
+            // Course Spinner
+            onView(withId(R.id.spinner_course)).perform(click());
+            onData(allOf(is(instanceOf(String.class)), is(courseSpinnerText))).perform(click());
+            onView(withId(R.id.spinner_course)).check(matches(withSpinnerText(containsString(courseSpinnerText))));
+        } catch (Exception e){
+            fail();
+        }
 
     }
 }
