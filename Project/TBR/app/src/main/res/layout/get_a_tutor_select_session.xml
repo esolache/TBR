@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="400dp"
-    android:layout_height="350dp"
+    android:layout_height="500dp"
     android:background="#F89797"
     android:gravity="center"
     android:orientation="vertical"
@@ -14,41 +14,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:text="CONFIRM SESSION" />
+        android:text="SELECT SESSION" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LOCATION:" />
-
-    <Spinner
-        android:id="@+id/spinner_location"
-        android:layout_width="287dp"
-        android:layout_height="62dp"
-        android:hint="Insert Course Number" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Tutor" />
-
-    <Spinner
-        android:id="@+id/spinner_tutor"
-        android:layout_width="287dp"
-        android:layout_height="62dp"
-        android:hint="Insert Course Number" />
+    <ListView
+        android:id="@+id/list_sessions_popup"
+        android:layout_width="387dp"
+        android:layout_height="269dp"
+        android:layout_marginTop="0dp"
+        android:scrollbars="vertical" />
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DESCRIPTION:" />
-
-    <EditText
-        android:id="@+id/editText_description"
-        android:layout_width="287dp"
-        android:layout_height="62dp"
-        android:hint="Description" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
@@ -60,10 +35,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginStart="28dp"
-            android:text="Confirm"
-            app:layout_constraintBaseline_toBaselineOf="@+id/button_cancel"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:text="Next"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.195"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
             android:id="@+id/button_cancel"
@@ -72,6 +48,7 @@
             android:layout_marginStart="16dp"
             android:text="Cancel"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/button_confirm" />
 
 
