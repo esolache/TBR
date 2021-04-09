@@ -601,7 +601,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         try {
             SQLiteDatabase db = this.getWritableDatabase();
-            result = db.rawQuery("SELECT u.course_num, t.tutor_id, t.date, t.time, t.booked FROM tutor_courses_table u, " + TABLE_NAME_TUTOR_A + " t WHERE " + COL_3_TUTOR_C + " = ?" + " AND " + COL_2_TUTOR_A + " = ?" + "AND " + COL_3_TUTOR_A + " = ? and t.tutor_id = u.tutor_id", new String[] {course, date, time});
+            result = db.rawQuery("SELECT u.course_num, a.name, t.tutor_id, t.date, t.time, t.booked FROM tutor_courses_table u, user_table a, " + TABLE_NAME_TUTOR_A + " t WHERE " + COL_3_TUTOR_C + " = ?" + " AND " + COL_2_TUTOR_A + " = ? " + "AND " + COL_3_TUTOR_A + " = ? and t.tutor_id = u.tutor_id and t.tutor_id = a.student_id", new String[] {course, date, time});
         }
         catch (Exception e) {
             return null;
@@ -616,21 +616,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         data = this.getTutorAvailabilitiesOnDateAndTimeCursor(Course, Date, Time);
         while(data.moveToNext()){
             String availability;
-            String tutorName = data.getString(0);
-            String tutorID = data.getString(1);
-            String date = data.getString(2);
-            String time = data.getString(3);
+            String tutorName = data.getString(1);
+            String tutorID = data.getString(2);
+            String date = data.getString(3);
+            String time = data.getString(4);
 //            String course = data.getString(3);
-            String booked = data.getString(4);
+            String booked = data.getString(5);
             // availability = tutorID + " " + date + " " + time + " " + booked;
 
 //            int courseNo = Integer.parseInt(data.getString(2));
             result.add(new TutorAvailablity(tutorName, tutorID, date, time, booked.equals("TRUE") ));
         }
 
-
         return result;
     }
+
 
 
 
@@ -878,6 +878,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         user = new User(studentID, null, netID, email, tutor, tutee);
         return user;
     }
+
 
     /*SECTION FOR USERS END*/
 }

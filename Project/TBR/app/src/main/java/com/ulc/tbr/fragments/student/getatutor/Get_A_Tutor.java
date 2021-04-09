@@ -954,25 +954,6 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
     // CONFIRMATION AND ADD DESCRIPTION FOR CREATE SESSION
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void selectSessionPopup(View view, String date, String course, String time){
-        LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.get_a_tutor_select_session, view_viewGroup, false);
-
-
-        ListView listView_session_popup = (ListView) view.findViewById(R.id.list_sessions_popup);
-        ArrayList<TutorAvailablity> tutorAvailablity_session_date =  database.getTutorAvailabilitiesOnDateAndTime(course,date,time);
-        ArrayList<String> available_session_popup = loadTutorAvailabilityToString(tutorAvailablity_session_date);
-        ArrayAdapter<String> adapter_session_popup = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session_popup );
-        listView_session_popup.setAdapter(adapter_session_popup);
-
-
-        PopupWindow popup = new PopupWindow(popupView, 1000 , 1000, true);
-        popup.setOutsideTouchable(true);
-        popup.showAtLocation(view, Gravity.CENTER, 0, 0);
-
-    }
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     public void showSessionConfirmationPopup(View view, Session session, TutorAvailablity availablity) {
