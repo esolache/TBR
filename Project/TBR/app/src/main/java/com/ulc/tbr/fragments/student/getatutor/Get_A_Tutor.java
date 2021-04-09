@@ -50,7 +50,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
     User user;
     boolean isTutor;
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     private GridView calendar;
     private CalendarAdapter adapter_calendar;
     String[] headerText = {"Time","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
@@ -82,7 +82,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
             "07:00pm","","","","","","","",
             "07:30pm","","","","","","",""
     } ;
-////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     // UPPER MENU BEGIN
     Spinner spinner_homeMenu;
     ArrayList<String> homeMenu;
@@ -242,7 +242,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////
         adapter_calendar = new CalendarAdapter(getContext(),slotText);
 
 
@@ -261,8 +261,31 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     if(gridSlots[row][col] == 2){
                         gridSlots[row][col] = 1;
 
+                        String date = dateConverter(spinner_week.getSelectedItem().toString(), col);
+                        String time= timeConverter(timeConverter(slotText[row*8]));
+                        String courseNo = spinner_course.getSelectedItem().toString();
+                        courseNo = courseNo.substring(courseNo.length()-3);
+
+
+
+                        String subject = spinner_subject.getSelectedItem().toString();
+
+                        Session newSession = new Session(user.getStudentID(), null , date , time, subject, Integer.parseInt(courseNo), "Virtual", "", sessionID++);
+
+
+                        TutorAvailablity newTutorAvailability = new TutorAvailablity(null, null, date, time, false);
+
+                        // Tutor and Description for session is to be set in showSessionConfirmationPopup
+                        showSessionConfirmationPopup(view, newSession, newTutorAvailability);
+
+
+
                     }else if(gridSlots[row][col] == 1) {
                         gridSlots[row][col] = 2;
+
+
+
+
                        /* String date = dateConverter(spinner_week.getSelectedItem().toString(), col);
                         String time= timeConverter(timeConverter(slotText[row*8]));
                         String course = spinner_course.getSelectedItem().toString();
@@ -273,11 +296,18 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
                     adapter_calendar.notifyDataSetChanged();
 
+
+
+
+
+
+
+
                 }
             }
         });
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -924,7 +954,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
     // CONFIRMATION AND ADD DESCRIPTION FOR CREATE SESSION
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     public void selectSessionPopup(View view, String date, String course, String time){
         LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.get_a_tutor_select_session, view_viewGroup, false);
@@ -946,31 +976,35 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
 
     public void showSessionConfirmationPopup(View view, Session session, TutorAvailablity availablity) {
-        // View popupView = LayoutInflater.from(p.getContext()).inflate(R.layout.popup, null);
-
-        //Fragment popup =
-
-        //View popupView = LayoutInflater.from(view_viewGroup.getContext()).inflate(R.layout.get_a_tutor_confirm_session_popup, null);
-        // newView.getWidth(), newView.getHeight(),
-
-
-        //newView.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        //newView.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-        //newView.setHeight(view.getMeasuredHeight());
 
         LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.get_a_tutor_confirm_session_popup, view_viewGroup, false);
 
         PopupWindow popup = new PopupWindow(popupView, 1000 , 1000, true);
         popup.setOutsideTouchable(true);
-        //popup.setContentView(view);
         popup.showAtLocation(view, Gravity.CENTER, 0, 0);
-        //p// opup.update(50, 50, 300, 80);
-        //click = false;
 
-//        final PopupWindow popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-//        ((TextView)popupWindow.getContentView().findViewById(R.id.text_popup)).setText(order);
+        Spinner spinner_tutor = (Spinner) popupView.findViewById(R.id.spinner_tutor);
+        ArrayList<TutorAvailablity> available_tutor;
+        available_tutor = new ArrayList<TutorAvailablity>();
+
+        available_tutor = database.getTutorAvailabilitiesOnDateAndTime("" + session.getCourseNo(), availablity.getDate(), availablity.getTime());
+
+        ArrayList<String> available_tutor_names;
+        available_tutor_names = new ArrayList<String>();
+
+        for ( TutorAvailablity tutors : available_tutor  ) {
+            available_tutor_names.add(tutors.getTutorName());
+
+        }
+
+        ArrayAdapter<String> adapter_tutor = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_tutor_names );
+        spinner_tutor.setAdapter(adapter_tutor);
+        spinner_tutor.setSelection(0, true);
+
+
+
+
         Spinner spinner_location = (Spinner) popupView.findViewById(R.id.spinner_location);
         ArrayList<String> available_location;
         available_location = new ArrayList<String>();
