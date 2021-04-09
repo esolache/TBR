@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.util.Log;
 
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
@@ -67,5 +68,13 @@ public class AvailabilityTest {
         Log.d("Size", String.valueOf(tutorAvailabilityList.size()));
         Log.d("Size", tutorAvailabilityList.get(0).toString());
         assertTrue(tutorAvailabilityList.get(0).toString().equals("1111111111 04/20/2021 09:00 false"));
+    }
+    @Test
+    public void addAvailabilityExcpetion (){
+        try {
+            db.addAvailability("1111111112", "04/27/2021", "09:00");
+        } catch (Exception e) {
+            assertFalse(true);
+        }
     }
 }

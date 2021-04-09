@@ -111,11 +111,8 @@ public class UISetATutorAvailable {
                 });
         onData(is("01/24 - 01/30")).perform(click());
 
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(32).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(15).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(27).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(32).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(15).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(2).perform(click());
+        onView((withId(R.id.confirm_availability))).perform(click());
 
     }
 
