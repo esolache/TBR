@@ -269,10 +269,12 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
                                 String tempTime = avail.getTime();
                                 Boolean tempBooked = avail.isBooked();
                                 if (!tempBooked) {
+                                    Log.d("NOT","booked");
                                     int col = dayToColumn(tempDate, spinner_week.getSelectedItem().toString());
                                     int row = timeToRow(tempTime);
                                     gridSlots[row][col] = 2;
                                 } else {
+                                    Log.d("is","booked");
                                     int col = dayToColumn(tempDate, spinner_week.getSelectedItem().toString());
                                     int row = timeToRow(tempTime);
                                     gridSlots[row][col] = 4;

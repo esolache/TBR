@@ -160,35 +160,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public Integer deleteDataSession(Session session) throws Exception {
-        Integer result;
+//    public Integer deleteDataSession(Session session) throws Exception {
+//        Integer result;
+//
+//        try {
+//            SQLiteDatabase db = this.getWritableDatabase();
+//            result = db.delete(TABLE_NAME_SESSION, COL_1_SESSION + " = ?", new String[] {"" + session.getSessionID()});
+//
+//        }
+//        catch (Exception e) {
+//            return null;
+//        }
+//
+//        return result;
+//    }
 
-        try {
-            SQLiteDatabase db = this.getWritableDatabase();
-            result = db.delete(TABLE_NAME_SESSION, COL_1_SESSION + " = ?", new String[] {"" + session.getSessionID()});
-
-        }
-        catch (Exception e) {
-            return null;
-        }
-
-        return result;
-    }
-
-    public Integer deleteDataSession(int sessionID) throws Exception {
-        Integer result;
-
-        try {
-            SQLiteDatabase db = this.getWritableDatabase();
-            result = db.delete(TABLE_NAME_SESSION, COL_1_SESSION + " = ?", new String[] {"" + sessionID});
-
-        }
-        catch (Exception e) {
-            return null;
-        }
-
-        return result;
-    }
+//    public Integer deleteDataSession(int sessionID) throws Exception {
+//        Integer result;
+//
+//        try {
+//            SQLiteDatabase db = this.getWritableDatabase();
+//            result = db.delete(TABLE_NAME_SESSION, COL_1_SESSION + " = ?", new String[] {"" + sessionID});
+//
+//        }
+//        catch (Exception e) {
+//            return null;
+//        }
+//
+//        return result;
+//    }
 
 
     /*
@@ -290,43 +290,43 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public boolean modifyNameSession(String NetID, String newName) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_3_SESSION, newName);
-        return modifyDataSession(NetID, COL_3_SESSION, contentValues);
-    }
-
-    public boolean modifyPasswordSession(String NetID, String newPassword) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_2_SESSION, newPassword);
-        return modifyDataSession(NetID, COL_2_SESSION, contentValues);
-    }
-
-    public boolean modifyAccountTYpeSession(String NetID, String newPassword) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(COL_2_SESSION, newPassword);
-        return modifyDataSession(NetID, COL_2_SESSION, contentValues);
-    }
-
-    public Cursor getDataSession(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM "+TABLE_NAME_SESSION;
-        Cursor data = db.rawQuery(query, null);
-        return data;
-    }
-    public Cursor checkLogin2Session(String NetID, String password){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String[] selectionArgs = {NetID,password};
-        Cursor cursor = db.query(TABLE_NAME_SESSION, new String[]{"NetID", "password"}, "NetID=? and password=?", selectionArgs , null, null, null);
-        return cursor;
-    }
-
-    public Cursor getPasswordSession(String NetID){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT password FROM "+TABLE_NAME_SESSION+"  WHERE " + COL_1_SESSION + NetID +"'";
-        Cursor data = db.rawQuery(query, null);
-        return data;
-    }
+//    public boolean modifyNameSession(String NetID, String newName) {
+//        ContentValues contentValues = new ContentValues();
+//        contentValues.put(COL_3_SESSION, newName);
+//        return modifyDataSession(NetID, COL_3_SESSION, contentValues);
+//    }
+//
+//    public boolean modifyPasswordSession(String NetID, String newPassword) {
+//        ContentValues contentValues = new ContentValues();
+//        contentValues.put(COL_2_SESSION, newPassword);
+//        return modifyDataSession(NetID, COL_2_SESSION, contentValues);
+//    }
+//
+//    public boolean modifyAccountTYpeSession(String NetID, String newPassword) {
+//        ContentValues contentValues = new ContentValues();
+//        contentValues.put(COL_2_SESSION, newPassword);
+//        return modifyDataSession(NetID, COL_2_SESSION, contentValues);
+//    }
+//
+//    public Cursor getDataSession(){
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        String query = "SELECT * FROM "+TABLE_NAME_SESSION;
+//        Cursor data = db.rawQuery(query, null);
+//        return data;
+//    }
+//    public Cursor checkLogin2Session(String NetID, String password){
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        String[] selectionArgs = {NetID,password};
+//        Cursor cursor = db.query(TABLE_NAME_SESSION, new String[]{"NetID", "password"}, "NetID=? and password=?", selectionArgs , null, null, null);
+//        return cursor;
+//    }
+//
+//    public Cursor getPasswordSession(String NetID){
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        String query = "SELECT password FROM "+TABLE_NAME_SESSION+"  WHERE " + COL_1_SESSION + NetID +"'";
+//        Cursor data = db.rawQuery(query, null);
+//        return data;
+//    }
 
     /*SECTION FOR SESSION END*/
 
@@ -566,20 +566,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 //        return tutorAvailabilityList;
 //    }
 
-    public Cursor getTutorAvailability(String TutorID) {
-        Cursor result;
-
-        try {
-            SQLiteDatabase db = this.getWritableDatabase();
-            result = db.rawQuery("SELECT * FROM " + TABLE_NAME_TUTOR_A + " WHERE " + COL_1_TUTOR_A + " = ?", new String[] {TutorID});
-
-        }
-        catch (Exception e) {
-            return null;
-        }
-
-        return result;
-    }
+//    public Cursor getTutorAvailability(String TutorID) {
+//        Cursor result;
+//
+//        try {
+//            SQLiteDatabase db = this.getWritableDatabase();
+//            result = db.rawQuery("SELECT * FROM " + TABLE_NAME_TUTOR_A + " WHERE " + COL_1_TUTOR_A + " = ?", new String[] {TutorID});
+//
+//        }
+//        catch (Exception e) {
+//            return null;
+//        }
+//
+//        return result;
+//    }
 
     public Cursor getTutorAvailabilityOnDateCursor(String TutorID, String Date) {
         Cursor result;
@@ -601,7 +601,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         try {
             SQLiteDatabase db = this.getWritableDatabase();
-            result = db.rawQuery("SELECT u.course_num, t.tutor_id, t.date, t.time, t.booked FROM tutor_courses_table u, " + TABLE_NAME_TUTOR_A + " t WHERE " + COL_3_TUTOR_C + " = ?" + " AND " + COL_2_TUTOR_A + " = ?" + "AND " + COL_3_TUTOR_A + " = ? and t.tutor_id = u.tutor_id", new String[] {course, date, time});
+            result = db.rawQuery("SELECT u.course_num, a.name, t.tutor_id, t.date, t.time, t.booked FROM tutor_courses_table u, user_table a, " + TABLE_NAME_TUTOR_A + " t WHERE " + COL_3_TUTOR_C + " = ?" + " AND " + COL_2_TUTOR_A + " = ? " + "AND " + COL_3_TUTOR_A + " = ? and t.tutor_id = u.tutor_id and t.tutor_id = a.student_id", new String[] {course, date, time});
         }
         catch (Exception e) {
             return null;
@@ -616,21 +616,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         data = this.getTutorAvailabilitiesOnDateAndTimeCursor(Course, Date, Time);
         while(data.moveToNext()){
             String availability;
-            String tutorName = data.getString(0);
-            String tutorID = data.getString(1);
-            String date = data.getString(2);
-            String time = data.getString(3);
+            String tutorName = data.getString(1);
+            String tutorID = data.getString(2);
+            String date = data.getString(3);
+            String time = data.getString(4);
 //            String course = data.getString(3);
-            String booked = data.getString(4);
+            String booked = data.getString(5);
             // availability = tutorID + " " + date + " " + time + " " + booked;
 
 //            int courseNo = Integer.parseInt(data.getString(2));
             result.add(new TutorAvailablity(tutorName, tutorID, date, time, booked.equals("TRUE") ));
         }
 
-
         return result;
     }
+
 
 
 
@@ -706,20 +706,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public Cursor getAllTutorCourses() {
-        Cursor result;
-
-        try {
-            SQLiteDatabase db = this.getWritableDatabase();
-            result = db.rawQuery("SELECT * FROM " + TABLE_NAME_TUTOR_C, null);
-
-        }
-        catch (Exception e) {
-            return null;
-        }
-
-        return result;
-    }
+//    public Cursor getAllTutorCourses() {
+//        Cursor result;
+//
+//        try {
+//            SQLiteDatabase db = this.getWritableDatabase();
+//            result = db.rawQuery("SELECT * FROM " + TABLE_NAME_TUTOR_C, null);
+//
+//        }
+//        catch (Exception e) {
+//            return null;
+//        }
+//
+//        return result;
+//    }
 
     public Cursor getTutorCoursesCursor(String TutorID) {
         Cursor result;
@@ -878,6 +878,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         user = new User(studentID, null, netID, email, tutor, tutee);
         return user;
     }
+
 
     /*SECTION FOR USERS END*/
 }

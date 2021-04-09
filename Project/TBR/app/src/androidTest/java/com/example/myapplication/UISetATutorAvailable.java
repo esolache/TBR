@@ -92,6 +92,8 @@ public class UISetATutorAvailable {
         onData(is("Change Availability")).perform(click());
         onView(withId(R.id.calendar)).check(matches((isDisplayed())));
 
+        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(0).perform(click());
+
         onView(withId(R.id.selectWeek)).check(matches(allOf( isEnabled(), isClickable())))
                 .perform(new ViewAction() {
                     @Override
@@ -112,7 +114,8 @@ public class UISetATutorAvailable {
         onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(32).perform(click());
         onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(15).perform(click());
         onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(27).perform(click());
-        onView(withId(R.id.confirm_availability)).check(matches((isDisplayed()))).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(32).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(15).perform(click());
 
     }
 
