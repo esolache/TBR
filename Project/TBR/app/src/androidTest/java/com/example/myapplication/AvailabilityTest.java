@@ -60,4 +60,12 @@ public class AvailabilityTest {
         tutorAvailabilityList = db.getTutorAvailabilityOnDate("1111111111","01/26/2021");
         assertTrue(tutorAvailabilityList.get(0).toString().equals("1111111111 01/26/2021 09:30 true"));
     }
+    @Test
+    public void availabilityDateTimeCourse() {
+        ArrayList<TutorAvailablity> tutorAvailabilityList;
+        tutorAvailabilityList = db.getTutorAvailabilitiesOnDateAndTime("400","04/20/2021","09:00");
+        Log.d("Size", String.valueOf(tutorAvailabilityList.size()));
+        Log.d("Size", tutorAvailabilityList.get(0).toString());
+        assertTrue(tutorAvailabilityList.get(0).toString().equals("1111111111 04/20/2021 09:00 false"));
+    }
 }
