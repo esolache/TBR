@@ -99,11 +99,91 @@ public class UIChangeCoursesTest {
                     });
 
             onData(is("Change Courses")).perform(click());
-            onView(withId(R.id.textView_get_a_tutor)).check(matches((isDisplayed())));
+            onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
         } catch(Exception e) {
             fail();
         }
     }
+
+    @Test
+    public void stutor_should_get_from_login() {
+
+        try {
+            Fragment g = new Fragment();
+            activityActivityTestRule.getActivity()
+                    .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login, g);
+            onView(withId(R.id.net_ID)).perform(clearText(), typeText("testStutor"));
+            onView(withId(R.id.password)).perform(clearText(), typeText("testStutor"));
+            onView(withId(R.id.login)).perform(click());
+            onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
+
+            onView(withId(R.id.spinner_homeMenu)).check(matches(allOf(isEnabled(), isClickable())))
+                    .perform(new ViewAction() {
+                        @Override
+                        public Matcher<View> getConstraints() {
+                            return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                        }
+
+                        @Override
+                        public String getDescription() {
+                            return "click button";
+                        }
+
+                        @Override
+                        public void perform(UiController uiController, View view) {
+                            view.performClick();
+                        }
+                    });
+
+            onData(is("Change Courses")).perform(click());
+            onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
+        } catch(Exception e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void student_should_not_get_from_login() {
+
+        try {
+            Fragment g = new Fragment();
+            activityActivityTestRule.getActivity()
+                    .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login, g);
+            onView(withId(R.id.net_ID)).perform(clearText(), typeText("testStudent"));
+            onView(withId(R.id.password)).perform(clearText(), typeText("testStudent"));
+            onView(withId(R.id.login)).perform(click());
+            onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
+
+            onView(withId(R.id.spinner_homeMenu)).check(matches(allOf(isEnabled(), isClickable())))
+                    .perform(new ViewAction() {
+                        @Override
+                        public Matcher<View> getConstraints() {
+                            return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                        }
+
+                        @Override
+                        public String getDescription() {
+                            return "click button";
+                        }
+
+                        @Override
+                        public void perform(UiController uiController, View view) {
+                            view.performClick();
+                        }
+                    });
+            try {
+                onData(is("Change Courses")).perform(click());
+                fail();
+            } catch (Exception e){
+
+            }
+
+        } catch(Exception e) {
+            fail();
+        }
+    }
+
+
 
 
 }

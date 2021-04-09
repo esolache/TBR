@@ -190,6 +190,12 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
             // La di da I have nothing to say.
         }
+        try {
+            database.addData("7777777777", "testStudent", "testStudent", "Testing Student", "teststudent@wisc.edu", false, true);
+        } catch (Exception e) {
+            // La di da I have nothing to say.
+        }
+
 
 
 
