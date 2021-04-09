@@ -63,7 +63,7 @@ public class UITest {
     @Rule
     public ActivityTestRule<MainActivity> activityActivityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class);
     @Test
-    public void student(){
+    public void studentLogin(){
         Fragment g = new Fragment();
         activityActivityTestRule.getActivity()
                 .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login,g);
@@ -87,13 +87,274 @@ public class UITest {
                         view.performClick();
                     }
                 });
-
         onData(is("Get A Tutor")).perform(click());
+        onView(withId(R.id.button_nextWeek)).perform(click());
 
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("My Sessions")).perform(click());
+        onView(withId(R.id.listView_sessions)).check(matches((isDisplayed())));
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Home")).perform(click());
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Logout")).perform(click());
+
+    }
+    @Test
+    public void tutorLogin(){
+        Fragment g = new Fragment();
+        activityActivityTestRule.getActivity()
+                .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login,g);
+        onView(withId(R.id.net_ID)).perform(clearText(),typeText("tutor4"));
+        onView(withId(R.id.password)).perform(clearText(),typeText("tutor4"));
+        onView(withId(R.id.login)).perform(click());
+        onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Change Courses")).perform(click());
+        onView(withId(R.id.listView_myClasses)).check(matches((isDisplayed())));
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("My Sessions")).perform(click());
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Home")).perform(click());
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Change Availability")).perform(click());
+        onView(withId(R.id.calendar)).check(matches((isDisplayed())));
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Logout")).perform(click());
+
+    }
+    @Test
+    public void stutorLogin(){
+        Fragment g = new Fragment();
+        activityActivityTestRule.getActivity()
+                .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login,g);
+        onView(withId(R.id.net_ID)).perform(clearText(),typeText("stutor"));
+        onView(withId(R.id.password)).perform(clearText(),typeText("stutor"));
+        onView(withId(R.id.login)).perform(click());
+        onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Get A Tutor")).perform(click());
         onView(withId(R.id.button_nextWeek)).perform(click());
-        onView(withId(R.id.button_nextWeek)).perform(click());
-        onView(withId(R.id.button_nextWeek)).perform(click());
-        onView(withId(R.id.button_nextWeek)).perform(click());
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Change Courses")).perform(click());
+        onView(withId(R.id.listView_myClasses)).check(matches((isDisplayed())));
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("My Sessions")).perform(click());
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Home")).perform(click());
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Change Availability")).perform(click());
+        onView(withId(R.id.calendar)).check(matches((isDisplayed())));
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Logout")).perform(click());
 
     }
 
