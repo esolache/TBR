@@ -1,19 +1,27 @@
 package com.example.myapplication;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.view.View;
 import android.widget.ListView;
 
+
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerViewAccessibilityDelegate;
 import androidx.test.espresso.UiController;
 import androidx.test.espresso.ViewAction;
 import androidx.test.espresso.matcher.ViewMatchers;
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import com.ulc.tbr.R;
 import com.ulc.tbr.activities.MainActivity;
+import com.ulc.tbr.databases.DatabaseHelper;
 
 import org.hamcrest.Matcher;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,12 +32,15 @@ import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -37,6 +48,21 @@ import static org.junit.Assert.fail;
 
 @RunWith(AndroidJUnit4ClassRunner.class)
 public class UIChangeCoursesTest {
+    DatabaseHelper db;
+
+
+    @Before
+    public void createDb() {
+        // Make sure DB is cleared out
+        Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        db = new DatabaseHelper(appContext);
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        db.deleteTutorCourse("8888888888","Computer Science", 200);
+        db.close();
+    }
 
     @Rule
     public ActivityTestRule<MainActivity> activityActivityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class);
@@ -185,34 +211,46 @@ public class UIChangeCoursesTest {
             fail();
         }
     }
-/*
+
     @Test
     public void tutor_add_course(){
         navigate();
-        final ListView listViewAdd = (ListView) withId(R.id.listView_availableClasses);
-        final ListView listViewRemove = (ListView) withId(R.id.listView_myClasses);
-        assertNotNull("The list was not loaded", listViewAdd);
         try {
-            String item = listViewAdd.getItemAtPosition(0).toString();
-            getInstrumentation().runOnMainSync(new Runnable() {
-                @Override
-                public void run() {
-                    listViewAdd.performItemClick(listViewAdd, 0, listViewAdd.getItemIdAtPosition(0));
 
-                }
-            });
+            onData(anything()).inAdapterView(withId(R.id.listView_availableClasses)).atPosition(0).perform(click());
             onView(withId(R.id.button_addTutorClasses)).perform(click());
-            if(listViewRemove.getItemAtPosition(0).toString()!=item){
+            Cursor c = db.CheckTutorFromCourse("8888888888","Computer Science", "200");
+            c.moveToNext();
+            if(!c.getString(0).equals("Computer Science")||!c.getString(1).equals("200")){
                 fail();
             }
+
+
         } catch (Exception e){
             fail();
+        }
+
+    }
+    @Test
+    public void tutor_remove_course(){
+
+
+        navigate();
+        try {
+
+            onData(anything()).inAdapterView(withId(R.id.listView_myClasses)).atPosition(0).perform(click());
+            onView(withId(R.id.button_removeTutorClasses)).perform(click());
+            Cursor c = db.CheckTutorFromCourse("8888888888","Computer Science", "300");
+            c.moveToNext();
+            c.getString(0);
+            fail();
+        } catch (Exception e){
+
         }
 
     }
 
 
 
-*/
 
 }

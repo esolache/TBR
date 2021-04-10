@@ -749,6 +749,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return result;
     }
+    public Cursor CheckTutorFromCourse(String Tutor, String Subject, String CourseNumber) {
+        Cursor result;
+
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            result = db.rawQuery("SELECT subject, course_num FROM " + TABLE_NAME_TUTOR_C + " WHERE " + COL_1_TUTOR_C + " = ?" + " AND " + COL_2_TUTOR_C + " = ?" + " AND " + COL_3_TUTOR_C + " = ?", new String[] { Tutor, Subject, CourseNumber});
+
+        } catch (Exception e) {
+            throw new NullPointerException("No Such Subject");
+        }
+
+        return result;
+    }
 
     public ArrayList<String> getAvailableCourseTutorIDs(String Subject, String CourseNumber) {
         Cursor data;

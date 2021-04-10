@@ -292,6 +292,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void populateTutorCoursesAvailability() {
+
+
         try {
             database.addTutorCourse("1111111111",  "Computer Science", 200);
         } catch (Exception e) {
