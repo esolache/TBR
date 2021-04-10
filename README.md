@@ -8,9 +8,12 @@ The current release to demo is Iteration 2.0 with the tag 2.0
 In order to run the application in Android Studio, navigate to the "Run" tab on the top of your screen and press "Run...". This will create and emulator and install the app on the emulator. From there you can see the app. Since we won't be creating users, we will be giving test credentials that will give you access to each section.
 
 Student
+
     * NetId: student
+    
     * Password: student
 Tutor
+
     * NetId: tutor1
     * Password: tutor1
 Student/Tutor (Stutor)
