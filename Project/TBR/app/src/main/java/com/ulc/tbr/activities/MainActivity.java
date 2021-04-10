@@ -1146,13 +1146,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            database.addAvailability("1111111112", "04/27/2021", "09:00");
-        } catch (Exception e) {
-            // La di da I have nothing to say.
-
-        }
-
-        try {
             database.addAvailability("1111111112", "04/27/2021", "09:30");
         } catch (Exception e) {
             // La di da I have nothing to say.

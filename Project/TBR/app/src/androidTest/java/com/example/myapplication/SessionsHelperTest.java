@@ -54,7 +54,8 @@ public class SessionsHelperTest {
             e.printStackTrace();
         }
         ArrayList<Session> sessionList = db.getSessionsByStudentID("0000000000");
-        assertTrue(sessionList.get(4).toString().equals("04/20/2021 - 10:30: Data Science and Engineering 204"));
+        Log.d("Session", sessionList.get(0).toString());
+        assertTrue(sessionList.get(0).toString().equals("04/21/2021 - 10:30: Data Science and Engineering 204"));
     }
     @Test
     public void addTutorSessionT() {

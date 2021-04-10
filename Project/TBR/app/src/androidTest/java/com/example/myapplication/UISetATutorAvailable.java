@@ -111,11 +111,43 @@ public class UISetATutorAvailable {
                 });
         onData(is("01/24 - 01/30")).perform(click());
 
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(32).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(15).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(27).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(32).perform(click());
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(15).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(2).perform(click());
+        onView((withId(R.id.confirm_availability))).perform(click());
+
+    }
+
+    @Test
+    public void tutorCourses(){
+        Fragment g = new Fragment();
+        activityActivityTestRule.getActivity()
+                .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login,g);
+        onView(withId(R.id.net_ID)).perform(clearText(),typeText("tutor4"));
+        onView(withId(R.id.password)).perform(clearText(),typeText("tutor4"));
+        onView(withId(R.id.login)).perform(click());
+        onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf( isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Change Courses")).perform(click());
+
+        onData(anything()).inAdapterView(withId(R.id.listView_availableClasses)).atPosition(0).perform(click());
+        onView(withId(R.id.button_addTutorClasses)).perform(click());
+        onData(anything()).inAdapterView(withId(R.id.listView_myClasses)).atPosition(0).perform(click());
+        onView(withId(R.id.button_removeTutorClasses)).perform(click());
+
 
     }
 

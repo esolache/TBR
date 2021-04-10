@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -42,8 +43,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasToString;
 import static org.hamcrest.Matchers.instanceOf;
@@ -51,7 +52,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -70,8 +70,8 @@ public class UIGetATutorTest {
         Fragment g = new Fragment();
         activityActivityTestRule.getActivity()
                 .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login, g);
-        onView(withId(R.id.net_ID)).perform(clearText(), typeText("testTutor"));
-        onView(withId(R.id.password)).perform(clearText(), typeText("testTutor"));
+        onView(withId(R.id.net_ID)).perform(clearText(), typeText("student"));
+        onView(withId(R.id.password)).perform(clearText(), typeText("student"));
         onView(withId(R.id.login)).perform(click());
         onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
 
@@ -95,7 +95,6 @@ public class UIGetATutorTest {
 
         onData(is("Get A Tutor")).perform(click());
     }
-
 
     @Test
     public void student_should_get_from_login() {
@@ -253,6 +252,96 @@ public class UIGetATutorTest {
         } catch (Exception e){
             fail();
         }
+
+    }
+
+    @Test
+    public void getATutor() {
+        Fragment g = new Fragment();
+        activityActivityTestRule.getActivity()
+                .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login, g);
+        onView(withId(R.id.net_ID)).perform(clearText(), typeText("student"));
+        onView(withId(R.id.password)).perform(clearText(), typeText("student"));
+        onView(withId(R.id.login)).perform(click());
+        onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
+
+        onView(withId(R.id.spinner_homeMenu)).check(matches(allOf(isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+
+        onData(is("Get A Tutor")).perform(click());
+        onView(withId(R.id.spinner_week)).check(matches(allOf(isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("01/24 - 01/30")).perform(click());
+        onView(withId(R.id.spinner_subject)).check(matches(allOf(isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Computer Science")).perform(click());
+        onView(withId(R.id.spinner_course)).check(matches(allOf(isEnabled(), isClickable())))
+                .perform(new ViewAction() {
+                    @Override
+                    public Matcher<View> getConstraints() {
+                        return ViewMatchers.isEnabled(); // no constraints, they are checked above
+                    }
+
+                    @Override
+                    public String getDescription() {
+                        return "click button";
+                    }
+
+                    @Override
+                    public void perform(UiController uiController, View view) {
+                        view.performClick();
+                    }
+                });
+        onData(is("Programming 1 200")).perform(click());
+        onData(is("Super Smart 01/26/2021 10:00 false")).inAdapterView(withId(R.id.listView_timeblock)).perform(click());
+        onView(withId(R.id.button_cancel)).perform(click());
+        onData(is("Super Smart 01/26/2021 10:00 false")).inAdapterView(withId(R.id.listView_timeblock)).perform(click());
+        onView(withId(R.id.button_confirm)).perform(click());
 
     }
 }

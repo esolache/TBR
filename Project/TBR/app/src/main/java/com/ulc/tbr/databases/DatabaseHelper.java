@@ -566,20 +566,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 //        return tutorAvailabilityList;
 //    }
 
-//    public Cursor getTutorAvailability(String TutorID) {
-//        Cursor result;
-//
-//        try {
-//            SQLiteDatabase db = this.getWritableDatabase();
-//            result = db.rawQuery("SELECT * FROM " + TABLE_NAME_TUTOR_A + " WHERE " + COL_1_TUTOR_A + " = ?", new String[] {TutorID});
-//
-//        }
-//        catch (Exception e) {
-//            return null;
-//        }
-//
-//        return result;
-//    }
+    public Cursor getTutorAvailability(String TutorID) {
+        Cursor result;
+
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            result = db.rawQuery("SELECT * FROM " + TABLE_NAME_TUTOR_A + " WHERE " + COL_1_TUTOR_A + " = ?", new String[] {TutorID});
+
+        }
+        catch (Exception e) {
+            return null;
+        }
+
+        return result;
+    }
 
     public Cursor getTutorAvailabilityOnDateCursor(String TutorID, String Date) {
         Cursor result;
