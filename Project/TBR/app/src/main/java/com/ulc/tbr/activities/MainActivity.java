@@ -363,6 +363,16 @@ public class MainActivity extends AppCompatActivity {
             // La di da I have nothing to say.
         }
 
+        try {
+            database.addAvailability("8888888888", "01/27/2021", "07:00");
+        } catch (Exception e) {
+            // La di da I have nothing to say.
+        }
+        try {
+            database.modifySessionIsAvailable("8888888888", "01/27/2021", "07:00", true);
+        } catch (Exception e){
+
+        }
 
 
             try {

@@ -240,6 +240,7 @@ public class UIGetATutorTest {
         String courseSpinnerText = "Programming 1 200";
         try {
             navigate();
+            onView(withId(R.id.button_prevWeek)).perform(click());
             onView(withId(R.id.button_nextWeek)).perform(click());
             // Subject Spinner
             onView(withId(R.id.spinner_subject)).perform(click());
@@ -344,4 +345,7 @@ public class UIGetATutorTest {
         onView(withId(R.id.button_confirm)).perform(click());
 
     }
+
+
+
 }
