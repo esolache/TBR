@@ -1,6 +1,9 @@
 # TBR
 UW-Madison CS 506 Software Engineering Undergraduate Learning Center Tutoring By Request (https://www.engr.wisc.edu/academics/student-services/ulc/tutoring-by-request/) Mobile Application Android Studio 
 
+# Release Information
+The current release to demo is Iteration 2.0 with the tag 2.0
+
 # Running the TBR App in Android Studio
 In order to run the application in Android Studio, navigate to the "Run" tab on the top of your screen and press "Run...". This will create and emulator and install the app on the emulator. From there you can see the app. Since we won't be creating users, we will be giving test credentials that will give you access to each section.
 
