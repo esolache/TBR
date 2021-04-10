@@ -352,6 +352,20 @@ public class MainActivity extends AppCompatActivity {
 
     public void populateAvailability(){
         try {
+            database.addAvailability("8888888888", "01/26/2021", "07:00");
+        } catch (Exception e) {
+            // La di da I have nothing to say.
+        }
+
+        try {
+            database.addAvailability("8888888888", "01/25/2021", "07:00");
+        } catch (Exception e) {
+            // La di da I have nothing to say.
+        }
+
+
+
+            try {
             database.addAvailability("1111111112", "01/26/2021", "04:00");
         } catch (Exception e) {
             // La di da I have nothing to say.
