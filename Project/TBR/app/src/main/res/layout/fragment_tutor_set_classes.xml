@@ -60,7 +60,7 @@
 
 
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingLeft="0dp"
@@ -116,15 +116,15 @@
                     android:id="@+id/listView_availableClasses"
                     android:layout_width="wrap_content"
                     android:layout_height="200dp"
+                    android:layout_marginTop="25dp"
+                    android:background="@drawable/border"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginTop="25dp"
-                    android:background="@drawable/border"
-                    >
+                    app:layout_constraintTop_toTopOf="parent">
 
                 </ListView>
+
                 <Button
                     android:id="@+id/button_addTutorClasses"
                     android:layout_width="227dp"
