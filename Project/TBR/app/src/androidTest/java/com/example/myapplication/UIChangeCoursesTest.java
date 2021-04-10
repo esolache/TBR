@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.view.View;
+import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 import androidx.test.espresso.UiController;
@@ -27,8 +28,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.isClickable;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 
@@ -182,8 +185,34 @@ public class UIChangeCoursesTest {
             fail();
         }
     }
+/*
+    @Test
+    public void tutor_add_course(){
+        navigate();
+        final ListView listViewAdd = (ListView) withId(R.id.listView_availableClasses);
+        final ListView listViewRemove = (ListView) withId(R.id.listView_myClasses);
+        assertNotNull("The list was not loaded", listViewAdd);
+        try {
+            String item = listViewAdd.getItemAtPosition(0).toString();
+            getInstrumentation().runOnMainSync(new Runnable() {
+                @Override
+                public void run() {
+                    listViewAdd.performItemClick(listViewAdd, 0, listViewAdd.getItemIdAtPosition(0));
+
+                }
+            });
+            onView(withId(R.id.button_addTutorClasses)).perform(click());
+            if(listViewRemove.getItemAtPosition(0).toString()!=item){
+                fail();
+            }
+        } catch (Exception e){
+            fail();
+        }
+
+    }
 
 
 
+*/
 
 }

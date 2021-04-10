@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.Spinner;
 
 import androidx.fragment.app.Fragment;
@@ -41,6 +42,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withSpinnerText;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasToString;
@@ -49,6 +51,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -67,8 +70,8 @@ public class UIGetATutorTest {
         Fragment g = new Fragment();
         activityActivityTestRule.getActivity()
                 .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login, g);
-        onView(withId(R.id.net_ID)).perform(clearText(), typeText("student"));
-        onView(withId(R.id.password)).perform(clearText(), typeText("student"));
+        onView(withId(R.id.net_ID)).perform(clearText(), typeText("testTutor"));
+        onView(withId(R.id.password)).perform(clearText(), typeText("testTutor"));
         onView(withId(R.id.login)).perform(click());
         onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
 
@@ -92,6 +95,7 @@ public class UIGetATutorTest {
 
         onData(is("Get A Tutor")).perform(click());
     }
+
 
     @Test
     public void student_should_get_from_login() {
