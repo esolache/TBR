@@ -10,12 +10,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,14 +23,10 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.ulc.tbr.activities.MainActivity;
 import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
-import com.ulc.tbr.fragments.common.Adapters.CalendarAdapter;
 import com.ulc.tbr.models.util.*;
 import com.ulc.tbr.models.users.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import static com.ulc.tbr.fragments.common.Adapters.CalendarAdapter.gridSlots;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,39 +44,6 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
     User user;
     boolean isTutor;
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    private GridView calendar;
-    private CalendarAdapter adapter_calendar;
-    String[] headerText = {"Time","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
-    String[] slotText = {
-            "07:00am","","","","","","","",
-            "07:30am","","","","","","","",
-            "08:00am","","","","","","","",
-            "08:30am","","","","","","","",
-            "09:00am","","","","","","","",
-            "09:30am","","","","","","","",
-            "10:00am","","","","","","","",
-            "10:30am","","","","","","","",
-            "11:00am","","","","","","","",
-            "11:30am","","","","","","","",
-            "12:00pm","","","","","","","",
-            "12:30pm","","","","","","","",
-            "01:00pm","","","","","","","",
-            "01:30pm","","","","","","","",
-            "02:00pm","","","","","","","",
-            "02:30pm","","","","","","","",
-            "03:00pm","","","","","","","",
-            "03:30pm","","","","","","","",
-            "04:00pm","","","","","","","",
-            "04:30pm","","","","","","","",
-            "05:00pm","","","","","","","",
-            "05:30pm","","","","","","","",
-            "06:00pm","","","","","","","",
-            "06:30pm","","","","","","","",
-            "07:00pm","","","","","","","",
-            "07:30pm","","","","","","",""
-    } ;
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
     // UPPER MENU BEGIN
     Spinner spinner_homeMenu;
     ArrayList<String> homeMenu;
@@ -237,83 +198,6 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
             homeMenu = null;
             currFragmentIndex = 0;
         }
-
-
-
-
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////
-        adapter_calendar = new CalendarAdapter(getContext(),slotText);
-
-
-        calendar=(GridView) view.findViewById(R.id.get_a_tutor_calendar);
-        calendar.setAdapter(adapter_calendar);
-        calendar.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Toast.makeText(getContext(), "You Clicked at " +slotText[+ position], Toast.LENGTH_SHORT).show();
-                if(!spinner_week.getSelectedItem().toString().equals("Select a week")) {
-                    int row = (position / 8);
-                    int col = position % 8;
-
-                    if(gridSlots[row][col] == 2){
-                        gridSlots[row][col] = 1;
-
-                        String date = dateConverter(spinner_week.getSelectedItem().toString(), col);
-                        String time= timeConverter(timeConverter(slotText[row*8]));
-                        String courseNo = spinner_course.getSelectedItem().toString();
-                        courseNo = courseNo.substring(courseNo.length()-3);
-
-
-
-                        String subject = spinner_subject.getSelectedItem().toString();
-
-                        Session newSession = new Session(user.getStudentID(), null , date , time, subject, Integer.parseInt(courseNo), "Virtual", "", sessionID++);
-
-
-                        TutorAvailablity newTutorAvailability = new TutorAvailablity(null, null, date, time, false);
-
-                        // Tutor and Description for session is to be set in showSessionConfirmationPopup
-                        showSessionConfirmationPopup(view, newSession, newTutorAvailability);
-
-
-
-                    }else if(gridSlots[row][col] == 1) {
-                        gridSlots[row][col] = 2;
-
-
-
-
-                       /* String date = dateConverter(spinner_week.getSelectedItem().toString(), col);
-                        String time= timeConverter(timeConverter(slotText[row*8]));
-                        String course = spinner_course.getSelectedItem().toString();
-                        course = course.substring(course.length()-3);
-                        selectSessionPopup(view, date, course, time);
-                    */
-                    }
-
-                    adapter_calendar.notifyDataSetChanged();
-
-
-
-
-
-
-
-
-                }
-            }
-        });
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
 
         adapter_homeMenu = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, homeMenu);
         spinner_homeMenu.setAdapter(adapter_homeMenu);
@@ -545,30 +429,6 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         if (parent.getId() == R.id.spinner_course) {
             if (spinner_course.getSelectedItemPosition() != 0) { // If a subject is selected
                 populateSessionListView();
-                for (int[] row : gridSlots) {
-                    Arrays.fill(row, 0);
-                }
-                adapter_calendar.notifyDataSetChanged();
-                if(!spinner_week.getSelectedItem().toString().equals("Select a week")) {
-//                    03/28 - 04/03
-                    String[] week = weekConverter(spinner_week.getSelectedItem().toString());
-                    try {
-                        for (TutorAvailablity avail : tutorAvailablity_session) {
-                            String tempDate = avail.getDate();
-                            String tempTime = avail.getTime();
-                            Boolean tempBooked = avail.isBooked();
-                            if (!tempBooked) {
-                                int col = dayToColumn(tempDate, spinner_week.getSelectedItem().toString());
-                                int row = timeToRow(tempTime);
-                                gridSlots[row][col] = 2;
-                            }
-                            adapter_calendar.notifyDataSetChanged();
-                        }
-                    } catch (Exception e) {
-
-                    }
-
-                }
             }
 
         }
@@ -953,39 +813,32 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
 
     // CONFIRMATION AND ADD DESCRIPTION FOR CREATE SESSION
-
-
-
     public void showSessionConfirmationPopup(View view, Session session, TutorAvailablity availablity) {
+        // View popupView = LayoutInflater.from(p.getContext()).inflate(R.layout.popup, null);
+
+        //Fragment popup =
+
+        //View popupView = LayoutInflater.from(view_viewGroup.getContext()).inflate(R.layout.get_a_tutor_confirm_session_popup, null);
+        // newView.getWidth(), newView.getHeight(),
+
+
+        //newView.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        //newView.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
+        //newView.setHeight(view.getMeasuredHeight());
 
         LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(view.getContext().LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.get_a_tutor_confirm_session_popup, view_viewGroup, false);
 
         PopupWindow popup = new PopupWindow(popupView, 1000 , 1000, true);
         popup.setOutsideTouchable(true);
+        //popup.setContentView(view);
         popup.showAtLocation(view, Gravity.CENTER, 0, 0);
+        //p// opup.update(50, 50, 300, 80);
+        //click = false;
 
-        Spinner spinner_tutor = (Spinner) popupView.findViewById(R.id.spinner_tutor);
-        ArrayList<TutorAvailablity> available_tutor;
-        available_tutor = new ArrayList<TutorAvailablity>();
-
-        available_tutor = database.getTutorAvailabilitiesOnDateAndTime("" + session.getCourseNo(), availablity.getDate(), availablity.getTime());
-
-        ArrayList<String> available_tutor_names;
-        available_tutor_names = new ArrayList<String>();
-
-        for ( TutorAvailablity tutors : available_tutor  ) {
-            available_tutor_names.add(tutors.getTutorName());
-
-        }
-
-        ArrayAdapter<String> adapter_tutor = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_tutor_names );
-        spinner_tutor.setAdapter(adapter_tutor);
-        spinner_tutor.setSelection(0, true);
-
-
-
-
+//        final PopupWindow popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+//        ((TextView)popupWindow.getContentView().findViewById(R.id.text_popup)).setText(order);
         Spinner spinner_location = (Spinner) popupView.findViewById(R.id.spinner_location);
         ArrayList<String> available_location;
         available_location = new ArrayList<String>();
@@ -1050,93 +903,6 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
         // popupWindow.showAtLocation(popupView, Gravity.AXIS_Y_SHIFT, 0, 10);
     }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public String dateConverter(String week, int col){
-        String toReturn = "";
-        int daysLeft = 7 - Integer.parseInt(week.substring(11));
-        if(!week.substring(0,2).equals(week.substring(8,10)) && daysLeft < col) {
-            int date = col - daysLeft ;
-            if(date >= 10) {
-                toReturn = week.substring(8, 11) + String.valueOf(date) + "/2021";
-            }else{
-                toReturn = week.substring(8, 11) + "0" + String.valueOf(date) + "/2021";
-            }
-        }else{
-            int date = Integer.parseInt(week.substring(3,5)) + col - 1;
-            if(date>=10){
-                toReturn = week.substring(0,3) + String.valueOf(date) + "/2021";
-            }else{
-                toReturn = week.substring(0,3) + "0" + String.valueOf(date) + "/2021";
-            }
-        }
-        return toReturn;
-    }
-
-    public String timeConverter(String time){
-        int hour = Integer.parseInt(time.substring(0,2));
-        if(time.substring(5).equals("pm") && hour != 12){
-            hour += 12;
-        }
-        String toReturn;
-        if(hour >= 10) {
-            toReturn = String.valueOf(hour) + ":" + time.substring(3, 5);
-        }else{
-            toReturn = "0" + String.valueOf(hour) + ":" + time.substring(3, 5);
-        }
-        return toReturn;
-    }
-    public int timeToRow(String time){
-        int row = (Integer.parseInt(time.substring(0,2)) - 7)*2;
-        if(time.substring(3,5).equals("30")){
-            row += 1;
-        }
-
-        return row;
-    }
-    public int dayToColumn(String day, String week){
-        int col = 0;
-        if(week.substring(0,2).equals(day.substring(0,2))){
-            int start = Integer.parseInt(week.substring(3,5));
-            col = Integer.parseInt(day.substring(3,5)) - start + 1;
-        }else{
-            int diff = Integer.parseInt(week.substring(11)) - Integer.parseInt(day.substring(3,5));
-            col = 7 - diff;
-        }
-        return col;
-    }
-    public String[] weekConverter(String week){
-        String[] toReturn = new String[7];
-        int day = Integer.parseInt(week.substring(11));
-        int i = 0;
-        while(day!=0 && i!=7){
-            String sDay;
-            if(day >= 10){
-                sDay = String.valueOf(day);
-            }else{
-                sDay = "0" + String.valueOf(day);
-            }
-            toReturn[6-i] = week.substring(8,11)+ sDay + "/2021";
-            i++;
-            day--;
-        }
-
-        if(day==0 && i!=7){
-            int day2 = Integer.parseInt(week.substring(3,5));
-
-            for(int j=0; j< 7-i; j++) {
-                String sDay = sDay = String.valueOf(day2);
-                toReturn[j] = week.substring(0, 3) + sDay + "/2021";
-                day2++;
-            }
-        }
-
-        return toReturn;
-    }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 }
 
