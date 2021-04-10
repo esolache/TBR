@@ -10,13 +10,13 @@ In order to run the application in Android Studio, navigate to the "Run" tab on 
 Student
 
     * NetId: student
-    
     * Password: student
 Tutor
 
     * NetId: tutor1
     * Password: tutor1
 Student/Tutor (Stutor)
+
     * NetId: stutor
     * Password: stutor
 
