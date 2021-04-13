@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/TBR.iml" filepath="$PROJECT_DIR$/.idea/modules/TBR.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/TBR.iml" filepath="$PROJECT_DIR$/.idea/TBR.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/TBR.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/TBR.app.iml" />
     </modules>
   </component>
