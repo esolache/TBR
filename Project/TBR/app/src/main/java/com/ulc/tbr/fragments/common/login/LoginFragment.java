@@ -3,6 +3,7 @@ package com.ulc.tbr.fragments.common.login;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +23,13 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.ulc.tbr.activities.MainActivity;
 import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
@@ -35,6 +39,9 @@ import com.ulc.tbr.databases.DatabaseHelper;
 //import com.ulc.tbr.fragments.common.login.util.LoginViewModel;
 //import com.ulc.tbr.fragments.common.login.util.LoginViewModelFactory;
 import com.ulc.tbr.models.users.User;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginFragment extends Fragment {
    // private LoginViewModel loginViewModel;
@@ -155,32 +162,50 @@ public class LoginFragment extends Fragment {
 //                    Toast.makeText(getContext().getApplicationContext(), "NetID or Password is incorrect", Toast.LENGTH_LONG).show();
 //                }
                 // TODO: This is new implement
-                String databasePassword = getPassword(passwordEditText.getText().toString());
-                if (databasePassword.equals(passwordEditText.getText().toString())){
-                    Toast.makeText(getContext(), "Logging In", Toast.LENGTH_LONG).show();
-                }
+                String username = netIDEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+                username = "student";
+                password = "student";
+                Boolean validLogin = validateLogin(username, password);
+//                String databasePassword = getPassword(passwordEditText.getText().toString());
+//                if (databasePassword.equals(passwordEditText.getText().toString())){
+//                    Toast.makeText(getContext(), "Logging In", Toast.LENGTH_LONG).show();
+//                }
 
             }
         });
 
     }
 
-    private String getPassword(String username) {
-        String url = "GET URL";
-        final String[] returnPassword = {""};
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                returnPassword[0] = response.toString();
-                Toast.makeText(getContext(), response.toString(), Toast.LENGTH_LONG).show();
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+    private Boolean validateLogin(String username, String password) {
+//        Boolean validLogin = true;
+//        String url = "http://10.0.2.2/android_connect/get_login.php";
+////        final String[] returnPassword = {""};
+//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+////                netIDEditText
+////                returnPassword[0] = response.toString();
+//                Toast.makeText(getContext(), response.toString(), Toast.LENGTH_LONG).show();
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
 
-            }
-        });
+//            }
+//        }) {
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Map<String, String> Params = new HashMap<String, String>();
+//                Params.put("netid", username);
+//                Params.put("password", password);
+//                return Params;
+//            }
+//        };
+//        Mysingleton.getInstance(getActivity()).addTorequestque(stringRequest);
+        //TODO:
+//        if (null response) incorrecet login
 
-        return returnPassword[0];
+        return false;
     }
 }
