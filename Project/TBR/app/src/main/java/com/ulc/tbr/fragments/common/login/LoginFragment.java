@@ -178,31 +178,32 @@ public class LoginFragment extends Fragment {
     }
 
     private Boolean validateLogin(String username, String password) {
-//        Boolean validLogin = true;
-//        String url = "http://10.0.2.2/android_connect/get_login.php";
-////        final String[] returnPassword = {""};
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-////                netIDEditText
-////                returnPassword[0] = response.toString();
-//                Toast.makeText(getContext(), response.toString(), Toast.LENGTH_LONG).show();
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
+        Boolean validLogin = true;
+        String url = "http://10.0.2.2/android_connect/get_login.php";
+//        final String[] returnPassword = {""};
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+//                netIDEditText
+//                returnPassword[0] = response.toString();
+                Log.i("Anthropocentric", response);
+                Toast.makeText(getContext(), response.toString(), Toast.LENGTH_LONG).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
 
-//            }
-//        }) {
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                Map<String, String> Params = new HashMap<String, String>();
-//                Params.put("netid", username);
-//                Params.put("password", password);
-//                return Params;
-//            }
-//        };
-//        Mysingleton.getInstance(getActivity()).addTorequestque(stringRequest);
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("netid", username);
+                Params.put("password", password);
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getActivity()).addTorequestque(stringRequest);
         //TODO:
 //        if (null response) incorrecet login
 
