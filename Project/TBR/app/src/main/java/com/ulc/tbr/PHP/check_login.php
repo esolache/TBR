@@ -31,9 +31,12 @@
     {
     $row = $result->fetch_assoc();
     $array = array(
-        "name" => $row['name'],
         "student_id" => $row['student_id'],
         "net_id" => $row['net_id'],
+        "name" => $row['name'],
+        "email" => $row['email'],
+        "tutor" => $row['tutor'],
+        "tutee" => $row['tutee'],
     );
     // $myObj->student_id = $row['student_id'];
     // $myObj->name = $row['name'];
