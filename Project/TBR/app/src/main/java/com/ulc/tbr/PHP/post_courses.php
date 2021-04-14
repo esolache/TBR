@@ -17,13 +17,13 @@
         $sql = "insert tutor_availability_table values ('".$subject."', '".$course."', '".$courseNumber."')";
         $result = mysqli_query($con,$sql);
     }
-    else{
-        $tutorID = "9999999999";
-        $subject = "test";
-        $courseNumber = "123";
-        $sql = "insert tutor_courses_table values ('".$tutorID."', '".$subject."', '".$courseNumber."')";
-        $result = mysqli_query($con,$sql);
-    }
+    // else{
+    //     $tutorID = "9999999999";
+    //     $subject = "test";
+    //     $courseNumber = "123";
+    //     $sql = "insert tutor_courses_table values ('".$tutorID."', '".$subject."', '".$courseNumber."')";
+    //     $result = mysqli_query($con,$sql);
+    // }
 
     if(!$result){
         echo 'insert failed';

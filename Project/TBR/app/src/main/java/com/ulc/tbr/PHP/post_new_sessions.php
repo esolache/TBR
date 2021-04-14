@@ -27,24 +27,26 @@
         $courseNumber = $_REQUEST["courseNumber"];
         $location = $_REQUEST["location"];
         $description = $_REQUEST["description"];
-        $sql = "insert sessions_table values ('".$studentID."', '".$tutorID."', '".$date."',
-                    '".$time."', '".$subject."', '".$courseNumber."', '".$location."', '".$description."')";
+        $sql = "insert into sessions_table (student_id, tutor_id, date, time, subject, course_number, location, description)
+              values ('".$studentID."', '".$tutorID."', '".$date."','".$time."',
+               '".$subject."', '".$courseNumber."', '".$location."', '".$description."')";
         $result = mysqli_query($con,$sql);
     }
-    else{
-        $studentID = '1';
-        $tutorID = '2';
-        $date = '01/01/2021';
-        $time = '1:00';
-        $subject = 'test';
-        $courseNumber = '123';
-        $location = 'test';
-        $description = 'test';
-        // $sql = "insert tutor_availability_table values ('".$subject."', '".$course."', '".$courseNumber."')";
-        $sql = "insert sessions_table values ('".$studentID."', '".$tutorID."', '".$date."',
-                    '".$time."', '".$subject."', '".$courseNumber."', '".$location."', '".$description."')";
-        $result = mysqli_query($con,$sql);
-    }
+    // else{
+    //     $studentID = '1';
+    //     $tutorID = '2';
+    //     $date = '01/01/2021';
+    //     $time = '1:00';
+    //     $subject = 'test';
+    //     $courseNumber = '123';
+    //     $location = 'test';
+    //     $description = 'test';
+    //     // $sql = "insert tutor_availability_table values ('".$subject."', '".$course."', '".$courseNumber."')";
+    //     $sql = "insert into sessions_table (student_id, tutor_id, date, time, subject, course_number, location, description)
+    //           values ('".$studentID."', '".$tutorID."', '".$date."','".$time."',
+    //            '".$subject."', '".$courseNumber."', '".$location."', '".$description."')";
+    //     $result = mysqli_query($con,$sql);
+    // }
 
     if(!$result){
         echo 'insert failed';
