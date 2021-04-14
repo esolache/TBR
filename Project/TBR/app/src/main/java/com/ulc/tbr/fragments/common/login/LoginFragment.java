@@ -132,33 +132,40 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadingProgressBar.setVisibility(View.VISIBLE);
-//                loginViewModel.login(netIDEditText.getText().toString(),
-//                        passwordEditText.getText().toString());
-
-                boolean login = false;
-                if (users.getPassword(netIDEditText.getText().toString()).equals(passwordEditText.getText().toString())) {
-                    login = true;
+                // TODO: This is original implement
+//                loadingProgressBar.setVisibility(View.VISIBLE);
+////                loginViewModel.login(netIDEditText.getText().toString(),
+////                        passwordEditText.getText().toString());
+//
+//                boolean login = false;
+//                if (users.getPassword(netIDEditText.getText().toString()).equals(passwordEditText.getText().toString())) {
+//                    login = true;
+//                }
+//                if (login) {
+//                    user = users.getUser(netIDEditText.getText().toString());
+//
+//                    Bundle userData = new Bundle();
+//                    userData.putSerializable("user", user);
+//
+//                    NavHostFragment.findNavController(LoginFragment.this)
+//                            .navigate(R.id.action_login, userData);
+//
+//
+//                } else {
+//                    Toast.makeText(getContext().getApplicationContext(), "NetID or Password is incorrect", Toast.LENGTH_LONG).show();
+//                }
+                // TODO: This is new implement
+                String databasePassword = getPassword(passwordEditText.getText().toString());
+                if (databasePassword.equals(passwordEditText.getText().toString())){
+                    Toast.makeText(getContext(), "Logging In", Toast.LENGTH_LONG).show();
                 }
-                if (login) {
-                    user = users.getUser(netIDEditText.getText().toString());
 
-                    Bundle userData = new Bundle();
-                    userData.putSerializable("user", user);
-
-                    NavHostFragment.findNavController(LoginFragment.this)
-                            .navigate(R.id.action_login, userData);
-
-
-                } else {
-                    Toast.makeText(getContext().getApplicationContext(), "NetID or Password is incorrect", Toast.LENGTH_LONG).show();
-                }
             }
         });
 
     }
 
-    private String getPassword(String username, String password) {
+    private String getPassword(String username) {
         String url = "GET URL";
         final String[] returnPassword = {""};
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
