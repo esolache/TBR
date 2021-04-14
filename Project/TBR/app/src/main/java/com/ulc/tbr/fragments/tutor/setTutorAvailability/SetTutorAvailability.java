@@ -411,21 +411,24 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
 
 
     public String dateConverter(String week, int col){
+        //   03/28 - 04/03
+        //   03/28/2020 - 04/03/2020
+
         String toReturn = "";
-        int daysLeft = 7 - Integer.parseInt(week.substring(11));
-        if(!week.substring(0,2).equals(week.substring(8,10)) && daysLeft < col) {
+        int daysLeft = 7 - Integer.parseInt(week.substring(16, 18));
+        if(!week.substring(0,2).equals(week.substring(14,16)) && daysLeft < col) {
             int date = col - daysLeft ;
             if(date >= 10) {
-                toReturn = week.substring(8, 11) + String.valueOf(date) + "/2021";
+                toReturn = week.substring(14, 17) + String.valueOf(date) + week.substring(18);
             }else{
-                toReturn = week.substring(8, 11) + "0" + String.valueOf(date) + "/2021";
+                toReturn = week.substring(14, 17) + "0" + String.valueOf(date) + week.substring(18);
             }
         }else{
             int date = Integer.parseInt(week.substring(3,5)) + col - 1;
             if(date>=10){
-                toReturn = week.substring(0,3) + String.valueOf(date) + "/2021";
+                toReturn = week.substring(0,3) + String.valueOf(date) + week.substring(5, 10);
             }else{
-                toReturn = week.substring(0,3) + "0" + String.valueOf(date) + "/2021";
+                toReturn = week.substring(0,3) + "0" + String.valueOf(date) + week.substring(5, 10);
             }
         }
         return toReturn;
@@ -464,8 +467,11 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
         return col;
     }
     public String[] weekConverter(String week){
+        //   03/28 - 04/03
+        //   03/28/2020 - 04/03/2020
+
         String[] toReturn = new String[7];
-        int day = Integer.parseInt(week.substring(11));
+        int day = Integer.parseInt(week.substring(16, 18)); //11
         int i = 0;
         while(day!=0 && i!=7){
             String sDay;
@@ -474,7 +480,7 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
             }else{
                 sDay = "0" + String.valueOf(day);
             }
-            toReturn[6-i] = week.substring(8,11)+ sDay + "/2021";
+            toReturn[6-i] = week.substring(13,16) + sDay + week.substring(18);//8,11
             i++;
             day--;
         }
@@ -484,12 +490,11 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
 
             for(int j=0; j< 7-i; j++) {
                 String sDay = sDay = String.valueOf(day2);
-                toReturn[j] = week.substring(0, 3) + sDay + "/2021";
+                toReturn[j] = week.substring(0, 3) + sDay + week.substring(5,10);
                 day2++;
             }
         }
 
         return toReturn;
     }
-
 }
