@@ -22,6 +22,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.ulc.tbr.activities.MainActivity;
 import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
@@ -145,104 +149,31 @@ public class LoginFragment extends Fragment {
                     NavHostFragment.findNavController(LoginFragment.this)
                             .navigate(R.id.action_login, userData);
 
-//                    if (user.isTutor() && user.isTutee()) {
-//                        NavHostFragment.findNavController(com.example.myapplication.ui.login.LoginFragment.this)
-//                                .navigate(R.id.action_loginFragment_to_studentTutorHome,userData);
-//                    } else if (user.isTutee()) {
-//                        NavHostFragment.findNavController(com.example.myapplication.ui.login.LoginFragment.this)
-//                                .navigate(R.id.action_loginFragment_to_studentHome,userData);
-//                    }else if (user.isTutor()) {
-//                        NavHostFragment.findNavController(com.example.myapplication.ui.login.LoginFragment.this)
-//                                .navigate(R.id.action_loginFragment_to_tutorHome,userData);
-//                    }
+
                 } else {
                     Toast.makeText(getContext().getApplicationContext(), "NetID or Password is incorrect", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
-//        registerButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try {
-//                    if (tutor.isChecked() && student.isChecked()) {
-//                        users.addData(1000, emailEditText.getText().toString(), passwordEditText.getText().toString(), nameEditText.getText().toString(), emailEditText.getText().toString(),
-//                                true, true);
-//                    } else if (student.isChecked()) {
-//                        users.addData(1000, emailEditText.getText().toString(), passwordEditText.getText().toString(), nameEditText.getText().toString(), emailEditText.getText().toString(),
-//                                false, true);
-//                    } else if (tutor.isChecked()) {
-//                        users.addData(1000, emailEditText.getText().toString(), passwordEditText.getText().toString(), nameEditText.getText().toString(), emailEditText.getText().toString(),
-//                                true, false);
-//                    } else {
-//                    }
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                user.setNetID(emailEditText.getText().toString());
-//                user.setPassword(passwordEditText.getText().toString());
-//                if (tutor.isChecked()) {user.setTutor(true);}
-//                if (student.isChecked()) {user.setTutee(true);}
-//                Bundle userData = new Bundle();
-//                userData.putSerializable("user", user);
-//
-//                if (user.isTutor() && user.isTutee()) {
-//                    Log.d("my", String.valueOf(user.isTutor()));
-//                    Log.d("12", String.valueOf(user.isTutee()));
-//                    NavHostFragment.findNavController(com.example.myapplication.ui.login.LoginFragment.this)
-//                            .navigate(R.id.action_loginFragment_to_studentTutorHome,userData);
-//                } else if (user.isTutee()) {
-//                    NavHostFragment.findNavController(com.example.myapplication.ui.login.LoginFragment.this)
-//                            .navigate(R.id.action_loginFragment_to_studentHome,userData);
-//                }else if (user.isTutor()) {
-//                    NavHostFragment.findNavController(com.example.myapplication.ui.login.LoginFragment.this)
-//                            .navigate(R.id.action_loginFragment_to_tutorHome,userData);
-//                }
-//                //loadingProgressBar.setVisibility(View.VISIBLE);
-//                // loginViewModel.login(usernameEditText.getText().toString(),passwordEditText.getText().toString());
-//            }
-//        });
-        // TODO: Remove all these buttons
-//        studentButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v) {
-//                NavHostFragment.findNavController(com.example.myapplication.ui.login.LoginFragment.this)
-//                        .navigate(R.id.action_loginFragment_to_studentHome);
-//            }
-//        });
-//
-//        tutorButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v) {
-//                NavHostFragment.findNavController(com.example.myapplication.ui.login.LoginFragment.this)
-//                        .navigate(R.id.action_loginFragment_to_tutorHome);
-//            }
-//        });
-//
-//        studentAndTutorButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v) {
-//                NavHostFragment.findNavController(com.example.myapplication.ui.login.LoginFragment.this)
-//                        .navigate(R.id.action_loginFragment_to_studentTutorHome);
-//            }
-//        });
     }
 
-//    private void updateUiWithUser(LoggedInUserView model) {
-//        String welcome = getString(R.string.welcome) + model.getDisplayName();
-//        // TODO : initiate successful logged in experience
-//        if (getContext() != null && getContext().getApplicationContext() != null) {
-//            Toast.makeText(getContext().getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-//        }
-//    }
+    private String getPassword(String username, String password) {
+        String url = "GET URL";
+        final String[] returnPassword = {""};
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                returnPassword[0] = response.toString();
+                Toast.makeText(getContext(), response.toString(), Toast.LENGTH_LONG).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
 
-//    private void showLoginFailed(@StringRes Integer errorString) {
-//        if (getContext() != null && getContext().getApplicationContext() != null) {
-//            Toast.makeText(
-//                    getContext().getApplicationContext(),
-//                    errorString,
-//                    Toast.LENGTH_LONG).show();
-//        }
-//    }
+            }
+        });
+
+        return returnPassword[0];
+    }
 }
