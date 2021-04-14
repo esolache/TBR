@@ -3,8 +3,9 @@
     <CLASSES>
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/aa9c2c3f6f60dfc912a9162064f07427/uiautomator-2.2.0/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/402f3ec9ae78b60a0c9dc5a5d072b38f/uiautomator-2.2.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/402f3ec9ae78b60a0c9dc5a5d072b38f/uiautomator-2.2.0/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/402f3ec9ae78b60a0c9dc5a5d072b38f/uiautomator-2.2.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e86aa6e4edbfc66af48c2d50e6a71bc4/uiautomator-2.2.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e86aa6e4edbfc66af48c2d50e6a71bc4/uiautomator-2.2.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e86aa6e4edbfc66af48c2d50e6a71bc4/uiautomator-2.2.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.test.uiautomator/uiautomator/2.2.0/b0064d35d4eb6b29c1a25a3e7b3feb798e12480d/uiautomator-2.2.0-javadoc.jar!/" />

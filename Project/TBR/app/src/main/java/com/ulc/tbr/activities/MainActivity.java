@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +31,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
 
@@ -38,8 +46,13 @@ import com.ulc.tbr.databases.DatabaseHelper;
 //import com.ulc.tbr.fragments.common.login.util.LoginResult;
 //import com.ulc.tbr.fragments.common.login.util.LoginViewModel;
 //import com.ulc.tbr.fragments.common.login.util.LoginViewModelFactory;
+import com.ulc.tbr.fragments.common.login.Mysingleton;
 import com.ulc.tbr.models.users.User;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.ulc.tbr.fragments.common.login.Mysingleton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -352,6 +365,30 @@ public class MainActivity extends AppCompatActivity {
 
     public void populateAvailability(){
         try {
+            database.addAvailability("8888888888", "01/26/2021", "07:00");
+        } catch (Exception e) {
+            // La di da I have nothing to say.
+        }
+
+        try {
+            database.addAvailability("8888888888", "01/25/2021", "07:00");
+        } catch (Exception e) {
+            // La di da I have nothing to say.
+        }
+
+        try {
+            database.addAvailability("8888888888", "01/27/2021", "07:00");
+        } catch (Exception e) {
+            // La di da I have nothing to say.
+        }
+        try {
+            database.modifySessionIsAvailable("8888888888", "01/27/2021", "07:00", true);
+        } catch (Exception e){
+
+        }
+
+
+            try {
             database.addAvailability("1111111112", "01/26/2021", "04:00");
         } catch (Exception e) {
             // La di da I have nothing to say.
