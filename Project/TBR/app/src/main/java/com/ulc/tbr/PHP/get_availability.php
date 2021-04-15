@@ -5,33 +5,34 @@
     $db_name ="tutorbyrequest";
     $con = mysqli_connect($host,$user,$password,$db_name);
     
-    $netid = null; // Initially null.
-    $loginpass = null;
+    $tutorid = null; // Initially null.
+    $date = null;
     
     // Check that netid and password are set.  If not, they'll stay null.
-    if (isset($_REQUEST["netid"]) && isset($_REQUEST["password"])){
-        $netid = $_REQUEST["netid"];
-        $loginpass = $_REQUEST["password"];
-    }   
+    if (isset($_REQUEST["tutorid"]) && isset($_REQUEST["date"])){
+        $tutorid = $_REQUEST["tutorid"];
+        $date = $_REQUEST["date"];
+    }
+    // else{
+    //     $tutorid = '1111111111';
+    //     $date = '01/26/2021';
+    // }   
     
     // Create SQL query.
-    $sql = "select* from users_table where net_id = ('".$netid."') and password = ('".$loginpass."');";
+    $sql = "select* from tutor_availability_table where tutor_id = ('".$tutorid."') and date = ('".$date."');";
     $result = mysqli_query($con,$sql);
     
-    // Fetch result.
-    $row = $result->fetch_assoc();
-    // Create array for JSON.
-    $array = array(
-        "student_id" => $row['student_id'],
-        "net_id" => $row['net_id'],
-        "name" => $row['name'],
-        "email" => $row['email'],
-        "tutor" => $row['tutor'],
-        "tutee" => $row['tutee'],
-    );
-
+    while($row = $result->fetch_assoc()){
+        $return['Availability: '][] =
+            $array = array(
+                "tutor_id" => $row['tutor_id'],
+                "date" => $row['date'],
+                "time" => $row['time'],
+                "booked" => $row['booked'],
+            );
+    }
     // Turn array into JSON.
-    $myJSON = json_encode($array);
+    $myJSON = json_encode($return);
 
     echo $myJSON;
 

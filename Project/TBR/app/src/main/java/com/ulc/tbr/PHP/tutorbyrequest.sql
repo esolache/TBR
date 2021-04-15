@@ -267,7 +267,7 @@ CREATE TABLE IF NOT EXISTS `users_table` (
 
 INSERT INTO `users_table` (`student_id`, `net_id`, `password`, `name`, `email`, `tutor`, `tutee`) VALUES
 ('0000000000', 'student', 'student', 'Stu Dent', 'student@wisc.edu', 'false', 'true'),
-('111111111', 'tutor1', 'tutor1', 'Super Smart', 'tutor1@wisc.edu', 'true', 'false'),
+('1111111111', 'tutor1', 'tutor1', 'Super Smart', 'tutor1@wisc.edu', 'true', 'false'),
 ('1111111112', 'tutor2', 'tutor2', 'Also Smart', 'tutor2@wisc.edu', 'true', 'false'),
 ('1111111113', 'tutor3', 'tutor3', 'Kindof Smart', 'tutor3@wisc.edu', 'true', 'false'),
 ('1111111114', 'tutor4', 'tutor4', 'Notso Smart', 'tutor4@wisc.edu', 'true', 'false'),
