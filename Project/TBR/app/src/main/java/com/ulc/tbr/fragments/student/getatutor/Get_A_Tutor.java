@@ -26,7 +26,9 @@ import com.ulc.tbr.databases.DatabaseHelper;
 import com.ulc.tbr.models.util.*;
 import com.ulc.tbr.models.users.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -548,6 +550,33 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         // TODO: NEED A GOOD WAY TO LOAD THESE FOR ONLY VALID WEEKS EACH SEMESTER
         // THIS WILL DO FOR NOW THO
         // ADMIN ACTIVITY TO SET WEEKS?
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+        Calendar cal = Calendar.getInstance();
+        int currWeek = cal.get(Calendar.WEEK_OF_YEAR);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        String currentDate = sdf.format(cal.getTime());
+
+
+        available_week.add("Select a week");
+
+        for(int i= 0; i< 15; i++){
+            cal.set(Calendar.WEEK_OF_YEAR, currWeek + i);
+            cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+            String monday = sdf.format(cal.getTime());
+            cal.set(Calendar.WEEK_OF_YEAR, currWeek + i + 1);
+            cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+            String sunday = sdf.format(cal.getTime());
+            available_week.add(monday + " - " + sunday);
+        }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
         available_week.add("Select a week");
         available_week.add("01/24 - 01/30");
         available_week.add("01/31 - 02/06");
