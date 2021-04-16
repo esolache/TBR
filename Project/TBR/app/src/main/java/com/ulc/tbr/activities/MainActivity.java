@@ -2,6 +2,7 @@ package com.ulc.tbr.activities;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -74,11 +75,11 @@ public class MainActivity extends AppCompatActivity {
 
         database = new DatabaseHelper(this);
 
-        populateSessions();
-        populateCourses();
-        populateAvailability();
-        populateUsers();
-        populateTutorCoursesAvailability();
+//        populateSessions();
+//        populateCourses();
+//        populateAvailability();
+//        populateUsers();
+//        populateTutorCoursesAvailability();
     }
 
     @Override
