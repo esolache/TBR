@@ -23,6 +23,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
@@ -134,8 +135,10 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 
         int currFragmentIndex;
 
-        Log.i("RIGHT HERE", "HELL0");
-        getTutorSessions(user.getNetID());
+        Log.i("firdt", String.valueOf(Mysingleton.getInstance(getContext()).getRequestQueue()));
+        getTutorSessions(user.getStudentID());
+        Log.i("second", String.valueOf(Mysingleton.getInstance(getContext()).getRequestQueue()));
+
 
 //        if (user.isTutor() && user.isTutee()){
 //            Log.i("RIGHT HERE", "HELL0");
@@ -211,6 +214,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
             button_studentSessions.setVisibility(View.VISIBLE);
 
 
+
             adapter_tutorSessions =
                     new ArrayAdapter<Session>(getContext(), android.R.layout.simple_selectable_list_item, tutorSessions);
 
@@ -224,10 +228,17 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
             button_tutorSessions.setVisibility(View.GONE);
             button_studentSessions.setVisibility(View.GONE);
 
-
+            tutorSessions = new ArrayList<>();
+//            Session session = new Session(
+//                    "student_id","tutor_id",
+//                    "date","time","subject",
+//                    0,"location","description",
+//                    1);
+//            tutorSessions.add(session);
             adapter_tutorSessions =
                     new ArrayAdapter<Session>(getContext(), android.R.layout.simple_selectable_list_item, tutorSessions);
 
+            Log.d("adapter", String.valueOf(adapter_tutorSessions.isEmpty()));
             listView_sessions.setAdapter(adapter_tutorSessions);
 
         } else if (user.isTutee()) {
@@ -338,13 +349,22 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 
 
     public  void getTutorSessions(String tutor_id){
+        Session session;
         Log.i("RIGHT HERE", "HELL02");
         String url = "https://pistachio.khello.co/get_sessions_tutor.php";
+        RequestQueue requestQueue = Mysingleton.getInstance(getContext()).getRequestQueue();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("TUTOR","HIT THE DATABASE");
-                Log.i("TUTOR",response.toString());
+                    try {
+                        Log.i("TUTOR","HIT THE DATABASE HURRAy");
+                        Log.i("TUTOR", response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        Log.i("after", response);
+                    } catch (JSONException e) {
+
+                    }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -355,13 +375,15 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+                Log.i("Param",tutor_id);
                 Map<String, String> Params = new HashMap<String, String>();
                 Params.put("tutor_id", tutor_id);
-
                 return Params;
             }
         };
+        Log.i("Testc", String.valueOf(getContext()));
         Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+        requestQueue.add(stringRequest);
     }
 
     public ArrayList<Session> getStudentSessions(String student_id){
