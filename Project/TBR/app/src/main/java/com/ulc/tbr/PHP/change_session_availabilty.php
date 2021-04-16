@@ -8,7 +8,6 @@
     $tutorID = null;
     $date = null;
     $time = null;
-    $booked = 'FALSE';
     $result = null;
 
     if(isset($_REQUEST["tutor_id"]) && isset($_REQUEST["date"]) && isset($_REQUEST["time"])){
@@ -17,11 +16,9 @@
         $time = $_REQUEST["time"];
         $sql = "insert tutor_availability_table values ('".$tutorID."', '".$date."', '".$time."', '".$booked."')";
         $result = mysqli_query($con,$sql);
-        if(!$result){
-            echo 0;
-        }
+        echo 1;
     }else{
-        echo 'Invalid input.';
+        echo 0;
     }
 
     mysqli_close($con);    

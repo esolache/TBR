@@ -6,16 +6,15 @@
     $con = mysqli_connect($host,$user,$password,$db_name);
     
     $tutorID = null;
-    $date = null;
-    $time = null;
-    $booked = 'FALSE';
+    $subject = null;
+    $courseNumber = null;
     $result = null;
 
-    if(isset($_REQUEST["tutor_id"]) && isset($_REQUEST["date"]) && isset($_REQUEST["time"])){
+    if(isset($_REQUEST["tutor_id"]) && isset($_REQUEST["subject"]) && isset($_REQUEST["course_num"])){
         $tutorID = $_REQUEST["tutor_id"];
-        $date = $_REQUEST["date"];
-        $time = $_REQUEST["time"];
-        $sql = "insert tutor_availability_table values ('".$tutorID."', '".$date."', '".$time."', '".$booked."')";
+        $subject = $_REQUEST["subject"];
+        $courseNumber = $_REQUEST["course_num"];
+        $sql = "delete from tutor_courses_table where tutor_id = ('".$tutorID."') and subject = ('".$subject."') and course_num = ('".$courseNumber."');";
         $result = mysqli_query($con,$sql);
         if(!$result){
             echo 0;

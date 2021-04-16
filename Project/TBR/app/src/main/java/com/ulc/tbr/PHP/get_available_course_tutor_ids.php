@@ -5,31 +5,28 @@
     $db_name ="pistachi_TutorByRequest";
     $con = mysqli_connect($host,$user,$password,$db_name);
     
-    $tutorid = null; // Initially null.
-    $date = null;
+    $subject = null; // Initially null.
+    $coursenum = null;
     
     // Check that netid and password are set.  If not, they'll stay null.
-    if (isset($_REQUEST["tutor_id"]) && isset($_REQUEST["date"])){
-        $tutorid = $_REQUEST["tutor_id"];
-        $date = $_REQUEST["date"];
-        $sql = "select* from tutor_availability_table where tutor_id = ('".$tutorid."') and date = ('".$date."');";
+    if (isset($_REQUEST["subject"]) && isset($_REQUEST["course_num"])){
+        $subject = $_REQUEST["subject"];
+        $coursenum = $_REQUEST["course_num"];
+        $sql = "select* from tutor_courses_table where subject = ('".$subject."') and course_num = ('".$coursenum."');";
         $result = mysqli_query($con,$sql);
         if($result){
             while($row = $result->fetch_assoc()){
-                $return['Availability: '][] =
+                $return['TutorIDs: '][] =
                     $array = array(
                         "tutor_id" => $row['tutor_id'],
-                        "date" => $row['date'],
-                        "time" => $row['time'],
-                        "booked" => $row['booked'],
                     );
             }
         }else{
             $return = null;
         }
     }else{
-        $return = 'Invalid input';
-    }
+        $return = 'Invalid input.';
+    }  
     
     // Turn array into JSON.
     $myJSON = json_encode($return);

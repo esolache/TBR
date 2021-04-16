@@ -8,14 +8,15 @@
     $tutorID = null;
     $date = null;
     $time = null;
-    $booked = 'FALSE';
+    $booked = null;
     $result = null;
 
-    if(isset($_REQUEST["tutor_id"]) && isset($_REQUEST["date"]) && isset($_REQUEST["time"])){
+    if(isset($_REQUEST["tutor_id"]) && isset($_REQUEST["date"]) && isset($_REQUEST["time"]) && isset($_REQUEST["booked"])){
         $tutorID = $_REQUEST["tutor_id"];
         $date = $_REQUEST["date"];
         $time = $_REQUEST["time"];
-        $sql = "insert tutor_availability_table values ('".$tutorID."', '".$date."', '".$time."', '".$booked."')";
+        $booked = $_REQUEST["booked"];
+        $sql = "update tutor_availability_table set (booked = ('".$booked."') where tutor_id =  ('".$tutorID."') and date = ('".$date."') and time = ('".$time."');";
         $result = mysqli_query($con,$sql);
         if(!$result){
             echo 0;

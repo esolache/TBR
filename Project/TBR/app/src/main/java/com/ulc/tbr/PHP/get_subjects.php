@@ -4,16 +4,16 @@
     $host ="localhost";    
     $db_name ="pistachi_TutorByRequest";
     $con = mysqli_connect($host,$user,$password,$db_name);
-      
-    $sql = "select* from courses_table;";
+    
+    // Create SQL query.
+    $sql = "select distinct subject from courses_table;";
     $result = mysqli_query($con,$sql);
     
+
     while($row = $result->fetch_assoc()){
-        $return['Courses: '][] =
+        $return['Subjects: '][] =
             $array = array(
                 "subject" => $row['subject'],
-                "course" => $row['course'],
-                "course_num" => $row['course_num'],
             );
     }
 
