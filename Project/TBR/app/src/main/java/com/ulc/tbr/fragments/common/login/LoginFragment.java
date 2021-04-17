@@ -82,7 +82,6 @@ public class LoginFragment extends Fragment {
                     Log.i("Some sort of unique string identifier here","HIT THE DATABASE");
                     Log.i("Some sort of unique string identifier here",response.toString());
                     JSONObject userObject = new JSONObject(response.toString());
-                    Log.i("Sdsaaaaaaaa","HIT THE DATABASE");
 
                     user = new User(
                             (String) userObject.get("student_id"),
