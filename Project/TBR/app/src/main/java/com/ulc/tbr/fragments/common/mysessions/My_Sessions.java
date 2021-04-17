@@ -112,9 +112,6 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
         getTutorSessions(user.getStudentID());
-        while (tutorSessions.size() == 0) {
-            Log.i("second", String.valueOf(tutorSessions.size()));
-        }
         Log.i("second", String.valueOf(tutorSessions.size()));
 
         if (getArguments() != null) {
