@@ -112,9 +112,6 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
-        getTutorSessions(user.getStudentID());
-
-        Log.i("onCreate", String.valueOf(tutorSessions.size()));
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -141,19 +138,10 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 
 
 
-   //     getTutorSessions(user.getStudentID());
-        Log.i("second", String.valueOf(tutorSessions.size()));
 
 
-//        if (user.isTutor() && user.isTutee()){
-//            Log.i("RIGHT HERE", "HELL0");
-//            tutorSessions = getTutorSessions(user.getNetID());
-//            studentSessions = getStudentSessions(user.getNetID());
-//        } else if (user.isTutor()) {
-//            tutorSessions = getTutorSessions(user.getNetID());
-//        } else {
-//            studentSessions = getStudentSessions(user.getNetID());
-//        }
+
+
 
             if (user.isTutor() && user.isTutee()) { // StudentTutor
             homeMenu.add("Home");
@@ -211,6 +199,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         if (user.isTutor() && user.isTutee() ) { // STUTOR CASE
 
             //textView.setText("Getting sessions for stutor with student id: " + user.getStudentID());
+            getTutorSessions(user.getStudentID());
             button_studentSessions.setEnabled(true);
             button_tutorSessions.setEnabled(true);
             button_tutorSessions.setBackgroundColor(Color.RED);
@@ -218,8 +207,8 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
             button_tutorSessions.setVisibility(View.VISIBLE);
             button_studentSessions.setVisibility(View.VISIBLE);
 
-
-
+            getTutorSessions(user.getStudentID());
+            getStudentSessions(user.getStudentID());
             adapter_tutorSessions =
                     new ArrayAdapter<Session>(getContext(), android.R.layout.simple_selectable_list_item, tutorSessions);
 
@@ -227,6 +216,8 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
                     new ArrayAdapter<Session>(getContext(), android.R.layout.simple_selectable_list_item, studentSessions);
 
         } else if (user.isTutor()){
+
+            getTutorSessions(user.getStudentID());
             //textView.setText("Getting sessions for tutor with tutor id: " + user.getStudentID());
             button_studentSessions.setEnabled(false);
             button_tutorSessions.setEnabled(false);
@@ -243,12 +234,13 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 
         } else if (user.isTutee()) {
             //textView.setText("Getting sessions for student with tutor id: " + user.getStudentID());
+            getStudentSessions(user.getStudentID());
             button_studentSessions.setEnabled(false);
             button_tutorSessions.setEnabled(false);
             button_tutorSessions.setVisibility(View.GONE);
             button_studentSessions.setVisibility(View.GONE);
 
-
+            Log.i("student", String.valueOf(studentSessions.toString()));
             adapter_studentSessions =
                     new ArrayAdapter<Session>(getContext(), android.R.layout.simple_selectable_list_item, studentSessions);
 
@@ -264,6 +256,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         button_studentSessions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getStudentSessions(user.getStudentID());
                 listView_sessions.setAdapter(adapter_studentSessions);
             }
         });
@@ -271,6 +264,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         button_tutorSessions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getTutorSessions(user.getStudentID());
                 listView_sessions.setAdapter(adapter_tutorSessions);
             }
         });
@@ -347,13 +341,10 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         }
     }
 
-    public  void getTutorSessions(String tutor_id){
-        boolean test = false;
-        Session session;
+    public  void getTutorSessions(String tutor_id) {
         tutorSessions = new ArrayList<>();
         Log.i("RIGHT HERE", "HELL02");
         String url = "https://pistachio.khello.co/get_sessions_tutor.php";
-        RequestQueue requestQueue = Mysingleton.getInstance(getContext()).getRequestQueue();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -363,16 +354,6 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
                         JSONObject jsonObject = new JSONObject(response);
                         JSONArray array = (JSONArray) jsonObject.get("Sessions: ");
 
-
-
-//                        Log.i("student_id", (String) jsonArray.get("student_id"));
-//                        Log.i("tutor_id", (String) jsonArray.get("tutor_id"));
-//                        Log.i("date",(String) jsonArray.get("date"));
-//                        Log.i("time", (String) jsonArray.get("time"));
-//                        Log.i("course_number", String.valueOf(Integer.parseInt((String) jsonArray.get("course_number"))));
-//                        Log.i("location", (String) jsonArray.get("location"));
-//                        Log.i("description",  (String) jsonArray.get("description"));
-//                        Log.i("session_id", String.valueOf(Integer.parseInt((String) jsonArray.get("session_id"))));
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject jsonArray = (JSONObject) array.get(i);
                             adapter_tutorSessions.add(new Session(
@@ -380,7 +361,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
                                     (String) jsonArray.get("tutor_id"),
                                     (String) jsonArray.get("date"),
                                     (String) jsonArray.get("time"),
-                                    "Math",//Need to change the database to match session or vice versa? Should be subject in database
+                                    (String) jsonArray.get("subject"),//Need to change the database to match session or vice versa? Should be subject in database
                                     Integer.parseInt((String) jsonArray.get("course_number")),
                                     (String) jsonArray.get("location"),
                                     (String) jsonArray.get("description"),
@@ -413,8 +394,67 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         //requestQueue.add(stringRequest);
     }
 
-    public ArrayList<Session> getStudentSessions(String student_id){
-        return  null;
+    public void getStudentSessions(String student_id) {
+        studentSessions = new ArrayList<>();
+        Log.i("RIGHT HERE", "HELL02");
+        String url = "https://pistachio.khello.co/get_sessions_student.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.i("Student","HIT THE DATABASE HURRAy");
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray array = (JSONArray) jsonObject.get("Sessions: ");
+
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject jsonArray = (JSONObject) array.get(i);
+
+                        Log.i("student_id",(String) jsonArray.get("student_id"));
+                        Log.i("tutor_id",(String) jsonArray.get("tutor_id"));
+                        Log.i("date",(String) jsonArray.get("date"));
+                        Log.i("time",(String) jsonArray.get("time"));
+                        Log.i("course_number", jsonArray.toString());
+                        Log.i("location",(String) jsonArray.get("location"));
+                        Log.i("description",(String) jsonArray.get("description"));
+                        Log.i("session_id",(String) jsonArray.get("session_id"));
+                        adapter_studentSessions.add(new Session(
+                                (String) jsonArray.get("student_id"),
+                                (String) jsonArray.get("tutor_id"),
+                                (String) jsonArray.get("date"),
+                                (String) jsonArray.get("time"),
+                                (String) jsonArray.get("subject"),//Need to change the database to match session or vice versa? Should be subject in database
+                                Integer.parseInt((String) jsonArray.get("course_number")),
+                                (String) jsonArray.get("location"),
+                                (String) jsonArray.get("description"),
+                                Integer.parseInt((String) jsonArray.get("session_id"))));
+                        Log.i("Student",(String) jsonArray.get("student_id"));
+
+                    }
+
+
+                } catch (JSONException e) {
+                    Log.i("Student","exception");
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Log.i("Student",student_id);
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("student_id", student_id);
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+        //requestQueue.add(stringRequest);
+
     }
 
     @Override
