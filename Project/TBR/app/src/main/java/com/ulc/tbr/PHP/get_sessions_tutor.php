@@ -29,11 +29,24 @@
                         "session_id" => $row['session_id'],
                     );
             }
+            // $row = $result->fetch_assoc();
+            // $return = array(
+            //             "student_id" => $row['student_id'],
+            //             "tutor_id" => $row['tutor_id'],
+            //             "date" => $row['date'],
+            //             "time" => $row['time'],
+            //             "subject" => $row['subject'],
+            //             "course_number" => $row['course_number'],
+            //             "location" => $row['location'],
+            //             "description" => $row['description'],
+            //             "session_id" => $row['session_id'],
+            //         );
         }else{
             $return = null;
         }
     }else{
         $return = 'Invalid input.';
+
     }
     
     // Turn array into JSON.
