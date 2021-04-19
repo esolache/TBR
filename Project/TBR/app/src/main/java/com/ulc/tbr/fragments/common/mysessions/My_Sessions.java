@@ -61,6 +61,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
     User user;
 
     ArrayList<Session> tutorSessions;
+    boolean res = false;
     ArrayList<Session> studentSessions;
 
     ArrayAdapter<Session> adapter_tutorSessions;
@@ -112,7 +113,8 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
         getTutorSessions(user.getStudentID());
-        Log.i("second", String.valueOf(tutorSessions.size()));
+
+        Log.i("onCreate", String.valueOf(tutorSessions.size()));
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -206,7 +208,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
 
-        if (user.isTutor() && user.isTutee() ){ // STUTOR CASE
+        if (user.isTutor() && user.isTutee() ) { // STUTOR CASE
 
             //textView.setText("Getting sessions for stutor with student id: " + user.getStudentID());
             button_studentSessions.setEnabled(true);
@@ -232,6 +234,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
             button_studentSessions.setVisibility(View.GONE);
 
 
+            Log.i("tutor", String.valueOf(tutorSessions.toString()));
             adapter_tutorSessions =
                     new ArrayAdapter<Session>(getContext(), android.R.layout.simple_selectable_list_item, tutorSessions);
 
@@ -344,7 +347,6 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         }
     }
 
-
     public  void getTutorSessions(String tutor_id){
         boolean test = false;
         Session session;
@@ -373,7 +375,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 //                        Log.i("session_id", String.valueOf(Integer.parseInt((String) jsonArray.get("session_id"))));
                         for (int i = 0; i < array.length(); i++) {
                             JSONObject jsonArray = (JSONObject) array.get(i);
-                            tutorSessions.add(new Session(
+                            adapter_tutorSessions.add(new Session(
                                     (String) jsonArray.get("student_id"),
                                     (String) jsonArray.get("tutor_id"),
                                     (String) jsonArray.get("date"),
@@ -386,6 +388,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 
                         }
                         Log.i("on response", String.valueOf(tutorSessions.size()));
+                        Log.i("tutor", String.valueOf(tutorSessions.toString()));
 
 
                     } catch (JSONException e) {
