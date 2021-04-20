@@ -20,12 +20,24 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.ulc.tbr.activities.MainActivity;
 import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
+import com.ulc.tbr.fragments.common.login.Mysingleton;
 import com.ulc.tbr.models.util.*;
 import com.ulc.tbr.models.users.*;
 import com.ulc.tbr.fragments.common.Adapters.CalendarAdapter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import static com.ulc.tbr.fragments.common.Adapters.CalendarAdapter.gridSlots;
 
 
@@ -33,6 +45,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,7 +69,7 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
     private String mParam1;
     private String mParam2;
 
-    DatabaseHelper dbHelper;
+
     // Required empty public constructor
     private User user;
     private Spinner spinner_week;
@@ -127,7 +141,6 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         MainActivity ma = (MainActivity) getActivity();
-        dbHelper = ma.getDatabase();
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
 //        user = (User) getActivity().getIntent().getSerializableExtra("user");
@@ -239,7 +252,7 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
         String currentDate = sdf.format(cal.getTime());
 
 
-        available_week.add("Select a week");
+//        available_week.add("Select a week");
 
         for(int i= 0; i< 15; i++){
             cal.set(Calendar.WEEK_OF_YEAR, currWeek + i);
@@ -253,26 +266,7 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-        available_week.add("Select a week");
-        available_week.add("01/24 - 01/30");
-        available_week.add("01/31 - 02/06");
-        available_week.add("02/07 - 02/13");
-        available_week.add("02/14 - 02/20");
-        available_week.add("02/21 - 02/27");
-        available_week.add("02/28 - 03/06");
-        available_week.add("03/07 - 03/13");
-        available_week.add("03/14 - 03/20");
-        available_week.add("03/21 - 03/27");
-        available_week.add("03/28 - 04/03");
-        available_week.add("04/04 - 04/10");
-        available_week.add("04/11 - 04/17");
-        available_week.add("04/18 - 04/24");
-        available_week.add("04/25 - 05/01");
-        available_week.add("05/02 - 05/08");
-
+        
         adapter_week = new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, available_week);
 //        adapter_week.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_week.setAdapter(adapter_week);
@@ -290,7 +284,7 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
 //                    03/28 - 04/03
                     String[] week = weekConverter(spinner_week.getSelectedItem().toString());
                     for (String date : week) {
-                        ArrayList<TutorAvailablity> availList = dbHelper.getTutorAvailabilityOnDate(user.getStudentID(), date);
+                        ArrayList<TutorAvailablity> availList = new ArrayList<TutorAvailablity>();
                         try {
                             for (TutorAvailablity avail : availList) {
                                 String tempDate = avail.getDate();
@@ -341,13 +335,16 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
                             Log.d("DAT","Date");
                             String date = dateConverter(spinner_week.getSelectedItem().toString(), j);
                             String tutorID = user.getStudentID();
-                            dbHelper.addAvailability(tutorID,date,time);
+                            // TODO: Add availability
+                            addAvailability(tutorID,date,time);
                             gridSlots[i][j] = 2;
                         }else if(gridSlots[i][j]==3){
                             String time = timeConverter(slotText[i*8]);
                             String date = dateConverter(spinner_week.getSelectedItem().toString(), j);
                             String tutorID = user.getStudentID();
-                            dbHelper.deleteAvailability(tutorID,date,time);
+                            // TODO: Delete availability
+                            deleteAvailability(tutorID,date,time);
+//                            dbHelper.deleteAvailability(tutorID,date,time);
                             gridSlots[i][j] = 0;
                         }
                         adapter.notifyDataSetChanged();
@@ -356,6 +353,70 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
             }
         });
 
+    }
+
+    private void setAvailability(String date){
+
+    }
+
+    private void deleteAvailability(String tutor_id, String date, String time) {
+        Log.i("Input",tutor_id + " " + date + " " + time );
+
+
+        String url = "https://pistachio.khello.co/remove_tutor_availability.php";
+        RequestQueue requestQueue = Mysingleton.getInstance(getContext()).getRequestQueue();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("Response", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("tutor_id", tutor_id);
+                Params.put("date", date);
+                Params.put("time", time);
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+    }
+
+    public void addAvailability(String tutor_id, String date, String time){
+        Log.i("Input",tutor_id + " " + date + " " + time );
+
+
+        String url = "https://pistachio.khello.co/post_availability.php";
+        RequestQueue requestQueue = Mysingleton.getInstance(getContext()).getRequestQueue();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("Response", response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("tutor_id", tutor_id);
+                Params.put("date", date);
+                Params.put("time", time);
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
     }
 
     @Override

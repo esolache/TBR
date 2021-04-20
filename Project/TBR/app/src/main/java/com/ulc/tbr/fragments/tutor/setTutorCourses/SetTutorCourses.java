@@ -100,8 +100,6 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        ma = (MainActivity) getActivity();
-        dbHelper = ma.getDatabase();
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
         return inflater.inflate(R.layout.fragment_tutor_set_classes, container, false);
@@ -175,10 +173,8 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
         button_removeClasses.setBackgroundColor(Color.RED);
 
 
-        ma = (MainActivity) getActivity();
-
-//        TutorCoursesDBHelper tutorCoursesDBHelper = ma.getTutorCourseDB();
-        courses = dbHelper.getDataCourses();
+        // courses = dbHelper.getDataCourses();
+        // TODO: get courses
         myCourses = dbHelper.getTutorCourses(user.getStudentID());
 
         courseString = new ArrayList<String>();

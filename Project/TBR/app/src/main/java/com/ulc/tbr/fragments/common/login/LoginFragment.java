@@ -72,8 +72,6 @@ public class LoginFragment extends Fragment {
         Boolean validLogin = true;
         String url = "https://pistachio.khello.co/get_login.php";
 
-
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
