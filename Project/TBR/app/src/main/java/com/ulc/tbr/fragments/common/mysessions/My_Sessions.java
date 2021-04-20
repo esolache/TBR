@@ -176,6 +176,10 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
             currFragmentIndex = 0;
         }
 
+
+        studentSessions = new ArrayList<>();
+        tutorSessions = new ArrayList<>();
+
         adapter_homeMenu = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, homeMenu);
         spinner_homeMenu.setAdapter(adapter_homeMenu);
 
@@ -197,9 +201,10 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         user = (User) bundle.getSerializable("user");
 
         if (user.isTutor() && user.isTutee() ) { // STUTOR CASE
-
-            //textView.setText("Getting sessions for stutor with student id: " + user.getStudentID());
             getTutorSessions(user.getStudentID());
+            getStudentSessions(user.getStudentID());
+//            getStudentSessions("00000111111");
+//            getTutorSessions("00000111111");
             button_studentSessions.setEnabled(true);
             button_tutorSessions.setEnabled(true);
             button_tutorSessions.setBackgroundColor(Color.RED);
@@ -207,17 +212,20 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
             button_tutorSessions.setVisibility(View.VISIBLE);
             button_studentSessions.setVisibility(View.VISIBLE);
 
-            getTutorSessions(user.getStudentID());
-            getStudentSessions(user.getStudentID());
+            Log.i("stutor",user.getStudentID());
+
+
+
+
             adapter_tutorSessions =
                     new ArrayAdapter<Session>(getContext(), android.R.layout.simple_selectable_list_item, tutorSessions);
-
             adapter_studentSessions =
                     new ArrayAdapter<Session>(getContext(), android.R.layout.simple_selectable_list_item, studentSessions);
 
         } else if (user.isTutor()){
 
-            getTutorSessions(user.getStudentID());
+//            getTutorSessions(user.getStudentID());
+            getTutorSessions("0000011111");
             //textView.setText("Getting sessions for tutor with tutor id: " + user.getStudentID());
             button_studentSessions.setEnabled(false);
             button_tutorSessions.setEnabled(false);
@@ -256,7 +264,6 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         button_studentSessions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getStudentSessions(user.getStudentID());
                 listView_sessions.setAdapter(adapter_studentSessions);
             }
         });
@@ -264,7 +271,6 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         button_tutorSessions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getTutorSessions(user.getStudentID());
                 listView_sessions.setAdapter(adapter_tutorSessions);
             }
         });
@@ -342,7 +348,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
     }
 
     public  void getTutorSessions(String tutor_id) {
-        tutorSessions = new ArrayList<>();
+    //    tutorSessions = new ArrayList<>();
         Log.i("RIGHT HERE", "HELL02");
         String url = "https://pistachio.khello.co/get_sessions_tutor.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -385,6 +391,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+                Log.i("tutor_id",tutor_id);
                 Map<String, String> Params = new HashMap<String, String>();
                 Params.put("tutor_id", tutor_id);
                 return Params;
@@ -395,7 +402,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
     }
 
     public void getStudentSessions(String student_id) {
-        studentSessions = new ArrayList<>();
+  //      studentSessions = new ArrayList<>();
         Log.i("RIGHT HERE", "HELL02");
         String url = "https://pistachio.khello.co/get_sessions_student.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -409,14 +416,6 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject jsonArray = (JSONObject) array.get(i);
 
-                        Log.i("student_id",(String) jsonArray.get("student_id"));
-                        Log.i("tutor_id",(String) jsonArray.get("tutor_id"));
-                        Log.i("date",(String) jsonArray.get("date"));
-                        Log.i("time",(String) jsonArray.get("time"));
-                        Log.i("course_number", jsonArray.toString());
-                        Log.i("location",(String) jsonArray.get("location"));
-                        Log.i("description",(String) jsonArray.get("description"));
-                        Log.i("session_id",(String) jsonArray.get("session_id"));
                         adapter_studentSessions.add(new Session(
                                 (String) jsonArray.get("student_id"),
                                 (String) jsonArray.get("tutor_id"),
@@ -434,6 +433,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 
                 } catch (JSONException e) {
                     Log.i("Student","exception");
+                    e.printStackTrace();
                 }
 
             }
