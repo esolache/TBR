@@ -72,6 +72,8 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
 
     // Required empty public constructor
     private User user;
+
+
     private Spinner spinner_week;
     private ArrayList<String> available_week;
     private ArrayAdapter<String> adapter_week;
@@ -284,28 +286,8 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
 //                    03/28 - 04/03
                     String[] week = weekConverter(spinner_week.getSelectedItem().toString());
                     for (String date : week) {
-                        ArrayList<TutorAvailablity> availList = new ArrayList<TutorAvailablity>();
-                        try {
-                            for (TutorAvailablity avail : availList) {
-                                String tempDate = avail.getDate();
-                                String tempTime = avail.getTime();
-                                Boolean tempBooked = avail.isBooked();
-                                if (!tempBooked) {
-                                    Log.d("NOT","booked");
-                                    int col = dayToColumn(tempDate, spinner_week.getSelectedItem().toString());
-                                    int row = timeToRow(tempTime);
-                                    gridSlots[row][col] = 2;
-                                } else {
-                                    Log.d("is","booked");
-                                    int col = dayToColumn(tempDate, spinner_week.getSelectedItem().toString());
-                                    int row = timeToRow(tempTime);
-                                    gridSlots[row][col] = 4;
-                                }
-                                adapter.notifyDataSetChanged();
-                            }
-                        } catch (Exception e) {
+                        getTutorAvailability(user.getStudentID(), date, user.getNetID(), adapter);
 
-                        }
                     }
                 }
             }
@@ -359,6 +341,73 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
 
     }
 
+    private void getTutorAvailability(String tutor_id, String date, String NetID, CalendarAdapter adapter ){
+        Log.i("RIGHT HERE", "HELL02");
+        String url = "https://pistachio.khello.co/get_availability.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.i("TUTOR","HIT THE DATABASE HURRAy");
+                    Log.i("TUTOR", response);
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray array = (JSONArray) jsonObject.get("Availability: ");
+                    ArrayList<TutorAvailablity> tutorSessions = new ArrayList<TutorAvailablity>();
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject jsonArray = (JSONObject) array.get(i);
+                        tutorSessions.add(new TutorAvailablity(
+                                NetID,
+                                (String) jsonArray.get("tutor_id"),
+                                (String) jsonArray.get("date"),
+                                (String) jsonArray.get("time"),
+                                (Boolean) jsonArray.get("booked").equals("TRUE")));
+                    }
+                    for (TutorAvailablity avail : tutorSessions) {
+                        String tempDate = avail.getDate();
+                        String tempTime = avail.getTime();
+                        Boolean tempBooked = avail.isBooked();
+                        if (!tempBooked) {
+                            Log.d("NOT", "booked");
+                            int col = dayToColumn(tempDate, spinner_week.getSelectedItem().toString());
+                            int row = timeToRow(tempTime);
+                            gridSlots[row][col] = 2;
+                        } else {
+                            Log.d("is", "booked");
+                            int col = dayToColumn(tempDate, spinner_week.getSelectedItem().toString());
+                            int row = timeToRow(tempTime);
+                            gridSlots[row][col] = 4;
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                    Log.i("on response", String.valueOf(tutorSessions.size()));
+                    Log.i("tutor", String.valueOf(tutorSessions.toString()));
+
+
+                } catch (JSONException e) {
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Log.i("tutor_id",tutor_id);
+                Log.i("date",date);
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("tutor_id", tutor_id);
+                Params.put("date", date);
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+        //requestQueue.add(stringRequest);
+    }
+
     private void deleteAvailability(String tutor_id, String date, String time) {
         Log.i("Input",tutor_id + " " + date + " " + time );
 
@@ -399,6 +448,7 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
             @Override
             public void onResponse(String response) {
                 Log.i("Response", response);
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -480,9 +530,9 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
         if(!week.substring(0,2).equals(week.substring(14,16)) && daysLeft < col) {
             int date = col - daysLeft ;
             if(date >= 10) {
-                toReturn = week.substring(14, 17) + String.valueOf(date) + week.substring(18);
+                toReturn = week.substring(13, 16) + String.valueOf(date) + week.substring(18);
             }else{
-                toReturn = week.substring(14, 17) + "0" + String.valueOf(date) + week.substring(18);
+                toReturn = week.substring(13, 16) + "0" + String.valueOf(date) + week.substring(18);
             }
         }else{
             int date = Integer.parseInt(week.substring(3,5)) + col - 1;
