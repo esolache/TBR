@@ -75,11 +75,11 @@ public class MainActivity extends AppCompatActivity {
 
         database = new DatabaseHelper(this);
 
-//        populateSessions();
-//        populateCourses();
-//        populateAvailability();
-//        populateUsers();
-//        populateTutorCoursesAvailability();
+        populateSessions();
+        populateCourses();
+        populateAvailability();
+        populateUsers();
+        populateTutorCoursesAvailability();
     }
 
     @Override

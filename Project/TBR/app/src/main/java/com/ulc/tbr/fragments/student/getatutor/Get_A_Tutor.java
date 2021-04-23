@@ -2,6 +2,7 @@ package com.ulc.tbr.fragments.student.getatutor;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,13 +24,26 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.ulc.tbr.activities.MainActivity;
 import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
+import com.ulc.tbr.fragments.common.login.Mysingleton;
 import com.ulc.tbr.models.util.*;
 import com.ulc.tbr.models.users.*;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link com.ulc.tbr.fragments.student.getatutor.Get_A_Tutor#newInstance} factory method to
@@ -40,6 +54,12 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
     static int sessionID = 0;
     MainActivity ma;
     DatabaseHelper database;
+
+    ArrayList<String> remoteTutorsIDsSelectedCourse = new ArrayList<String>();;
+    ArrayList<TutorAvailablity> remoteTutorAvailabilityOnDate = new ArrayList<TutorAvailablity>();
+    ArrayList<TutorAvailablity> remoteResult = new ArrayList<TutorAvailablity>();
+    ArrayList<String> remote_available_session = new ArrayList<String>();
+    ArrayAdapter<String> remote_adapter_session;
 
     ViewGroup view_viewGroup;
 
@@ -154,7 +174,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        remote_adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, remote_available_session );
 
+//        remoteTutorsIDsSelectedCourse = new ArrayList<String>();
         user = (User) this.getArguments().getSerializable("user");
         boolean isTutor = user.isTutor(); // use this to erase entries of self
 
@@ -372,7 +394,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     tutorAvailablity_session = populateAvailableTutorSessions(week, subject, course);
                     available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
                     adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
-                    listView_session.setAdapter(adapter_session);
+                    remote_adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, remote_available_session );
+//                    listView_session.setAdapter(adapter_session);
+                    listView_session.setAdapter(remote_adapter_session);
 
                     listViewHelper();
 
@@ -437,6 +461,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
     }
 
+
     private void populateSessionListView() {
         String week;
         String subject;
@@ -451,7 +476,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         tutorAvailablity_session = populateAvailableTutorSessions(week, subject, course);
         available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
         adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
-        listView_session.setAdapter(adapter_session);
+        remote_adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, remote_available_session );
+//        listView_session.setAdapter(adapter_session);
+        listView_session.setAdapter(remote_adapter_session);
     }
 
     @Override
@@ -656,30 +683,192 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 //
 //    }
 
+
+    private void remoteGetAvailableCourseTutorIDs(String subject, String course, String date){
+//        ArrayList<String> remote_tutorsIDs_selectedCourse = new ArrayList<String>();
+//        Log.i("Turtle", "HELL02");
+        String url = "https://pistachio.khello.co/get_available_course_tutor_ids.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+//                    Log.i("Turtle","HIT THE DATABASE HURRAy");
+//                    Log.i("Turtle", response);
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray array = (JSONArray) jsonObject.get("TutorIDs: ");
+
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject jsonArray = (JSONObject) array.get(i);
+//                        Log.i("Purple", (String) jsonArray.get("tutor_id"));
+                        if(!remoteTutorsIDsSelectedCourse.contains((String) jsonArray.get("tutor_id"))) {
+                            remoteTutorsIDsSelectedCourse.add((String) jsonArray.get("tutor_id"));
+                        }
+                    }
+//                    Log.i("Purple", String.valueOf(remoteTutorsIDsSelectedCourse.size()));
+//                    Log.i("Turtle", remoteTutorsIDsSelectedCourse.toString());
+
+                    for (int i = 0; i < remoteTutorsIDsSelectedCourse.size(); i++) {
+//                        Log.i("Poop", "Poop");
+
+                        if ( !remoteTutorsIDsSelectedCourse.get(i).equals(user.getStudentID()) ) { // skip over your own TutorID if your a stutor
+                            String tutorID = remoteTutorsIDsSelectedCourse.get(i);
+//                            Log.i("Word", tutorID);
+                            remoteGetTutorAvailabilityOnDate(tutorID, date);
+//                            Log.i("Word", String.valueOf(remoteTutorAvailabilityOnDate.size()));
+
+
+                        }
+                    }
+
+                } catch (JSONException e) {
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Log.i("subject",subject);
+                Log.i("course",course);
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("subject", subject);
+                Params.put("course_num", course);
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+        //requestQueue.add(stringRequest);
+//        return remote_tutorsIDs_selectedCourse;
+    }
+
+    private void remoteGetTutorAvailabilityOnDate(String tutorID, String date){
+
+//        Log.i("Turtle", "HELL02");
+        Log.i("Shit","Butt");
+
+        String url = "https://pistachio.khello.co/get_available_course_tutors_and_times_on_date.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+//                    Log.i("Shit", tutorID);
+//                    Log.i("Shit", date);
+                    Log.i("Shit", response);
+                    JSONObject jsonObject = new JSONObject(response);
+//                    Log.i("Shit","Butt2");
+                    JSONArray array = (JSONArray) jsonObject.get("Available tutors: ");
+//                    Log.i("Shit", String.valueOf(array.length()));
+
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject jsonArray = (JSONObject) array.get(i);
+                        String tempName = (String) jsonArray.get("name");
+                        String tempId = (String) jsonArray.get("tutor_id");
+                        String tempDate = (String) jsonArray.get("date");
+                        String tempTime = (String) jsonArray.get("time");
+                        String tempBooked = (String) jsonArray.get("booked");
+                        Boolean tempBool = false;
+                        if(tempBooked == "TRUE"){
+                            tempBool = true;
+                        }
+
+                        TutorAvailablity temp = new TutorAvailablity(tempName, tempId, tempDate, tempTime, tempBool);
+                        remote_adapter_session.add(tempName);
+                        remoteTutorAvailabilityOnDate.add(temp);
+                    }
+                    for (int j = 0; j < remoteTutorAvailabilityOnDate.size(); j++) {
+                        if (!remoteTutorAvailabilityOnDate.get(j).isBooked()) {
+                            if(!remoteResult.contains(remoteTutorAvailabilityOnDate.get(j))) {
+                                remoteResult.add(remoteTutorAvailabilityOnDate.get(j));
+                            }
+                        }
+                    }
+//                    tutorAvailablity_session = populateAvailableTutorSessions(week, subject, course);
+//                    remote_available_session = new ArrayList<String>();
+                    for (int i = 0; i < remoteResult.size(); i++) {
+                        remote_adapter_session.add(new String(remoteResult.get(i).toStringTutorName()));
+//                        remote_adapter_session.add(remoteResult.get(i).toStringTutorName());
+                    }
+
+                    Log.i("Shit Fuck", String.valueOf(remoteTutorAvailabilityOnDate.size()));
+                    Log.i("Shit Fuck", remoteTutorAvailabilityOnDate.toString());
+                    Log.i("Shit Fuck", remoteResult.toString());
+
+
+                } catch (JSONException e) {
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Shit","Fuck");
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Log.i("Shit","Fuck2");
+                Log.i("tutor_id",tutorID);
+                Log.i("date",date);
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("tutor_id", tutorID);
+                Params.put("date", date);
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+        //requestQueue.add(stringRequest);
+//        return remoteTutorAvailabilityOnDate;
+    }
+
+
     private ArrayList<TutorAvailablity> loadTutorAvailability(String date, String subject, String course) {
         // first load tutors who can tutor that subject and course
         ArrayList<TutorAvailablity> result;
+//        ArrayList<TutorAvailablity> remoteResult;
 
         ArrayList<String> tutorsIDs_selectedCourse;
         ArrayList<TutorAvailablity> tutorAvailabilityOnDate;
 
 
+        ArrayList<TutorAvailablity> remoteTutorAvailabilityOnDate;
+
+
         result = new ArrayList<TutorAvailablity>();
         tutorsIDs_selectedCourse = database.getAvailableCourseTutorIDs(subject, course);
-
-
-        for (int i = 0; i < tutorsIDs_selectedCourse.size(); i++) {
-            if ( !tutorsIDs_selectedCourse.get(i).equals(user.getStudentID()) ) { // skip over your own TutorID if your a stutor
-                String tutorID = tutorsIDs_selectedCourse.get(i);
-                tutorAvailabilityOnDate = database.getTutorAvailabilityOnDate(tutorID, date);
-                for (int j = 0; j < tutorAvailabilityOnDate.size(); j++) {
-                    if (!tutorAvailabilityOnDate.get(j).isBooked()) {
-                        result.add(tutorAvailabilityOnDate.get(j));
-                    }
-                }
-            }
-
-        }
+        remoteGetAvailableCourseTutorIDs(subject, course, date);
+//        Log.i("poop", String.valueOf(remoteTutorsIDsSelectedCourse.size()));
+//        for (int i = 0; i < remoteTutorsIDsSelectedCourse.size(); i++) {
+//            Log.i("Poop", "Poop");
+//
+//            if ( !remoteTutorsIDsSelectedCourse.get(i).equals(user.getStudentID()) ) { // skip over your own TutorID if your a stutor
+//                String tutorID = remoteTutorsIDsSelectedCourse.get(i);
+//                remoteTutorAvailabilityOnDate = remoteGetTutorAvailabilityOnDate(tutorID, date);
+//                for (int j = 0; j < remoteTutorAvailabilityOnDate.size(); j++) {
+//                    if (!remoteTutorAvailabilityOnDate.get(j).isBooked()) {
+//                        result.add(remoteTutorAvailabilityOnDate.get(j));
+//                    }
+//                }
+//            }
+//        }
+//        for (int i = 0; i < tutorsIDs_selectedCourse.size(); i++) {
+//            if ( !tutorsIDs_selectedCourse.get(i).equals(user.getStudentID()) ) { // skip over your own TutorID if your a stutor
+//                String tutorID = tutorsIDs_selectedCourse.get(i);
+//                tutorAvailabilityOnDate = database.getTutorAvailabilityOnDate(tutorID, date);
+//                for (int j = 0; j < tutorAvailabilityOnDate.size(); j++) {
+//                    if (!tutorAvailabilityOnDate.get(j).isBooked()) {
+//                        result.add(tutorAvailabilityOnDate.get(j));
+//                    }
+//                }
+//            }
+//
+//        }
 
         // then from these tutors, load their time and availability
         return result;
@@ -716,8 +905,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
             System.out.println(date_weekStart);
             String date_weekStart_MM = date_weekStart.split("/", 2)[0];
             System.out.println(date_weekStart_MM);
-            String date_weekStart_DD = date_weekStart.split("/", 2)[1];
+            String date_weekStart_DD = date_weekStart.split("/", 3)[1];
             System.out.println(date_weekStart_DD);
+//            Log.i("Shit", date_weekStart_DD);
             int date_weekStart_MM_int = 0;
             int date_weekStart_DD_int = 0;
             date_weekStart_MM_int = Integer.parseInt(date_weekStart_MM);
@@ -727,8 +917,6 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
             // class variable that stores tutoravailability for selected week and subject|course
             this.tutorAvailablity_session = new ArrayList<TutorAvailablity>();
-
-
 
             if (date_weekStart_DD_int < 23) { // no date month overflow conflict possible. february 22-28 worst case
                 for (int i = 0; i < 7; i++) {
@@ -913,7 +1101,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                         available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
 
                         adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
-                        listView_session.setAdapter(adapter_session);
+                        remote_adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, remote_available_session );
+//                        listView_session.setAdapter(adapter_session);
+                        listView_session.setAdapter(remote_adapter_session);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
