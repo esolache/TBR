@@ -393,6 +393,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
                     tutorAvailablity_session = populateAvailableTutorSessions(week, subject, course);
                     available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
+//                    remote_available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
                     adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
                     remote_adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, remote_available_session );
 //                    listView_session.setAdapter(adapter_session);
@@ -777,22 +778,22 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                         }
 
                         TutorAvailablity temp = new TutorAvailablity(tempName, tempId, tempDate, tempTime, tempBool);
-                        remote_adapter_session.add(tempName);
                         remoteTutorAvailabilityOnDate.add(temp);
                     }
                     for (int j = 0; j < remoteTutorAvailabilityOnDate.size(); j++) {
                         if (!remoteTutorAvailabilityOnDate.get(j).isBooked()) {
                             if(!remoteResult.contains(remoteTutorAvailabilityOnDate.get(j))) {
                                 remoteResult.add(remoteTutorAvailabilityOnDate.get(j));
+                                remote_adapter_session.add(remoteTutorAvailabilityOnDate.get(j).toStringTutorName());
                             }
                         }
                     }
 //                    tutorAvailablity_session = populateAvailableTutorSessions(week, subject, course);
 //                    remote_available_session = new ArrayList<String>();
-                    for (int i = 0; i < remoteResult.size(); i++) {
-                        remote_adapter_session.add(new String(remoteResult.get(i).toStringTutorName()));
+//                    for (int i = 0; i < remoteResult.size(); i++) {
+////                        remote_adapter_session.add(new String(remoteResult.get(i).toStringTutorName()));
 //                        remote_adapter_session.add(remoteResult.get(i).toStringTutorName());
-                    }
+//                    }
 
                     Log.i("Shit Fuck", String.valueOf(remoteTutorAvailabilityOnDate.size()));
                     Log.i("Shit Fuck", remoteTutorAvailabilityOnDate.toString());
