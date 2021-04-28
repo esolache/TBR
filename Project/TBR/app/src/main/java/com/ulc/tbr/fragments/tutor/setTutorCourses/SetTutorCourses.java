@@ -71,11 +71,11 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
     ArrayList<Course> courses;
     ArrayList<Course> myCourses;
 
-    ArrayList<String> courseString;
-    ArrayList<String> myCourseString;
+    ArrayList<Course> courseString;
+    ArrayList<Course> myCourseString;
 
-    ArrayAdapter<String> courseArrayAdapter;
-    ArrayAdapter<String> myClassesAdapter;
+    ArrayAdapter<Course> courseArrayAdapter;
+    ArrayAdapter<Course> myClassesAdapter;
 
 
     public SetTutorCourses() {
@@ -187,12 +187,12 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
 
 
 
-        courseString = new ArrayList<String>();
-        myCourseString = new ArrayList<String>();
+        courseString = new ArrayList<Course>();
+        myCourseString = new ArrayList<Course>();
         this.selectListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         this.myClasses.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        courseArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice,courseString);
-        myClassesAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice,myCourseString);
+        courseArrayAdapter = new ArrayAdapter<Course>(getContext(), android.R.layout.simple_list_item_multiple_choice,courseString);
+        myClassesAdapter = new ArrayAdapter<Course>(getContext(), android.R.layout.simple_list_item_multiple_choice,myCourseString);
 
         populateAllCourses();
         populateTutorCourses(user.getStudentID());
@@ -215,14 +215,9 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
                             //String currSelection = sp.toString();
                             //int currIndex = Integer.parseInt(currSelection.split("=")[0]);
 
-                            String course = (String) selectListView.getItemAtPosition(currIndex);
+                            Course course = (Course) selectListView.getItemAtPosition(currIndex);
 
-                            String course_num = course.substring(course.lastIndexOf(" ") + 1);
-                            String subject = course.substring(0, course.length() - course_num.length() - 1);
-
-                            int courseNo = Integer.parseInt(course_num);
-
-                            addTutorCourse(user.getStudentID(), new Course(subject,course,courseNo));
+                            addTutorCourse(user.getStudentID(), course);
 
                             Toast.makeText(getContext(), "Course selection saved", Toast.LENGTH_LONG).show();
                         }
@@ -237,10 +232,10 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
 
 
 
-                courseString = new ArrayList<String>();
-                myCourseString = new ArrayList<String>();
-                courseArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice, courseString);
-                myClassesAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice, myCourseString);
+                courseString = new ArrayList<Course>();
+                myCourseString = new ArrayList<Course>();
+                courseArrayAdapter = new ArrayAdapter<Course>(getContext(), android.R.layout.simple_list_item_multiple_choice, courseString);
+                myClassesAdapter = new ArrayAdapter<Course>(getContext(), android.R.layout.simple_list_item_multiple_choice, myCourseString);
 
                 populateTutorCourses(user.getStudentID());
                 populateAllCourses();
@@ -265,14 +260,10 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
                             //String currSelection = sp.toString();
                             //int currIndex = Integer.parseInt(currSelection.split("=")[0]);
 
-                            String course = (String) myClasses.getItemAtPosition(currIndex);
+                            Course course = (Course) myClasses.getItemAtPosition(currIndex);
 
-                            String course_num = course.substring(course.lastIndexOf(" ") + 1);
-                            String subject = course.substring(0, course.length() - course_num.length() - 1);
 
-                            int courseNo = Integer.parseInt(course_num);
-
-                            removeTutorCourse(user.getStudentID(), new Course(subject, course, courseNo));
+                            removeTutorCourse(user.getStudentID(), course);
 
                             Toast.makeText(getContext(), "Course selection saved", Toast.LENGTH_LONG).show();
                         }
@@ -287,10 +278,10 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
 
 
 
-                courseString = new ArrayList<String>();
-                myCourseString = new ArrayList<String>();
-                courseArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice, courseString);
-                myClassesAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice, myCourseString);
+                courseString = new ArrayList<Course>();
+                myCourseString = new ArrayList<Course>();
+                courseArrayAdapter = new ArrayAdapter<Course>(getContext(), android.R.layout.simple_list_item_multiple_choice, courseString);
+                myClassesAdapter = new ArrayAdapter<Course>(getContext(), android.R.layout.simple_list_item_multiple_choice, myCourseString);
 
                 populateAllCourses();
                 populateTutorCourses(user.getStudentID());
@@ -375,7 +366,7 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
                         courseArrayAdapter.add(new Course(
                                 (String) jsonArray.get("subject"),
                                 (String) jsonArray.get("course"),//Need to change the database to match session or vice versa? Should be subject in database
-                                Integer.parseInt((String) jsonArray.get("course_num"))).toString());
+                                Integer.parseInt((String) jsonArray.get("course_num"))));
                     }
                 } catch (JSONException e) {
                     Log.i("Student","exception");
@@ -410,7 +401,7 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
                         myClassesAdapter.add(new Course(
                                 (String) jsonArray.get("subject"),
                                 (String) jsonArray.get("course"),//Need to change the database to match session or vice versa? Should be subject in database
-                                Integer.parseInt((String) jsonArray.get("course_num"))).toString());
+                                Integer.parseInt((String) jsonArray.get("course_num"))));
                     }
                 } catch (JSONException e) {
                     Log.i("Student","exception");
@@ -488,7 +479,9 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
         {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-
+                Log.i("VALUES", course.getSubject());
+                Log.i("VALUES", course.getCourse());
+                Log.i("VALUES", String.valueOf(course.getCourseNo()));
                 Map<String, String> Params = new HashMap<String, String>();
                 Params.put("tutor_id", tutor_id);
                 Params.put("subject",course.getSubject());
