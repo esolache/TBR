@@ -2,6 +2,7 @@ package com.ulc.tbr.fragments.tutor.setTutorCourses;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +18,25 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.ulc.tbr.activities.MainActivity;
 import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
+import com.ulc.tbr.fragments.common.login.Mysingleton;
 import com.ulc.tbr.models.util.*;
 import com.ulc.tbr.models.users.*;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -173,25 +186,17 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
         button_removeClasses.setBackgroundColor(Color.RED);
 
 
-        // courses = dbHelper.getDataCourses();
-        // TODO: get courses
-        myCourses = dbHelper.getTutorCourses(user.getStudentID());
 
         courseString = new ArrayList<String>();
         myCourseString = new ArrayList<String>();
-
-        for(Course c : courses) {
-            courseString.add(c.toStringSubjectCourseNo());
-        }
-        for(Course c : myCourses){
-            myCourseString.add(c.toStringSubjectCourseNo());
-            courseString.remove(c.toStringSubjectCourseNo());
-        }
         this.selectListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         this.myClasses.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-
         courseArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice,courseString);
         myClassesAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice,myCourseString);
+
+        populateAllCourses();
+        populateTutorCourses(user.getStudentID());
+
         this.myClasses.setAdapter(myClassesAdapter);
         this.selectListView.setAdapter(courseArrayAdapter);
 
@@ -217,44 +222,32 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
 
                             int courseNo = Integer.parseInt(course_num);
 
-                            dbHelper.addTutorCourse(user.getStudentID(), subject, courseNo);
+                            addTutorCourse(user.getStudentID(), new Course(subject,course,courseNo));
 
-                            Toast.makeText(ma, "Course selection saved", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Course selection saved", Toast.LENGTH_LONG).show();
                         }
 
 
 
                     }
                 } catch(Exception e){
-                    Toast.makeText(ma, "Course selection not saved! Try again", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Course selection not saved! Try again", Toast.LENGTH_LONG).show();
                 }
 
-                myCourses = dbHelper.getTutorCourses(user.getStudentID());
+
 
 
                 courseString = new ArrayList<String>();
                 myCourseString = new ArrayList<String>();
-                for (Course c : courses) {
-                    courseString.add(c.toStringSubjectCourseNo());
-                }
-                for (Course c : myCourses) {
-                    myCourseString.add(c.toStringSubjectCourseNo());
-                    courseString.remove(c.toStringSubjectCourseNo());
-                }
                 courseArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice, courseString);
                 myClassesAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice, myCourseString);
+
+                populateTutorCourses(user.getStudentID());
+                populateAllCourses();
+
                 myClasses.setAdapter(myClassesAdapter);
                 selectListView.setAdapter(courseArrayAdapter);
-
-
-
-
             }
-
-
-
-
-
         });
 
         button_removeClasses.setOnClickListener(new View.OnClickListener() {
@@ -279,32 +272,29 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
 
                             int courseNo = Integer.parseInt(course_num);
 
-                            dbHelper.deleteTutorCourse(user.getStudentID(), subject, courseNo);
+                            removeTutorCourse(user.getStudentID(), new Course(subject, course, courseNo));
 
-                            Toast.makeText(ma, "Course selection saved", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Course selection saved", Toast.LENGTH_LONG).show();
                         }
 
 
 
                     }
                 } catch(Exception e){
-                    Toast.makeText(ma, "Course selection not saved! Try again", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Course selection not saved! Try again", Toast.LENGTH_LONG).show();
                 }
 
-                myCourses = dbHelper.getTutorCourses(user.getStudentID());
+
 
 
                 courseString = new ArrayList<String>();
                 myCourseString = new ArrayList<String>();
-                for (Course c : courses) {
-                    courseString.add(c.toStringSubjectCourseNo());
-                }
-                for (Course c : myCourses) {
-                    myCourseString.add(c.toStringSubjectCourseNo());
-                    courseString.remove(c.toStringSubjectCourseNo());
-                }
                 courseArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice, courseString);
                 myClassesAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_multiple_choice, myCourseString);
+
+                populateAllCourses();
+                populateTutorCourses(user.getStudentID());
+
                 myClasses.setAdapter(myClassesAdapter);
                 selectListView.setAdapter(courseArrayAdapter);
 
@@ -366,6 +356,149 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
 
 
         }
+    }
+
+    private void populateAllCourses(){
+        Log.i("Populate All Courses","Populating....");
+        String url = "https://pistachio.khello.co/get_courses.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.i("Student","HIT THE DATABASE HURRAY");
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray array = (JSONArray) jsonObject.get("Courses: ");
+
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject jsonArray = (JSONObject) array.get(i);
+
+                        courseArrayAdapter.add(new Course(
+                                (String) jsonArray.get("subject"),
+                                (String) jsonArray.get("course"),//Need to change the database to match session or vice versa? Should be subject in database
+                                Integer.parseInt((String) jsonArray.get("course_num"))).toString());
+                    }
+                } catch (JSONException e) {
+                    Log.i("Student","exception");
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        });
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+    }
+
+    private void populateTutorCourses(String tutor_id){
+        Log.i("Populate Tutor Courses","Populating....");
+        String url = "https://pistachio.khello.co/get_tutor_courses.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.i("Student","HIT THE DATABASE HURRAY");
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray array = (JSONArray) jsonObject.get("Courses: ");
+
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject jsonArray = (JSONObject) array.get(i);
+
+                        myClassesAdapter.add(new Course(
+                                (String) jsonArray.get("subject"),
+                                (String) jsonArray.get("course"),//Need to change the database to match session or vice versa? Should be subject in database
+                                Integer.parseInt((String) jsonArray.get("course_num"))).toString());
+                    }
+                } catch (JSONException e) {
+                    Log.i("Student","exception");
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("tutor_id", tutor_id);
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+    }
+
+    private void addTutorCourse(String tutor_id, Course course){
+        Log.i("Adding Tutor Courses","Adding....");
+        String url = "https://pistachio.khello.co/post_tutor_courses.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("Student",response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("tutor_id", tutor_id);
+                Params.put("subject",course.getSubject());
+                Params.put("course",course.getCourse());
+                Params.put("course_num",String.valueOf(course.getCourseNo()));
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+
+    }
+
+    private void removeTutorCourse(String tutor_id, Course course){
+        Log.i("Removing Tutor Courses","Removing....");
+        String url = "https://pistachio.khello.co/remove_tutor_courses.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("Removing",response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Error removing",error.toString());
+                user = null;
+            }
+        })
+        {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("tutor_id", tutor_id);
+                Params.put("subject",course.getSubject());
+                Params.put("course",course.getCourse());
+                Params.put("course_num",String.valueOf(course.getCourseNo()));
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+
     }
 
     @Override
