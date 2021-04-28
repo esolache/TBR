@@ -222,8 +222,6 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
                             Toast.makeText(getContext(), "Course selection saved", Toast.LENGTH_LONG).show();
                         }
 
-
-
                     }
                 } catch(Exception e){
                     Toast.makeText(getContext(), "Course selection not saved! Try again", Toast.LENGTH_LONG).show();
@@ -434,7 +432,7 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.i("Student",response);
+                Log.i("Adding",response);
 
             }
         }, new Response.ErrorListener() {
@@ -447,7 +445,9 @@ public class SetTutorCourses extends Fragment implements AdapterView.OnItemSelec
         {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-
+                Log.i("VALUES", course.getSubject());
+                Log.i("VALUES", course.getCourse());
+                Log.i("VALUES", String.valueOf(course.getCourseNo()));
                 Map<String, String> Params = new HashMap<String, String>();
                 Params.put("tutor_id", tutor_id);
                 Params.put("subject",course.getSubject());
