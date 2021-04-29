@@ -786,7 +786,13 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                         int currDay = Integer.parseInt(currentDate.substring(3,5));
                         int currYear = Integer.parseInt(currentDate.substring(6));
 
-                        if(tempMonth>currMonth && tempDay>currDay && tempYear>currYear){
+                        if(tempYear>currYear){
+                            TutorAvailablity temp = new TutorAvailablity(tempName, tempId, tempDate, tempTime, tempBool);
+                            remoteTutorAvailabilityOnDate.add(temp);
+                        }else if(tempMonth>currMonth){
+                            TutorAvailablity temp = new TutorAvailablity(tempName, tempId, tempDate, tempTime, tempBool);
+                            remoteTutorAvailabilityOnDate.add(temp);
+                        } else if(tempDay>currDay){
                             TutorAvailablity temp = new TutorAvailablity(tempName, tempId, tempDate, tempTime, tempBool);
                             remoteTutorAvailabilityOnDate.add(temp);
                         }
