@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -71,8 +72,8 @@ public class UIChangeCoursesTest {
         Fragment g = new Fragment();
         activityActivityTestRule.getActivity()
                 .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login, g);
-        onView(withId(R.id.net_ID)).perform(clearText(), typeText("testTutor"));
-        onView(withId(R.id.password)).perform(clearText(), typeText("testTutor"));
+        onView(withId(R.id.net_ID)).perform(clearText(), typeText("tutor1"));
+        onView(withId(R.id.password)).perform(clearText(), typeText("tutor1"));
         onView(withId(R.id.login)).perform(click());
         onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
 
@@ -104,8 +105,8 @@ public class UIChangeCoursesTest {
             Fragment g = new Fragment();
             activityActivityTestRule.getActivity()
                     .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login, g);
-            onView(withId(R.id.net_ID)).perform(clearText(), typeText("testTutor"));
-            onView(withId(R.id.password)).perform(clearText(), typeText("testTutor"));
+            onView(withId(R.id.net_ID)).perform(clearText(), typeText("tutor1"));
+            onView(withId(R.id.password)).perform(clearText(), typeText("tutor1"));
             onView(withId(R.id.login)).perform(click());
             onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
 
@@ -141,8 +142,8 @@ public class UIChangeCoursesTest {
             Fragment g = new Fragment();
             activityActivityTestRule.getActivity()
                     .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login, g);
-            onView(withId(R.id.net_ID)).perform(clearText(), typeText("testStutor"));
-            onView(withId(R.id.password)).perform(clearText(), typeText("testStutor"));
+            onView(withId(R.id.net_ID)).perform(clearText(), typeText("stutor"));
+            onView(withId(R.id.password)).perform(clearText(), typeText("stutor"));
             onView(withId(R.id.login)).perform(click());
             onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
 
@@ -178,8 +179,8 @@ public class UIChangeCoursesTest {
             Fragment g = new Fragment();
             activityActivityTestRule.getActivity()
                     .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login, g);
-            onView(withId(R.id.net_ID)).perform(clearText(), typeText("testStudent"));
-            onView(withId(R.id.password)).perform(clearText(), typeText("testStudent"));
+            onView(withId(R.id.net_ID)).perform(clearText(), typeText("student"));
+            onView(withId(R.id.password)).perform(clearText(), typeText("student"));
             onView(withId(R.id.login)).perform(click());
             onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
 
@@ -212,25 +213,6 @@ public class UIChangeCoursesTest {
         }
     }
 
-    @Test
-    public void tutor_add_course(){
-        navigate();
-        try {
-
-            onData(anything()).inAdapterView(withId(R.id.listView_availableClasses)).atPosition(0).perform(click());
-            onView(withId(R.id.button_addTutorClasses)).perform(click());
-            Cursor c = db.CheckTutorFromCourse("8888888888","Computer Science", "200");
-            c.moveToNext();
-            if(!c.getString(0).equals("Computer Science")||!c.getString(1).equals("200")){
-                fail();
-            }
-
-
-        } catch (Exception e){
-            fail();
-        }
-
-    }
     @Test
     public void tutor_remove_course(){
 
