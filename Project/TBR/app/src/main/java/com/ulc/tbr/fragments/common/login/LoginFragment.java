@@ -81,16 +81,17 @@ public class LoginFragment extends Fragment {
                     Log.i("Some sort of unique string identifier here",response.toString());
                     JSONObject userObject = new JSONObject(response.toString());
 
-                    user = new User(
-                            (String) userObject.get("student_id"),
-                            password,
-                            (String)userObject.get("net_id"),
-                            (String) userObject.get("email"),
-                             Boolean.valueOf(userObject.get("tutor").toString()),
-                             Boolean.valueOf(userObject.get("tutee").toString()));
-                    if (user == null){
-                        Toast.makeText(getContext().getApplicationContext(), "NetID or Password is incorrect", Toast.LENGTH_LONG).show();
+                    if (userObject.isNull("student_id")) {
+                        Toast.makeText(getActivity().getApplicationContext(), "NetID or Password is incorrect", Toast.LENGTH_LONG).show();
                     } else {
+                        user = new User(
+                                (String) userObject.get("student_id"),
+                                password,
+                                (String)userObject.get("net_id"),
+                                (String) userObject.get("email"),
+                                Boolean.valueOf(userObject.get("tutor").toString()),
+                                Boolean.valueOf(userObject.get("tutee").toString()));
+
                         Bundle userData = new Bundle();
                         userData.putSerializable("user", user);
 

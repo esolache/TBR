@@ -38,8 +38,8 @@ public class UILoginTest {
         Fragment g = new Fragment();
         activityActivityTestRule.getActivity()
                 .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login,g);
-        onView(withId(R.id.net_ID)).perform(clearText(),typeText("testTutor"));
-        onView(withId(R.id.password)).perform(clearText(),typeText("testTutor"));
+        onView(withId(R.id.net_ID)).perform(clearText(),typeText("tutor1"));
+        onView(withId(R.id.password)).perform(clearText(),typeText("tutor1"));
         onView(withId(R.id.login)).perform(click());
         onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
     }
@@ -48,8 +48,8 @@ public class UILoginTest {
         Fragment g = new Fragment();
         activityActivityTestRule.getActivity()
                 .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login,g);
-        onView(withId(R.id.net_ID)).perform(clearText(),typeText("testStutor"));
-        onView(withId(R.id.password)).perform(clearText(),typeText("testStutor"));
+        onView(withId(R.id.net_ID)).perform(clearText(),typeText("stutor"));
+        onView(withId(R.id.password)).perform(clearText(),typeText("stutor"));
         onView(withId(R.id.login)).perform(click());
         onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
     }
@@ -84,7 +84,6 @@ public class UILoginTest {
         }
     }
 
-
     @Test
     public void should_not_login_with_only_username(){
         Fragment g = new Fragment();
@@ -98,7 +97,6 @@ public class UILoginTest {
 
         }
     }
-
 
     @Test
     public void should_not_login_with_only_password(){
@@ -114,7 +112,6 @@ public class UILoginTest {
         }
     }
 
-
     @Test
     public void should_not_login_with_incorrect_password_but_correct_username(){
         Fragment g = new Fragment();
@@ -129,7 +126,6 @@ public class UILoginTest {
 
         }
     }
-
 
     @Test
     public void should_not_login_with_correct_password_but_incorrect_username() {
@@ -176,8 +172,6 @@ public class UILoginTest {
 
         }
     }
-
-
 
 }
 
