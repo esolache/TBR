@@ -10,11 +10,12 @@
     $courseNumber = null;
     $result = null;
 
-    if(isset($_REQUEST["tutor_id"]) && isset($_REQUEST["course"]) && isset($_REQUEST["course_num"])){
+    if(isset($_REQUEST["tutor_id"]) && isset($_REQUEST["subject"]) && isset($_REQUEST["course_num"])){
         $tutorID = $_REQUEST["tutor_id"];
         $subject = $_REQUEST["subject"];
         $courseNumber = $_REQUEST["course_num"];
-        $sql = "insert tutor_availability_table values ('".$subject."', '".$course."', '".$courseNumber."')";
+        $sql = "insert tutor_courses_table (tutor_id, subject, course_num)
+                values ('".$tutorID."', '".$subject."', '".$courseNumber."')";
         $result = mysqli_query($con,$sql);
         if(!$result){
             echo 0;
