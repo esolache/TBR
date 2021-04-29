@@ -393,7 +393,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
                     tutorAvailablity_session = populateAvailableTutorSessions(week, subject, course);
                     available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
-//                    remote_available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
+                    remote_available_session = new ArrayList<String>();
+                    remote_available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
+
                     adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
                     remote_adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, remote_available_session );
 //                    listView_session.setAdapter(adapter_session);
