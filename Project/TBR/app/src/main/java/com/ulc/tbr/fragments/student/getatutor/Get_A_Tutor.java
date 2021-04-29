@@ -552,7 +552,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
                     // we now have to match
 
-                    TutorAvailablity selectedTutorAvailability = tutorAvailablity_session.get(position);
+                    TutorAvailablity selectedTutorAvailability = remoteTutorAvailabilityOnDate.get(position);
                     listviewsession = (String) parent.getItemAtPosition(position);
                     //String [] availability;
 
@@ -906,10 +906,13 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         try {
             date_weekStart = week.split(" ", 2)[0];
             System.out.println(date_weekStart);
-            String date_weekStart_MM = date_weekStart.split("/", 2)[0];
+            String date_weekStart_MM = date_weekStart.split("/", 3)[0];
             System.out.println(date_weekStart_MM);
             String date_weekStart_DD = date_weekStart.split("/", 3)[1];
             System.out.println(date_weekStart_DD);
+            String date_weekStart_YEAR = date_weekStart.split("/", 3)[2];
+            System.out.println(date_weekStart_YEAR);
+
 //            Log.i("Shit", date_weekStart_DD);
             int date_weekStart_MM_int = 0;
             int date_weekStart_DD_int = 0;
@@ -923,7 +926,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
             if (date_weekStart_DD_int < 23) { // no date month overflow conflict possible. february 22-28 worst case
                 for (int i = 0; i < 7; i++) {
-                    date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                    date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                     System.out.println("Current Date = " + date);
                     temp = loadTutorAvailability(date, subject, course);
                     for (int j = 0; j < temp.size(); j++) {
@@ -937,7 +940,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 if (date_weekStart_MM_int == 2) { // february case
                     int i = 0;
                     while (date_weekStart_DD_int < 29) { // TODO: iteration 1 so we're just gonna go ahead and assume leap year doesn't exist
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                         System.out.println("Current Date = " + date);
                         temp = loadTutorAvailability(date, subject, course);
                         for (int j = 0; j < temp.size(); j++) {
@@ -951,7 +954,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     date_weekStart_DD_int = 1;
 
                     while ( i < 7 ) {
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                         System.out.println("Current Date = " + date);
                         temp = loadTutorAvailability(date, subject, course);
                         for (int j = 0; j < temp.size(); j++) {
@@ -964,7 +967,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 else if (date_weekStart_MM_int % 2 == 1) { // 31 day months case
                     int i = 0;
                     while (date_weekStart_DD_int < 32) { // TODO: iteration 1 so we're just gonna go ahead and assume leap year doesn't exist
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                         System.out.println("Current Date = " + date);
                         temp = loadTutorAvailability(date, subject, course);
                         for (int j = 0; j < temp.size(); j++) {
@@ -978,7 +981,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     date_weekStart_DD_int = 1;
 
                     while ( i < 7 ) {
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                         System.out.println("Current Date = " + date);
                         temp = loadTutorAvailability(date, subject, course);
                         for (int j = 0; j < temp.size(); j++) {
@@ -991,7 +994,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 else { // 30 day month case
                     int i = 0;
                     while (date_weekStart_DD_int < 31) { // TODO: iteration 1 so we're just gonna go ahead and assume leap year doesn't exist
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                         System.out.println("Current Date = " + date);
                         temp = loadTutorAvailability(date, subject, course);
                         for (int j = 0; j < temp.size(); j++) {
@@ -1005,7 +1008,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     date_weekStart_DD_int = 1;
 
                     while ( i < 7 ) {
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                         System.out.println("Current Date = " + date);
                         temp = loadTutorAvailability(date, subject, course);
                         for (int j = 0; j < temp.size(); j++) {
