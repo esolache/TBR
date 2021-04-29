@@ -224,8 +224,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 
         } else if (user.isTutor()){
 
-//            getTutorSessions(user.getStudentID());
-            getTutorSessions("0000011111");
+            getTutorSessions(user.getStudentID());
             //textView.setText("Getting sessions for tutor with tutor id: " + user.getStudentID());
             button_studentSessions.setEnabled(false);
             button_tutorSessions.setEnabled(false);
