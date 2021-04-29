@@ -54,6 +54,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
     static int sessionID = 0;
     MainActivity ma;
     DatabaseHelper database;
+    String currentDate;
 
     ArrayList<String> remoteTutorsIDsSelectedCourse = new ArrayList<String>();;
     ArrayList<TutorAvailablity> remoteTutorAvailabilityOnDate = new ArrayList<TutorAvailablity>();
@@ -586,7 +587,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         Calendar cal = Calendar.getInstance();
         int currWeek = cal.get(Calendar.WEEK_OF_YEAR);
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        String currentDate = sdf.format(cal.getTime());
+        currentDate = sdf.format(cal.getTime());
 
 
         available_week.add("Select a week");
@@ -778,9 +779,19 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                         if(tempBooked == "TRUE"){
                             tempBool = true;
                         }
+                        int tempMonth = Integer.parseInt(date.substring(0,2));
+                        int tempDay = Integer.parseInt(date.substring(3,5));
+                        int tempYear = Integer.parseInt(date.substring(6));
+                        int currMonth = Integer.parseInt(currentDate.substring(0,2));
+                        int currDay = Integer.parseInt(currentDate.substring(3,5));
+                        int currYear = Integer.parseInt(currentDate.substring(6));
 
-                        TutorAvailablity temp = new TutorAvailablity(tempName, tempId, tempDate, tempTime, tempBool);
-                        remoteTutorAvailabilityOnDate.add(temp);
+                        if(tempMonth>currMonth && tempDay>currDay && tempYear>currYear){
+                            TutorAvailablity temp = new TutorAvailablity(tempName, tempId, tempDate, tempTime, tempBool);
+                            remoteTutorAvailabilityOnDate.add(temp);
+                        }
+
+
                     }
                     for (int j = 0; j < remoteTutorAvailabilityOnDate.size(); j++) {
                         if (!remoteTutorAvailabilityOnDate.get(j).isBooked()) {
@@ -882,6 +893,8 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
         result = new ArrayList<String>();
         for (int i = 0; i < availablity.size(); i++) {
+            String date = availablity.get(i).getDate();
+
             result.add(availablity.get(i).toStringTutorName());
         }
 
