@@ -54,6 +54,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
     Spinner spinner_homeMenu;
     ArrayList<String> homeMenu;
     ArrayAdapter<String> adapter_homeMenu;
+    Boolean stutor = false;
 
     ViewGroup view_viewGroup;
 
@@ -203,8 +204,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         if (user.isTutor() && user.isTutee() ) { // STUTOR CASE
             getTutorSessions(user.getStudentID());
             getStudentSessions(user.getStudentID());
-//            getStudentSessions("00000111111");
-//            getTutorSessions("00000111111");
+            stutor = true;
             button_studentSessions.setEnabled(true);
             button_tutorSessions.setEnabled(true);
             button_tutorSessions.setBackgroundColor(Color.RED);
@@ -465,6 +465,73 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
     }
     // UPPER MENU END
 
+    public void deleteSession(Session session) {
+        String url = "https://pistachio.khello.co/remove_sessions.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                updateAvail(session);
+                if (stutor) {
+                    if (listView_sessions.getAdapter() == adapter_studentSessions) {
+                        adapter_studentSessions.remove(session);
+                    } else if (listView_sessions.getAdapter() == adapter_studentSessions) {
+                        adapter_tutorSessions.remove(session);
+                    }
+                } else if (user.isTutee()) {
+                    adapter_studentSessions.remove(session);
+                } else if (user.isTutor()) {
+                    adapter_tutorSessions.remove(session);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("student_id", session.getStudentID());
+                Params.put("tutor_id", session.getTutorID());
+                Params.put("date", session.getDate());
+                Params.put("time", session.getTime());
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+
+    }
+
+    public void updateAvail(Session session) {
+        String url = "https://pistachio.khello.co/update_session_availability.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Log.d("E","it got here");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("tutor_id", session.getTutorID());
+                Params.put("date", session.getDate());
+                Params.put("time", session.getTime());
+                Params.put("booked", "FALSE");
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+
+    }
 
 
 
@@ -476,7 +543,7 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 
         PopupWindow popup = new PopupWindow(popupView, 1000, 1000, true);
         popup.setOutsideTouchable(true);
-        //popup.setContentView(view);
+
         popup.showAtLocation(view, Gravity.CENTER, 0, 0);
 
         TextView textView = popupView.findViewById(R.id.sessionDetails);
@@ -485,11 +552,10 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 
         Button button_dismiss = (Button) popupView.findViewById(R.id.button_dismiss);
 
-
-
         button_dismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                deleteSession(session);
                 popup.dismiss();
             }
         });
