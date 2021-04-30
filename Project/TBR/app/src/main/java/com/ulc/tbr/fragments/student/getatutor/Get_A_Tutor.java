@@ -1052,6 +1052,75 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         return result;
     }
 
+    public void remoteAddSession(Session session){
+        Log.i("Input",session.getStudentID() + " " + session.getTutorID() + " " + session.getDate() + " " + session.getTime() + " " + session.getSubject() + " " + String.valueOf(session.getCourseNo()) + " " + session.getLocation() + " " + session.getDescription() + " " +  String.valueOf(session.getSessionID()));
+
+
+        String url = "https://pistachio.khello.co/post_new_sessions.php";
+
+        RequestQueue requestQueue = Mysingleton.getInstance(getContext()).getRequestQueue();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("Response", response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("student_id", session.getStudentID());
+                Params.put("tutor_id", session.getTutorID());
+                Params.put("date", session.getDate());
+                Params.put("time", session.getTime());
+                Params.put("subject", session.getSubject());
+                Params.put("course_number", String.valueOf(session.getCourseNo()));
+                Params.put("location", session.getLocation());
+                Params.put("description", session.getDescription());
+                //Params.put("session_id", String.valueOf(session.getSessionID()));
+
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+    }
+
+    public void updateAvailBookSession(Session session) {
+        String url = "https://pistachio.khello.co/update_session_availability.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Log.d("E","it got here");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("tutor_id", session.getTutorID());
+                Params.put("date", session.getDate());
+                Params.put("time", session.getTime());
+                Params.put("booked", "TRUE");
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+
+    }
+
+
 
 
     // CONFIRMATION AND ADD DESCRIPTION FOR CREATE SESSION
@@ -1111,28 +1180,21 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 session.setDescription(description);
                 session.setLocation(location);
 
-                try {
-                    if ( database.addDataSession(session) ) {
-                        // ADD SESSION TO DATABASE SUCCESSFUL
-                        String tutorID = availablity.getTutorId();
-                        String date = availablity.getDate();
-                        String time = availablity.getTime();
-                        //boolean currentavailability = availablity.isBooked(); // just for testing the toggling
+                remoteAddSession(session);
+                updateAvailBookSession(session);
 
-                        database.modifySessionIsAvailable(tutorID, date, time, true);
 
-                        // reload tutoravailability listview
-                        tutorAvailablity_session = populateAvailableTutorSessions((String) spinner_week.getSelectedItem(), session.getSubject(), "" + session.getCourseNo());
-                        available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
 
-                        adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
-                        remote_adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, remote_available_session );
+
+                // reload tutoravailability listview
+                //tutorAvailablity_session = populateAvailableTutorSessions((String) spinner_week.getSelectedItem(), session.getSubject(), "" + session.getCourseNo());
+                //available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
+
+                //adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
+                //remote_adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, remote_available_session );
 //                        listView_session.setAdapter(adapter_session);
-                        listView_session.setAdapter(remote_adapter_session);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                //listView_session.setAdapter(remote_adapter_session);
+
 
                 popup.dismiss();
             }
@@ -1150,41 +1212,4 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
 }
 
-//public class ShowPopUp extends MainActivity {
-//    PopupWindow popUp;
-//    boolean click = true;
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        popUp = new PopupWindow(this);
-//        LinearLayout layout = new LinearLayout(this);
-//        LinearLayout mainLayout = new LinearLayout(this);
-//        TextView tv = new TextView(this);
-//        Button but = new Button(this);
-//        but.setText("Click Me");
-//        but.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (click) {
-//                    popUp.showAtLocation(layout, Gravity.BOTTOM, 10, 10);
-//                    popUp.update(50, 50, 300, 80);
-//                    click = false;
-//                } else {
-//                    popUp.dismiss();
-//                    click = true;
-//                }
-//            }
-//        });
-//
-//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT);
-//        layout.setOrientation(LinearLayout.VERTICAL);
-//        tv.setText("Hi this is a sample text for popup window");
-//        layout.addView(tv, params);
-//        popUp.setContentView(layout);
-//        // popUp.showAtLocation(layout, Gravity.BOTTOM, 10, 10);
-//        mainLayout.addView(but, params);
-//        setContentView(mainLayout);
-//    }
-//}
+
