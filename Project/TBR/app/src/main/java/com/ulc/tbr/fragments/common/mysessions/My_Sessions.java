@@ -1,7 +1,9 @@
 package com.ulc.tbr.fragments.common.mysessions;
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,18 +15,33 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.ulc.tbr.activities.MainActivity;
 import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
+import com.ulc.tbr.fragments.common.login.LoginFragment;
+import com.ulc.tbr.fragments.common.login.Mysingleton;
 import com.ulc.tbr.models.util.Session;
 import com.ulc.tbr.models.users.User;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,14 +54,15 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
     Spinner spinner_homeMenu;
     ArrayList<String> homeMenu;
     ArrayAdapter<String> adapter_homeMenu;
+    Boolean stutor = false;
 
     ViewGroup view_viewGroup;
 
-    MainActivity ma;
-    DatabaseHelper db;
+
     User user;
 
     ArrayList<Session> tutorSessions;
+    boolean res = false;
     ArrayList<Session> studentSessions;
 
     ArrayAdapter<Session> adapter_tutorSessions;
@@ -119,7 +137,14 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 
         int currFragmentIndex;
 
-        if (user.isTutor() && user.isTutee()) { // StudentTutor
+
+
+
+
+
+
+
+            if (user.isTutor() && user.isTutee()) { // StudentTutor
             homeMenu.add("Home");
             homeMenu.add("Get A Tutor");
             homeMenu.add("My Sessions");
@@ -152,6 +177,10 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
             currFragmentIndex = 0;
         }
 
+
+        studentSessions = new ArrayList<>();
+        tutorSessions = new ArrayList<>();
+
         adapter_homeMenu = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, homeMenu);
         spinner_homeMenu.setAdapter(adapter_homeMenu);
 
@@ -169,15 +198,13 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         button_studentSessions = view.findViewById(R.id.button_studentSession);
         button_tutorSessions = view.findViewById(R.id.button_tutorSessions);
 
-        ma = (MainActivity) getActivity();
-        db = ma.getDatabase();
-
         Bundle bundle = this.getArguments();
         user = (User) bundle.getSerializable("user");
 
-        if (user.isTutor() && user.isTutee() ){ // STUTOR CASE
-
-            //textView.setText("Getting sessions for stutor with student id: " + user.getStudentID());
+        if (user.isTutor() && user.isTutee() ) { // STUTOR CASE
+            getTutorSessions(user.getStudentID());
+            getStudentSessions(user.getStudentID());
+            stutor = true;
             button_studentSessions.setEnabled(true);
             button_tutorSessions.setEnabled(true);
             button_tutorSessions.setBackgroundColor(Color.RED);
@@ -185,35 +212,42 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
             button_tutorSessions.setVisibility(View.VISIBLE);
             button_studentSessions.setVisibility(View.VISIBLE);
 
-            tutorSessions = db.getTutorSession(user.getStudentID());
-            studentSessions = db.getStudentSession(user.getStudentID());
+            Log.i("stutor",user.getStudentID());
+
+
+
+
             adapter_tutorSessions =
                     new ArrayAdapter<Session>(getContext(), android.R.layout.simple_selectable_list_item, tutorSessions);
-
             adapter_studentSessions =
                     new ArrayAdapter<Session>(getContext(), android.R.layout.simple_selectable_list_item, studentSessions);
 
         } else if (user.isTutor()){
+
+            getTutorSessions(user.getStudentID());
             //textView.setText("Getting sessions for tutor with tutor id: " + user.getStudentID());
             button_studentSessions.setEnabled(false);
             button_tutorSessions.setEnabled(false);
             button_tutorSessions.setVisibility(View.GONE);
             button_studentSessions.setVisibility(View.GONE);
-            tutorSessions = db.getTutorSession(user.getStudentID());
 
+
+            Log.i("tutor", String.valueOf(tutorSessions.toString()));
             adapter_tutorSessions =
                     new ArrayAdapter<Session>(getContext(), android.R.layout.simple_selectable_list_item, tutorSessions);
+
 
             listView_sessions.setAdapter(adapter_tutorSessions);
 
         } else if (user.isTutee()) {
             //textView.setText("Getting sessions for student with tutor id: " + user.getStudentID());
+            getStudentSessions(user.getStudentID());
             button_studentSessions.setEnabled(false);
             button_tutorSessions.setEnabled(false);
             button_tutorSessions.setVisibility(View.GONE);
             button_studentSessions.setVisibility(View.GONE);
-            studentSessions = db.getStudentSession(user.getStudentID());
 
+            Log.i("student", String.valueOf(studentSessions.toString()));
             adapter_studentSessions =
                     new ArrayAdapter<Session>(getContext(), android.R.layout.simple_selectable_list_item, studentSessions);
 
@@ -312,6 +346,116 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
         }
     }
 
+    public  void getTutorSessions(String tutor_id) {
+    //    tutorSessions = new ArrayList<>();
+        Log.i("RIGHT HERE", "HELL02");
+        String url = "https://pistachio.khello.co/get_sessions_tutor.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                    try {
+                        Log.i("TUTOR","HIT THE DATABASE HURRAy");
+                        Log.i("TUTOR", response);
+                        JSONObject jsonObject = new JSONObject(response);
+                        JSONArray array = (JSONArray) jsonObject.get("Sessions: ");
+
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject jsonArray = (JSONObject) array.get(i);
+                            adapter_tutorSessions.add(new Session(
+                                    (String) jsonArray.get("student_id"),
+                                    (String) jsonArray.get("tutor_id"),
+                                    (String) jsonArray.get("date"),
+                                    (String) jsonArray.get("time"),
+                                    (String) jsonArray.get("subject"),//Need to change the database to match session or vice versa? Should be subject in database
+                                    Integer.parseInt((String) jsonArray.get("course_number")),
+                                    (String) jsonArray.get("location"),
+                                    (String) jsonArray.get("description"),
+                                    Integer.parseInt((String) jsonArray.get("session_id"))));
+
+                        }
+                        Log.i("on response", String.valueOf(tutorSessions.size()));
+                        Log.i("tutor", String.valueOf(tutorSessions.toString()));
+
+
+                    } catch (JSONException e) {
+                    }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Log.i("tutor_id",tutor_id);
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("tutor_id", tutor_id);
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+        //requestQueue.add(stringRequest);
+    }
+
+    public void getStudentSessions(String student_id) {
+  //      studentSessions = new ArrayList<>();
+        Log.i("RIGHT HERE", "HELL02");
+        String url = "https://pistachio.khello.co/get_sessions_student.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    Log.i("Student","HIT THE DATABASE HURRAy");
+                    JSONObject jsonObject = new JSONObject(response);
+                    JSONArray array = (JSONArray) jsonObject.get("Sessions: ");
+
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject jsonArray = (JSONObject) array.get(i);
+
+                        adapter_studentSessions.add(new Session(
+                                (String) jsonArray.get("student_id"),
+                                (String) jsonArray.get("tutor_id"),
+                                (String) jsonArray.get("date"),
+                                (String) jsonArray.get("time"),
+                                (String) jsonArray.get("subject"),//Need to change the database to match session or vice versa? Should be subject in database
+                                Integer.parseInt((String) jsonArray.get("course_number")),
+                                (String) jsonArray.get("location"),
+                                (String) jsonArray.get("description"),
+                                Integer.parseInt((String) jsonArray.get("session_id"))));
+                        Log.i("Student",(String) jsonArray.get("student_id"));
+
+                    }
+
+
+                } catch (JSONException e) {
+                    Log.i("Student","exception");
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Log.i("Student",student_id);
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("student_id", student_id);
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+        //requestQueue.add(stringRequest);
+
+    }
+
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         if (parent.getId() == R.id.spinner_homeMenu) {
@@ -321,6 +465,73 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
     }
     // UPPER MENU END
 
+    public void deleteSession(Session session) {
+        String url = "https://pistachio.khello.co/remove_sessions.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                updateAvail(session);
+                if (stutor) {
+                    if (listView_sessions.getAdapter() == adapter_studentSessions) {
+                        adapter_studentSessions.remove(session);
+                    } else if (listView_sessions.getAdapter() == adapter_studentSessions) {
+                        adapter_tutorSessions.remove(session);
+                    }
+                } else if (user.isTutee()) {
+                    adapter_studentSessions.remove(session);
+                } else if (user.isTutor()) {
+                    adapter_tutorSessions.remove(session);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("student_id", session.getStudentID());
+                Params.put("tutor_id", session.getTutorID());
+                Params.put("date", session.getDate());
+                Params.put("time", session.getTime());
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+
+    }
+
+    public void updateAvail(Session session) {
+        String url = "https://pistachio.khello.co/update_session_availability.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Log.d("E","it got here");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("tutor_id", session.getTutorID());
+                Params.put("date", session.getDate());
+                Params.put("time", session.getTime());
+                Params.put("booked", "FALSE");
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+
+    }
 
 
 
@@ -332,43 +543,19 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 
         PopupWindow popup = new PopupWindow(popupView, 1000, 1000, true);
         popup.setOutsideTouchable(true);
-        //popup.setContentView(view);
+
         popup.showAtLocation(view, Gravity.CENTER, 0, 0);
 
         TextView textView = popupView.findViewById(R.id.sessionDetails);
 
         textView.setText(session.sessionDetails());
 
-        //Button button_cancelSession = (Button) popupView.findViewById(R.id.button_cancelSession);
-        // button_cancelSession.setVisibility(View.VISIBLE);
-        // button_cancelSession.setEnabled(true);
-        // button_cancelSession.setBackgroundColor(Color.RED);
         Button button_dismiss = (Button) popupView.findViewById(R.id.button_dismiss);
-
-        // button_dismiss.setVisibility(View.VISIBLE);
-        //button_dismiss.setEnabled(true);
-        //button_dismiss.setBackgroundColor(Color.RED);
-
-//        button_cancelSession.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // delete session from sessions database
-                  // but also make assosiated tutoravailability false again
-
-//                TutorAvailablity timeBlock;
-
-//                  // coming soon
-//
-//
-//
-//                popup.dismiss();
-//            }
-//        });
-
 
         button_dismiss.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                deleteSession(session);
                 popup.dismiss();
             }
         });
@@ -376,6 +563,15 @@ public class My_Sessions extends Fragment implements AdapterView.OnItemSelectedL
 
 
 
+    }
+
+    public class StartAsyncTask extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            Log.e("startAsyncTask", "start");
+            return null;
+        }
     }
 
 

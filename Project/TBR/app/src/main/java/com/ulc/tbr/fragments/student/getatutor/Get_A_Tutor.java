@@ -2,6 +2,7 @@ package com.ulc.tbr.fragments.student.getatutor;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,13 +24,26 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.ulc.tbr.activities.MainActivity;
 import com.ulc.tbr.R;
 import com.ulc.tbr.databases.DatabaseHelper;
+import com.ulc.tbr.fragments.common.login.Mysingleton;
 import com.ulc.tbr.models.util.*;
 import com.ulc.tbr.models.users.*;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link com.ulc.tbr.fragments.student.getatutor.Get_A_Tutor#newInstance} factory method to
@@ -40,6 +54,16 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
     static int sessionID = 0;
     MainActivity ma;
     DatabaseHelper database;
+    String currentDate;
+
+    ArrayList<String> remoteTutorsIDsSelectedCourse = new ArrayList<String>();;
+    ArrayList<TutorAvailablity> remoteTutorAvailabilityOnDate = new ArrayList<TutorAvailablity>();
+    ArrayList<TutorAvailablity> remoteResult = new ArrayList<TutorAvailablity>();
+    ArrayList<TutorAvailablity> remote_available_session = new ArrayList<TutorAvailablity>();
+
+
+
+    ArrayAdapter<TutorAvailablity> remote_adapter_session;
 
     ViewGroup view_viewGroup;
 
@@ -154,7 +178,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        remote_adapter_session = new ArrayAdapter<TutorAvailablity>(getContext(), android.R.layout.simple_list_item_1, remote_available_session );
 
+//        remoteTutorsIDsSelectedCourse = new ArrayList<String>();
         user = (User) this.getArguments().getSerializable("user");
         boolean isTutor = user.isTutor(); // use this to erase entries of self
 
@@ -241,12 +267,14 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         button_prevWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                remote_adapter_session.clear();
                 if (spinner_week.getSelectedItem() != null) {
                     int curr_week_pos = spinner_week.getSelectedItemPosition();
                     if (curr_week_pos > 0) {
                         curr_week_pos--;
                         spinner_week.setSelection(curr_week_pos, true);
-                        populateSessionListView();
+//                        populateSessionListView();
                     }
                 }
                 else {
@@ -258,12 +286,14 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         button_nextWeek.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                remote_adapter_session.clear();
                 if (spinner_week.getSelectedItem() != null) {
                     int curr_week_pos = spinner_week.getSelectedItemPosition();
                     if (curr_week_pos < available_week.size() - 1) {
                         curr_week_pos++;
                         spinner_week.setSelection(curr_week_pos, true);
-                        populateSessionListView();
+//                        populateSessionListView();
                     }
                 }
                 else {
@@ -363,18 +393,23 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     String week;
                     String subject;
                     String course;
+                    Log.i("FML","KILL ME");
 
-                    week = (String) spinner_week.getSelectedItem();
-                    subject = (String) spinner_subject.getSelectedItem();
-                    course = (String) spinner_course.getSelectedItem();
-                    course = course.substring(course.lastIndexOf(" ")+1);
+//                    week = (String) spinner_week.getSelectedItem();
+//                    subject = (String) spinner_subject.getSelectedItem();
+//                    course = (String) spinner_course.getSelectedItem();
+//                    course = course.substring(course.lastIndexOf(" ")+1);
 
-                    tutorAvailablity_session = populateAvailableTutorSessions(week, subject, course);
-                    available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
-                    adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
-                    listView_session.setAdapter(adapter_session);
+//                    tutorAvailablity_session = populateAvailableTutorSessions(week, subject, course);
+//                    available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
+                  //  remote_available_session = new ArrayList<TutorAvailablity>();
+                    remote_adapter_session.clear();
+                    //remote_available_session = loadTutorAvailability(week, subject, course);
+                    populateSessionListView();
 
-                    listViewHelper();
+
+
+//                    listViewHelper();
 
                     // updateCalendar();
                 }
@@ -388,11 +423,11 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
             switch ( (String) spinner_subject.getSelectedItem() ) {
                 case "Select a Subject":
                     spinner_course.setAdapter(adapter_course_Default);
-                    System.out.println("adapter_course_Default");
+//                    System.out.println("adapter_course_Default");
                     spinner_course.setSelection(0);
                     break;
                 case "Electrical and Computer Engineering":
-                    System.out.println("adapter_course_ECE");
+//                    System.out.println("adapter_course_ECE");
                     available_courses_ECE = database.getAllCoursesBySubject("Electrical and Computer Engineering");
                     available_course_ECE = populateCourses(available_courses_ECE);
                     adapter_course_ECE = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, available_course_ECE);
@@ -400,14 +435,14 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
                     break;
                 case "Computer Science":
-                    System.out.println("adapter_course_CS");
+//                    System.out.println("adapter_course_CS");
                     available_courses_CS = database.getAllCoursesBySubject("Computer Science");
                     available_course_CS = populateCourses(available_courses_CS);
                     adapter_course_CS = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, available_course_CS);
                     spinner_course.setAdapter(adapter_course_CS);
                     break;
                 case "Mathematics":
-                    System.out.println("adapter_course_MATH");
+//                    System.out.println("adapter_course_MATH");
                     available_courses_MATH = database.getAllCoursesBySubject("Mathematics");
                     available_course_MATH = populateCourses(available_courses_MATH);
                     adapter_course_MATH = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, available_course_MATH);
@@ -437,6 +472,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
     }
 
+
     private void populateSessionListView() {
         String week;
         String subject;
@@ -449,9 +485,11 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
 
         tutorAvailablity_session = populateAvailableTutorSessions(week, subject, course);
-        available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
-        adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
-        listView_session.setAdapter(adapter_session);
+//        available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
+//        adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
+        remote_adapter_session = new ArrayAdapter<TutorAvailablity>(getContext(), android.R.layout.simple_list_item_1, remote_available_session );
+//        listView_session.setAdapter(adapter_session);
+        listView_session.setAdapter(remote_adapter_session);
     }
 
     @Override
@@ -518,12 +556,12 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
 
                 try {
+                    Log.d("___________________________","D");
                     courseNo = Integer.parseInt(courseNum);
 
                     // we now have to match
-
-                    TutorAvailablity selectedTutorAvailability = tutorAvailablity_session.get(position);
-                    listviewsession = (String) parent.getItemAtPosition(position);
+                    Log.i("GFFFFdaasdFFSAD", listView_session.getAdapter().getItem(position).toString());
+                    TutorAvailablity selectedTutorAvailability = (TutorAvailablity) listView_session.getAdapter().getItem(position);
                     //String [] availability;
 
                     //availability = listviewsession.split(" ");
@@ -535,6 +573,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
 
                 } catch (Exception e) {
+                    e.printStackTrace();
                     System.out.println("ERROR CLICKING ON TIMEBLOCK. COURSE NUMBER DIDNT WORK OUT");
                 }
 
@@ -556,7 +595,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         Calendar cal = Calendar.getInstance();
         int currWeek = cal.get(Calendar.WEEK_OF_YEAR);
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-        String currentDate = sdf.format(cal.getTime());
+        currentDate = sdf.format(cal.getTime());
 
 
         available_week.add("Select a week");
@@ -656,40 +695,280 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 //
 //    }
 
-    private ArrayList<TutorAvailablity> loadTutorAvailability(String date, String subject, String course) {
-        // first load tutors who can tutor that subject and course
-        ArrayList<TutorAvailablity> result;
 
-        ArrayList<String> tutorsIDs_selectedCourse;
-        ArrayList<TutorAvailablity> tutorAvailabilityOnDate;
+//    private void remoteGetAvailableCourseTutorIDs(String subject, String course, String date){
+////        ArrayList<String> remote_tutorsIDs_selectedCourse = new ArrayList<String>();
+////        Log.i("Turtle", "HELL02");
+//        String url = "https://pistachio.khello.co/get_available_course_tutor_ids.php";
+//        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                try {
+//                    Log.i("Toortle","HIT THE DATABASE HURRAy");
+////                    Log.i("Turtle", response);
+//                    JSONObject jsonObject = new JSONObject(response);
+//                    JSONArray array = (JSONArray) jsonObject.get("TutorIDs: ");
+//
+//                    for (int i = 0; i < array.length(); i++) {
+//                        JSONObject jsonArray = (JSONObject) array.get(i);
+////                        Log.i("Purple", (String) jsonArray.get("tutor_id"));
+//                        if(!remoteTutorsIDsSelectedCourse.contains((String) jsonArray.get("tutor_id"))) {
+//                            remoteTutorsIDsSelectedCourse.add((String) jsonArray.get("tutor_id"));
+//                        }
+//                    }
+////                    Log.i("Purple", String.valueOf(remoteTutorsIDsSelectedCourse.size()));
+////                    Log.i("Turtle", remoteTutorsIDsSelectedCourse.toString());
+//                    Log.i("remoteTutorsIDsSelectedCourse", "tutorID");
+//
+//                    for (int i = 0; i < remoteTutorsIDsSelectedCourse.size(); i++) {
+////                        Log.i("Poop", "Poop");
+//                        Log.i("remoteTutorsIDsSelectedCourse", remoteTutorsIDsSelectedCourse.get(i));
+//
+//                        if ( !remoteTutorsIDsSelectedCourse.get(i).equals(user.getStudentID()) ) { // skip over your own TutorID if your a stutor
+//                            String tutorID = remoteTutorsIDsSelectedCourse.get(i);
+//                            Log.i("Wordsssss", tutorID);
+//                            remoteGetTutorAvailabilityOnDate(tutorID, date);
+////                            Log.i("Word", String.valueOf(remoteTutorAvailabilityOnDate.size()));
+//
+//
+//                        }
+//                    }
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.i("Some sort of unique string identifier here",error.toString());
+//                user = null;
+//            }
+//        }) {
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Log.i("subject",subject);
+//                Log.i("course",course);
+//                Map<String, String> Params = new HashMap<String, String>();
+//                Params.put("subject", subject);
+//                Params.put("course_num", course);
+//                return Params;
+//            }
+//        };
+//        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+//        //requestQueue.add(stringRequest);
+////        return remote_tutorsIDs_selectedCourse;
+//    }
+//
+//    private void remoteGetTutorAvailabilityOnDate(String tutorID, String date){
+//
+////        Log.i("Turtle", "HELL02");
+//        Log.i("Shit","Butt");
+//
+//        String url = "https://pistachio.khello.co/get_available_course_tutors_and_times_on_date.php";
+//        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                try {
+//                    Log.i("Shitouttaluck", tutorID);
+////                    Log.i("Shit", date);
+//                    Log.i("Shit", response);
+//                    JSONObject jsonObject = new JSONObject(response);
+////                    Log.i("Shit","Butt2");
+//                    JSONArray array = (JSONArray) jsonObject.get("Available tutors: ");
+////                    Log.i("Shit", String.valueOf(array.length()));
+//
+//                    for (int i = 0; i < array.length(); i++) {
+//                        JSONObject jsonArray = (JSONObject) array.get(i);
+//                        String tempName = (String) jsonArray.get("name");
+//                        String tempId = (String) jsonArray.get("tutor_id");
+//                        String tempDate = (String) jsonArray.get("date");
+//                        String tempTime = (String) jsonArray.get("time");
+//                        String tempBooked = (String) jsonArray.get("booked");
+//                        Boolean tempBool = false;
+//                        if(tempBooked == "TRUE"){
+//                            tempBool = true;
+//                        }
+//                        int tempMonth = Integer.parseInt(date.substring(0,2));
+//                        int tempDay = Integer.parseInt(date.substring(3,5));
+//                        int tempYear = Integer.parseInt(date.substring(6));
+//                        int currMonth = Integer.parseInt(currentDate.substring(0,2));
+//                        int currDay = Integer.parseInt(currentDate.substring(3,5));
+//                        int currYear = Integer.parseInt(currentDate.substring(6));
+//
+//                        if(tempYear>currYear){
+//                            TutorAvailablity temp = new TutorAvailablity(tempName, tempId, tempDate, tempTime, tempBool);
+//                            remoteTutorAvailabilityOnDate.add(temp);
+//                        }else if(tempMonth>currMonth){
+//                            TutorAvailablity temp = new TutorAvailablity(tempName, tempId, tempDate, tempTime, tempBool);
+//                            remoteTutorAvailabilityOnDate.add(temp);
+//                        } else if(tempDay>currDay){
+//                            TutorAvailablity temp = new TutorAvailablity(tempName, tempId, tempDate, tempTime, tempBool);
+//                            remoteTutorAvailabilityOnDate.add(temp);
+//                        }
+//
+//
+//                    }
+//                    for (int j = 0; j < remoteTutorAvailabilityOnDate.size(); j++) {
+//                        if (!remoteTutorAvailabilityOnDate.get(j).isBooked()) {
+//                            if(!remoteResult.contains(remoteTutorAvailabilityOnDate.get(j))) {
+//                                remoteResult.add(remoteTutorAvailabilityOnDate.get(j));
+//                                remote_adapter_session.add(remoteTutorAvailabilityOnDate.get(j).toStringTutorName());
+//                            }
+//                        }
+//                    }
+////                    tutorAvailablity_session = populateAvailableTutorSessions(week, subject, course);
+////                    remote_available_session = new ArrayList<String>();
+////                    for (int i = 0; i < remoteResult.size(); i++) {
+//////                        remote_adapter_session.add(new String(remoteResult.get(i).toStringTutorName()));
+////                        remote_adapter_session.add(remoteResult.get(i).toStringTutorName());
+////                    }
+//
+//                    Log.i("Shit Fuck", String.valueOf(remoteTutorAvailabilityOnDate.size()));
+//                    Log.i("Shit Fuck", remoteTutorAvailabilityOnDate.toString());
+//                    Log.i("Shit Fuck", remoteResult.toString());
+//
+//
+//                } catch (JSONException e) {
+//                }
+//
+//            }
+//        }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.i("Shit","Fuck");
+//                Log.i("Some sort of unique string identifier here",error.toString());
+//                user = null;
+//            }
+//        }) {
+//            @Override
+//            protected Map<String, String> getParams() throws AuthFailureError {
+//                Log.i("Shit","Fuck2");
+//                Log.i("tutor_id",tutorID);
+//                Log.i("date",date);
+//                Map<String, String> Params = new HashMap<String, String>();
+//                Params.put("tutor_id", tutorID);
+//                Params.put("date", date);
+//                return Params;
+//            }
+//        };
+//        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+//        //requestQueue.add(stringRequest);
+////        return remoteTutorAvailabilityOnDate;
+//    }
 
+    private void remoteGetTutorAvailability(String date, String subject, String courseNo){
+//        Log.i("Turtle", "HELL02");
+//        remote_adapter_session.clear();
+//        Log.i("Shit","Butt");
 
-        result = new ArrayList<TutorAvailablity>();
-        tutorsIDs_selectedCourse = database.getAvailableCourseTutorIDs(subject, course);
+        String url = "https://pistachio.khello.co/get_available_tutors.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+//                    Log.i("Shit","Butt2");
+                    JSONArray array = (JSONArray) jsonObject.get("Availability: ");
 
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject jsonArray = (JSONObject) array.get(i);
 
-        for (int i = 0; i < tutorsIDs_selectedCourse.size(); i++) {
-            if ( !tutorsIDs_selectedCourse.get(i).equals(user.getStudentID()) ) { // skip over your own TutorID if your a stutor
-                String tutorID = tutorsIDs_selectedCourse.get(i);
-                tutorAvailabilityOnDate = database.getTutorAvailabilityOnDate(tutorID, date);
-                for (int j = 0; j < tutorAvailabilityOnDate.size(); j++) {
-                    if (!tutorAvailabilityOnDate.get(j).isBooked()) {
-                        result.add(tutorAvailabilityOnDate.get(j));
+                        remote_adapter_session.add(new TutorAvailablity(
+                                (String) jsonArray.get("name"),
+                                (String) jsonArray.get("tutor_id"),
+                                (String) jsonArray.get("date"),
+                                (String) jsonArray.get("time"),
+                                Boolean.parseBoolean(String.valueOf(jsonArray.get("booked")))
+                                )
+                        );
+                        Log.i("ADAPTER",i + " " + remote_adapter_session.getItem(i).toString());
                     }
+                    Log.i("AFTER ADAPTER","ADAPTER");
+                } catch (JSONException e) {
                 }
+
             }
-
-        }
-
-        // then from these tutors, load their time and availability
-        return result;
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+//                Log.i("Shit","Fuck");
+//                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+//                Log.i("Shit","Fuck2");
+//                Log.i("date",date);
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("date", date);
+                Params.put("subject", subject);
+                Params.put("course_num", courseNo);
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+        //requestQueue.add(stringRequest);
+//        return remoteTutorAvailabilityOnDate;
     }
+
+
+
+//    private ArrayList<TutorAvailablity> loadTutorAvailability(String date, String subject, String course) {
+////        // first load tutors who can tutor that subject and course
+////        ArrayList<TutorAvailablity> result;
+//////        ArrayList<TutorAvailablity> remoteResult;
+////
+////        ArrayList<String> tutorsIDs_selectedCourse;
+////        ArrayList<TutorAvailablity> tutorAvailabilityOnDate;
+////
+////
+////        ArrayList<TutorAvailablity> remoteTutorAvailabilityOnDate;
+////
+////
+////        result = new ArrayList<TutorAvailablity>();
+////        tutorsIDs_selectedCourse = database.getAvailableCourseTutorIDs(subject, course);
+////        remoteGetAvailableCourseTutorIDs(subject, course, date);
+////        Log.i("poop", String.valueOf(remoteTutorsIDsSelectedCourse.size()));
+////        for (int i = 0; i < remoteTutorsIDsSelectedCourse.size(); i++) {
+////            Log.i("Poop", "Poop");
+////
+////            if ( !remoteTutorsIDsSelectedCourse.get(i).equals(user.getStudentID()) ) { // skip over your own TutorID if your a stutor
+////                String tutorID = remoteTutorsIDsSelectedCourse.get(i);
+////                remoteTutorAvailabilityOnDate = remoteGetTutorAvailabilityOnDate(tutorID, date);
+////                for (int j = 0; j < remoteTutorAvailabilityOnDate.size(); j++) {
+////                    if (!remoteTutorAvailabilityOnDate.get(j).isBooked()) {
+////                        result.add(remoteTutorAvailabilityOnDate.get(j));
+////                    }
+////                }
+////            }
+////        }
+////        for (int i = 0; i < tutorsIDs_selectedCourse.size(); i++) {
+////            if ( !tutorsIDs_selectedCourse.get(i).equals(user.getStudentID()) ) { // skip over your own TutorID if your a stutor
+////                String tutorID = tutorsIDs_selectedCourse.get(i);
+////                tutorAvailabilityOnDate = database.getTutorAvailabilityOnDate(tutorID, date);
+////                for (int j = 0; j < tutorAvailabilityOnDate.size(); j++) {
+////                    if (!tutorAvailabilityOnDate.get(j).isBooked()) {
+////                        result.add(tutorAvailabilityOnDate.get(j));
+////                    }
+////                }
+////            }
+////
+//////        }
+////
+////        // then from these tutors, load their time and availability
+////        return result;
+//    }
 
     private ArrayList<String> loadTutorAvailabilityToString(ArrayList<TutorAvailablity> availablity) {
         ArrayList<String> result;
 
         result = new ArrayList<String>();
         for (int i = 0; i < availablity.size(); i++) {
+            String date = availablity.get(i).getDate();
+
             result.add(availablity.get(i).toStringTutorName());
         }
 
@@ -705,39 +984,43 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         String date_weekStart;
         String date;
 
-        System.out.println("Week = " + week);
-        System.out.println("Subject = " + subject);
-        System.out.println("Course = " + course);
+//        System.out.println("Week = " + week);
+//        System.out.println("Subject = " + subject);
+//        System.out.println("Course = " + course);
 
 
         result = new ArrayList<TutorAvailablity>();
         try {
             date_weekStart = week.split(" ", 2)[0];
-            System.out.println(date_weekStart);
-            String date_weekStart_MM = date_weekStart.split("/", 2)[0];
-            System.out.println(date_weekStart_MM);
-            String date_weekStart_DD = date_weekStart.split("/", 2)[1];
-            System.out.println(date_weekStart_DD);
+//            System.out.println(date_weekStart);
+            String date_weekStart_MM = date_weekStart.split("/", 3)[0];
+//            System.out.println(date_weekStart_MM);
+            String date_weekStart_DD = date_weekStart.split("/", 3)[1];
+//            System.out.println(date_weekStart_DD);
+            String date_weekStart_YEAR = date_weekStart.split("/", 3)[2];
+//            System.out.println(date_weekStart_YEAR);
+
+//            Log.i("Shit", date_weekStart_DD);
             int date_weekStart_MM_int = 0;
             int date_weekStart_DD_int = 0;
             date_weekStart_MM_int = Integer.parseInt(date_weekStart_MM);
             date_weekStart_DD_int = Integer.parseInt(date_weekStart_DD);
-            System.out.println("date_weekStart_MM_int = " + date_weekStart_MM_int);
-            System.out.println("date_weekStart_DD_int = " + date_weekStart_DD_int);
+//            System.out.println("date_weekStart_MM_int = " + date_weekStart_MM_int);
+//            System.out.println("date_weekStart_DD_int = " + date_weekStart_DD_int);
 
             // class variable that stores tutoravailability for selected week and subject|course
             this.tutorAvailablity_session = new ArrayList<TutorAvailablity>();
 
-
-
             if (date_weekStart_DD_int < 23) { // no date month overflow conflict possible. february 22-28 worst case
                 for (int i = 0; i < 7; i++) {
-                    date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
-                    System.out.println("Current Date = " + date);
-                    temp = loadTutorAvailability(date, subject, course);
-                    for (int j = 0; j < temp.size(); j++) {
-                        result.add(temp.get(j));
-                    }
+                    date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
+//                    System.out.println("Current Date = " + date);
+//                    temp = loadTutorAvailability(date, subject, course);
+                    Log.i("date a",date);
+                    remoteGetTutorAvailability(date, subject, course);
+//                    for (int j = 0; j < temp.size(); j++) {
+//                        result.add(temp.get(j));
+//                    }
                     date_weekStart_DD_int++;
                 }
             }
@@ -746,12 +1029,14 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 if (date_weekStart_MM_int == 2) { // february case
                     int i = 0;
                     while (date_weekStart_DD_int < 29) { // TODO: iteration 1 so we're just gonna go ahead and assume leap year doesn't exist
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
-                        System.out.println("Current Date = " + date);
-                        temp = loadTutorAvailability(date, subject, course);
-                        for (int j = 0; j < temp.size(); j++) {
-                            result.add(temp.get(j));
-                        }
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
+//                        System.out.println("Current Date = " + date);
+//                        temp = loadTutorAvailability(date, subject, course);
+                        Log.i("date b",date);
+                        remoteGetTutorAvailability(date, subject, course);
+//                        for (int j = 0; j < temp.size(); j++) {
+//                            result.add(temp.get(j));
+//                        }
                         date_weekStart_DD_int++;
                         i++;
                     }
@@ -760,12 +1045,14 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     date_weekStart_DD_int = 1;
 
                     while ( i < 7 ) {
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
-                        System.out.println("Current Date = " + date);
-                        temp = loadTutorAvailability(date, subject, course);
-                        for (int j = 0; j < temp.size(); j++) {
-                            result.add(temp.get(j));
-                        }
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
+//                        System.out.println("Current Date = " + date);
+//                        temp = loadTutorAvailability(date, subject, course);
+                        Log.i("date c",date);
+                        remoteGetTutorAvailability(date, subject, course);
+//                        for (int j = 0; j < temp.size(); j++) {
+//                            result.add(temp.get(j));
+//                        }
                         date_weekStart_DD_int++;
                         i++;
                     }
@@ -773,12 +1060,14 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 else if (date_weekStart_MM_int % 2 == 1) { // 31 day months case
                     int i = 0;
                     while (date_weekStart_DD_int < 32) { // TODO: iteration 1 so we're just gonna go ahead and assume leap year doesn't exist
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
-                        System.out.println("Current Date = " + date);
-                        temp = loadTutorAvailability(date, subject, course);
-                        for (int j = 0; j < temp.size(); j++) {
-                            result.add(temp.get(j));
-                        }
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
+//                        System.out.println("Current Date = " + date);
+//                        temp = loadTutorAvailability(date, subject, course);
+                        Log.i("date d",date);
+                        remoteGetTutorAvailability(date, subject, course);
+//                        for (int j = 0; j < temp.size(); j++) {
+//                            result.add(temp.get(j));
+//                        }
                         date_weekStart_DD_int++;
                         i++;
                     }
@@ -787,12 +1076,14 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     date_weekStart_DD_int = 1;
 
                     while ( i < 7 ) {
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
-                        System.out.println("Current Date = " + date);
-                        temp = loadTutorAvailability(date, subject, course);
-                        for (int j = 0; j < temp.size(); j++) {
-                            result.add(temp.get(j));
-                        }
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
+//                        System.out.println("Current Date = " + date);
+//                        temp = loadTutorAvailability(date, subject, course);
+                        Log.i("date e",date);
+                        remoteGetTutorAvailability(date, subject, course);
+//                        for (int j = 0; j < temp.size(); j++) {
+//                            result.add(temp.get(j));
+//                        }
                         date_weekStart_DD_int++;
                         i++;
                     }
@@ -800,12 +1091,14 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 else { // 30 day month case
                     int i = 0;
                     while (date_weekStart_DD_int < 31) { // TODO: iteration 1 so we're just gonna go ahead and assume leap year doesn't exist
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
-                        System.out.println("Current Date = " + date);
-                        temp = loadTutorAvailability(date, subject, course);
-                        for (int j = 0; j < temp.size(); j++) {
-                            result.add(temp.get(j));
-                        }
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
+//                        System.out.println("Current Date = " + date);
+//                        temp = loadTutorAvailability(date, subject, course);
+//                        for (int j = 0; j < temp.size(); j++) {
+//                            result.add(temp.get(j));
+//                        }
+                        Log.i("date",date);
+                        remoteGetTutorAvailability(date, subject, course);
                         date_weekStart_DD_int++;
                         i++;
                     }
@@ -814,12 +1107,14 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     date_weekStart_DD_int = 1;
 
                     while ( i < 7 ) {
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
-                        System.out.println("Current Date = " + date);
-                        temp = loadTutorAvailability(date, subject, course);
-                        for (int j = 0; j < temp.size(); j++) {
-                            result.add(temp.get(j));
-                        }
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
+//                        System.out.println("Current Date = " + date);
+//                        temp = loadTutorAvailability(date, subject, course);
+//                        for (int j = 0; j < temp.size(); j++) {
+//                            result.add(temp.get(j));
+//                        }
+                        Log.i("date f",date);
+                        remoteGetTutorAvailability(date, subject, course);
                         date_weekStart_DD_int++;
                         i++;
                     }
@@ -839,7 +1134,74 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         return result;
     }
 
+    public void remoteAddSession(Session session){
+        Log.i("Input",session.getStudentID() + " " + session.getTutorID() + " " + session.getDate() + " " + session.getTime() + " " + session.getSubject() + " " + String.valueOf(session.getCourseNo()) + " " + session.getLocation() + " " + session.getDescription() + " " +  String.valueOf(session.getSessionID()));
 
+
+        String url = "https://pistachio.khello.co/post_new_sessions.php";
+
+        RequestQueue requestQueue = Mysingleton.getInstance(getContext()).getRequestQueue();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("ADDED SESSION", response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("student_id", session.getStudentID());
+                Params.put("tutor_id", session.getTutorID());
+                Params.put("date", session.getDate());
+                Params.put("time", session.getTime());
+                Params.put("subject", session.getSubject());
+                Params.put("course_number", String.valueOf(session.getCourseNo()));
+                Params.put("location", session.getLocation());
+                Params.put("description", session.getDescription());
+                //Params.put("session_id", String.valueOf(session.getSessionID()));
+
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+    }
+
+    public void updateAvailBookSession(Session session) {
+        String url = "https://pistachio.khello.co/update_session_availability.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                remote_adapter_session.notifyDataSetChanged();
+
+                Log.d("E","it got here");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("tutor_id", session.getTutorID());
+                Params.put("date", session.getDate());
+                Params.put("time", session.getTime());
+                Params.put("booked", "TRUE");
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+
+    }
 
     // CONFIRMATION AND ADD DESCRIPTION FOR CREATE SESSION
     public void showSessionConfirmationPopup(View view, Session session, TutorAvailablity availablity) {
@@ -898,26 +1260,22 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 session.setDescription(description);
                 session.setLocation(location);
 
-                try {
-                    if ( database.addDataSession(session) ) {
-                        // ADD SESSION TO DATABASE SUCCESSFUL
-                        String tutorID = availablity.getTutorId();
-                        String date = availablity.getDate();
-                        String time = availablity.getTime();
-                        //boolean currentavailability = availablity.isBooked(); // just for testing the toggling
 
-                        database.modifySessionIsAvailable(tutorID, date, time, true);
+                remoteAddSession(session);
+                updateAvailBookSession(session);
+//                remote_adapter_session.clear();
 
-                        // reload tutoravailability listview
-                        tutorAvailablity_session = populateAvailableTutorSessions((String) spinner_week.getSelectedItem(), session.getSubject(), "" + session.getCourseNo());
-                        available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
 
-                        adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
-                        listView_session.setAdapter(adapter_session);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
+                // reload tutoravailability listview
+                //tutorAvailablity_session = populateAvailableTutorSessions((String) spinner_week.getSelectedItem(), session.getSubject(), "" + session.getCourseNo());
+                //available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
+
+                //adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
+                //remote_adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, remote_available_session );
+//                        listView_session.setAdapter(adapter_session);
+                //listView_session.setAdapter(remote_adapter_session);
+
 
                 popup.dismiss();
             }
@@ -935,41 +1293,4 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
 }
 
-//public class ShowPopUp extends MainActivity {
-//    PopupWindow popUp;
-//    boolean click = true;
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        popUp = new PopupWindow(this);
-//        LinearLayout layout = new LinearLayout(this);
-//        LinearLayout mainLayout = new LinearLayout(this);
-//        TextView tv = new TextView(this);
-//        Button but = new Button(this);
-//        but.setText("Click Me");
-//        but.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (click) {
-//                    popUp.showAtLocation(layout, Gravity.BOTTOM, 10, 10);
-//                    popUp.update(50, 50, 300, 80);
-//                    click = false;
-//                } else {
-//                    popUp.dismiss();
-//                    click = true;
-//                }
-//            }
-//        });
-//
-//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT);
-//        layout.setOrientation(LinearLayout.VERTICAL);
-//        tv.setText("Hi this is a sample text for popup window");
-//        layout.addView(tv, params);
-//        popUp.setContentView(layout);
-//        // popUp.showAtLocation(layout, Gravity.BOTTOM, 10, 10);
-//        mainLayout.addView(but, params);
-//        setContentView(mainLayout);
-//    }
-//}
+

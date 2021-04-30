@@ -92,7 +92,7 @@ public class UISetATutorAvailable {
         onData(is("Change Availability")).perform(click());
         onView(withId(R.id.calendar)).check(matches((isDisplayed())));
 
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(0).perform(click());
+       // onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(0).perform(click());
 
         onView(withId(R.id.selectWeek)).check(matches(allOf( isEnabled(), isClickable())))
                 .perform(new ViewAction() {
@@ -109,7 +109,7 @@ public class UISetATutorAvailable {
                         view.performClick();
                     }
                 });
-        onData(is("01/24 - 01/30")).perform(click());
+        onData(is("04/26/2021 - 05/02/2021")).perform(click());
 
         onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(2).perform(click());
         onView((withId(R.id.confirm_availability))).perform(click());
@@ -121,8 +121,8 @@ public class UISetATutorAvailable {
         Fragment g = new Fragment();
         activityActivityTestRule.getActivity()
                 .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login,g);
-        onView(withId(R.id.net_ID)).perform(clearText(),typeText("testTutor"));
-        onView(withId(R.id.password)).perform(clearText(),typeText("testTutor"));
+        onView(withId(R.id.net_ID)).perform(clearText(),typeText("tutor1"));
+        onView(withId(R.id.password)).perform(clearText(),typeText("tutor1"));
         onView(withId(R.id.login)).perform(click());
         onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
 
@@ -144,7 +144,7 @@ public class UISetATutorAvailable {
         onData(is("Change Availability")).perform(click());
         onView(withId(R.id.calendar)).check(matches((isDisplayed())));
 
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(0).perform(click());
+       // onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(0).perform(click());
 
         onView(withId(R.id.selectWeek)).check(matches(allOf( isEnabled(), isClickable())))
                 .perform(new ViewAction() {
@@ -161,7 +161,7 @@ public class UISetATutorAvailable {
                         view.performClick();
                     }
                 });
-        onData(is("01/24 - 01/30")).perform(click());
+        onData(is("04/26/2021 - 05/02/2021")).perform(click());
 
         onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(2).perform(click());
         onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(3).perform(click());
@@ -172,8 +172,8 @@ public class UISetATutorAvailable {
         Fragment g = new Fragment();
         activityActivityTestRule.getActivity()
                 .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login,g);
-        onView(withId(R.id.net_ID)).perform(clearText(),typeText("testTutor"));
-        onView(withId(R.id.password)).perform(clearText(),typeText("testTutor"));
+        onView(withId(R.id.net_ID)).perform(clearText(),typeText("tutor1"));
+        onView(withId(R.id.password)).perform(clearText(),typeText("tutor1"));
         onView(withId(R.id.login)).perform(click());
         onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
 
@@ -195,7 +195,7 @@ public class UISetATutorAvailable {
         onData(is("Change Availability")).perform(click());
         onView(withId(R.id.calendar)).check(matches((isDisplayed())));
 
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(0).perform(click());
+     //   onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(0).perform(click());
 
         onView(withId(R.id.selectWeek)).check(matches(allOf( isEnabled(), isClickable())))
                 .perform(new ViewAction() {
@@ -212,7 +212,7 @@ public class UISetATutorAvailable {
                         view.performClick();
                     }
                 });
-        onData(is("01/24 - 01/30")).perform(click());
+        onData(is("04/26/2021 - 05/02/2021")).perform(click());
 
         onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(4).perform(click());
         onView((withId(R.id.confirm_availability))).perform(click());
@@ -223,8 +223,8 @@ public class UISetATutorAvailable {
         Fragment g = new Fragment();
         activityActivityTestRule.getActivity()
                 .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login,g);
-        onView(withId(R.id.net_ID)).perform(clearText(),typeText("testTutor"));
-        onView(withId(R.id.password)).perform(clearText(),typeText("testTutor"));
+        onView(withId(R.id.net_ID)).perform(clearText(),typeText("tutor1"));
+        onView(withId(R.id.password)).perform(clearText(),typeText("tutor1"));
         onView(withId(R.id.login)).perform(click());
         onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
 
@@ -246,7 +246,7 @@ public class UISetATutorAvailable {
         onData(is("Change Availability")).perform(click());
         onView(withId(R.id.calendar)).check(matches((isDisplayed())));
 
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(0).perform(click());
+     //   onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(0).perform(click());
 
         onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(4).perform(click());
         onView((withId(R.id.confirm_availability))).perform(click());
@@ -257,8 +257,8 @@ public class UISetATutorAvailable {
         Fragment g = new Fragment();
         activityActivityTestRule.getActivity()
                 .getSupportFragmentManager().beginTransaction().add(R.id.fragment_login,g);
-        onView(withId(R.id.net_ID)).perform(clearText(),typeText("testStutor"));
-        onView(withId(R.id.password)).perform(clearText(),typeText("testStutor"));
+        onView(withId(R.id.net_ID)).perform(clearText(),typeText("tutor1"));
+        onView(withId(R.id.password)).perform(clearText(),typeText("tutor1"));
         onView(withId(R.id.login)).perform(click());
         onView(withId(R.id.textView_TBR)).check(matches((isDisplayed())));
 
@@ -280,7 +280,7 @@ public class UISetATutorAvailable {
         onData(is("Change Availability")).perform(click());
         onView(withId(R.id.calendar)).check(matches((isDisplayed())));
 
-        onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(0).perform(click());
+        //onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(0).perform(click());
 
         onView(withId(R.id.selectWeek)).check(matches(allOf( isEnabled(), isClickable())))
                 .perform(new ViewAction() {
@@ -297,7 +297,7 @@ public class UISetATutorAvailable {
                         view.performClick();
                     }
                 });
-        onData(is("01/24 - 01/30")).perform(click());
+        onData(is("04/26/2021 - 05/02/2021")).perform(click());
 
         onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(2).perform(click());
         onData(anything()).inAdapterView(withId(R.id.calendar)).atPosition(3).perform(click());
