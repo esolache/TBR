@@ -49,7 +49,7 @@ public class TutorAvailablity implements Serializable {
 
 
     public String toString() {
-        return "" + this.getTutorId() + " " + this.getDate() + " " + this.getTime() + " " + this.isBooked();
+        return "" + this.getTutorName() + " " + this.getDate() + " " + this.getTime();
     }
 
     public String toStringTutorName() {
