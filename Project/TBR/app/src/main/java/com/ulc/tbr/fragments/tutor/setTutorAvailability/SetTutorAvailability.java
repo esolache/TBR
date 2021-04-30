@@ -572,7 +572,9 @@ public class SetTutorAvailability extends Fragment implements AdapterView.OnItem
             int start = Integer.parseInt(week.substring(3,5));
             col = Integer.parseInt(day.substring(3,5)) - start + 1;
         }else{
-            int diff = Integer.parseInt(week.substring(11)) - Integer.parseInt(day.substring(3,5));
+            String s1 = week.substring(16, 18);
+            String s2 = day.substring(3, 5);
+            int diff = Integer.parseInt(week.substring(16, 18)) - Integer.parseInt(day.substring(3,5));
             col = 7 - diff;
         }
         return col;
