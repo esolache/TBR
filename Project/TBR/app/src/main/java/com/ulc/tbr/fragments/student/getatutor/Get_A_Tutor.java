@@ -556,12 +556,12 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
 
                 try {
+                    Log.d("___________________________","D");
                     courseNo = Integer.parseInt(courseNum);
 
                     // we now have to match
-
-                    TutorAvailablity selectedTutorAvailability = remoteTutorAvailabilityOnDate.get(position);
-                    listviewsession = (String) parent.getItemAtPosition(position);
+                    Log.i("GFFFFdaasdFFSAD", listView_session.getAdapter().getItem(position).toString());
+                    TutorAvailablity selectedTutorAvailability = (TutorAvailablity) listView_session.getAdapter().getItem(position);
                     //String [] availability;
 
                     //availability = listviewsession.split(" ");
@@ -573,6 +573,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
 
                 } catch (Exception e) {
+                    e.printStackTrace();
                     System.out.println("ERROR CLICKING ON TIMEBLOCK. COURSE NUMBER DIDNT WORK OUT");
                 }
 
@@ -1254,6 +1255,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
                 remoteAddSession(session);
                 updateAvailBookSession(session);
+                remote_adapter_session.clear();
 
 
 
