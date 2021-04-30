@@ -98,7 +98,8 @@ public class RemoteTest {
                     JSONArray array = (JSONArray) jsonObject.get("Sessions: ");
                     JSONObject jsonArray = (JSONObject) array.get(0);
                     String test = (String) jsonArray.get("subject");
-                    assertTrue(test.equals("Mathematics"));
+                    Log.d("a",test);
+                    assertTrue(test.equals("Computer Science"));
                 } catch (JSONException e) {
                 }
 
