@@ -553,7 +553,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
                     // we now have to match
 
-                    TutorAvailablity selectedTutorAvailability = tutorAvailablity_session.get(position);
+                    TutorAvailablity selectedTutorAvailability = remoteTutorAvailabilityOnDate.get(position);
                     listviewsession = (String) parent.getItemAtPosition(position);
                     //String [] availability;
 
@@ -925,10 +925,13 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         try {
             date_weekStart = week.split(" ", 2)[0];
             System.out.println(date_weekStart);
-            String date_weekStart_MM = date_weekStart.split("/", 2)[0];
+            String date_weekStart_MM = date_weekStart.split("/", 3)[0];
             System.out.println(date_weekStart_MM);
             String date_weekStart_DD = date_weekStart.split("/", 3)[1];
             System.out.println(date_weekStart_DD);
+            String date_weekStart_YEAR = date_weekStart.split("/", 3)[2];
+            System.out.println(date_weekStart_YEAR);
+
 //            Log.i("Shit", date_weekStart_DD);
             int date_weekStart_MM_int = 0;
             int date_weekStart_DD_int = 0;
@@ -942,7 +945,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
             if (date_weekStart_DD_int < 23) { // no date month overflow conflict possible. february 22-28 worst case
                 for (int i = 0; i < 7; i++) {
-                    date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                    date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                     System.out.println("Current Date = " + date);
                     temp = loadTutorAvailability(date, subject, course);
                     for (int j = 0; j < temp.size(); j++) {
@@ -956,7 +959,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 if (date_weekStart_MM_int == 2) { // february case
                     int i = 0;
                     while (date_weekStart_DD_int < 29) { // TODO: iteration 1 so we're just gonna go ahead and assume leap year doesn't exist
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                         System.out.println("Current Date = " + date);
                         temp = loadTutorAvailability(date, subject, course);
                         for (int j = 0; j < temp.size(); j++) {
@@ -970,7 +973,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     date_weekStart_DD_int = 1;
 
                     while ( i < 7 ) {
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                         System.out.println("Current Date = " + date);
                         temp = loadTutorAvailability(date, subject, course);
                         for (int j = 0; j < temp.size(); j++) {
@@ -983,7 +986,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 else if (date_weekStart_MM_int % 2 == 1) { // 31 day months case
                     int i = 0;
                     while (date_weekStart_DD_int < 32) { // TODO: iteration 1 so we're just gonna go ahead and assume leap year doesn't exist
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                         System.out.println("Current Date = " + date);
                         temp = loadTutorAvailability(date, subject, course);
                         for (int j = 0; j < temp.size(); j++) {
@@ -997,7 +1000,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     date_weekStart_DD_int = 1;
 
                     while ( i < 7 ) {
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                         System.out.println("Current Date = " + date);
                         temp = loadTutorAvailability(date, subject, course);
                         for (int j = 0; j < temp.size(); j++) {
@@ -1010,7 +1013,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 else { // 30 day month case
                     int i = 0;
                     while (date_weekStart_DD_int < 31) { // TODO: iteration 1 so we're just gonna go ahead and assume leap year doesn't exist
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                         System.out.println("Current Date = " + date);
                         temp = loadTutorAvailability(date, subject, course);
                         for (int j = 0; j < temp.size(); j++) {
@@ -1024,7 +1027,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     date_weekStart_DD_int = 1;
 
                     while ( i < 7 ) {
-                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + YEAR;
+                        date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
                         System.out.println("Current Date = " + date);
                         temp = loadTutorAvailability(date, subject, course);
                         for (int j = 0; j < temp.size(); j++) {
@@ -1048,6 +1051,75 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
         return result;
     }
+
+    public void remoteAddSession(Session session){
+        Log.i("Input",session.getStudentID() + " " + session.getTutorID() + " " + session.getDate() + " " + session.getTime() + " " + session.getSubject() + " " + String.valueOf(session.getCourseNo()) + " " + session.getLocation() + " " + session.getDescription() + " " +  String.valueOf(session.getSessionID()));
+
+
+        String url = "https://pistachio.khello.co/post_new_sessions.php";
+
+        RequestQueue requestQueue = Mysingleton.getInstance(getContext()).getRequestQueue();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("Response", response);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("student_id", session.getStudentID());
+                Params.put("tutor_id", session.getTutorID());
+                Params.put("date", session.getDate());
+                Params.put("time", session.getTime());
+                Params.put("subject", session.getSubject());
+                Params.put("course_number", String.valueOf(session.getCourseNo()));
+                Params.put("location", session.getLocation());
+                Params.put("description", session.getDescription());
+                //Params.put("session_id", String.valueOf(session.getSessionID()));
+
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+    }
+
+    public void updateAvailBookSession(Session session) {
+        String url = "https://pistachio.khello.co/update_session_availability.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                Log.d("E","it got here");
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.i("Some sort of unique string identifier here",error.toString());
+                user = null;
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> Params = new HashMap<String, String>();
+                Params.put("tutor_id", session.getTutorID());
+                Params.put("date", session.getDate());
+                Params.put("time", session.getTime());
+                Params.put("booked", "TRUE");
+                return Params;
+            }
+        };
+        Mysingleton.getInstance(getContext()).addTorequestque(stringRequest);
+
+    }
+
 
 
 
@@ -1108,28 +1180,21 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 session.setDescription(description);
                 session.setLocation(location);
 
-                try {
-                    if ( database.addDataSession(session) ) {
-                        // ADD SESSION TO DATABASE SUCCESSFUL
-                        String tutorID = availablity.getTutorId();
-                        String date = availablity.getDate();
-                        String time = availablity.getTime();
-                        //boolean currentavailability = availablity.isBooked(); // just for testing the toggling
+                remoteAddSession(session);
+                updateAvailBookSession(session);
 
-                        database.modifySessionIsAvailable(tutorID, date, time, true);
 
-                        // reload tutoravailability listview
-                        tutorAvailablity_session = populateAvailableTutorSessions((String) spinner_week.getSelectedItem(), session.getSubject(), "" + session.getCourseNo());
-                        available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
 
-                        adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
-                        remote_adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, remote_available_session );
+
+                // reload tutoravailability listview
+                //tutorAvailablity_session = populateAvailableTutorSessions((String) spinner_week.getSelectedItem(), session.getSubject(), "" + session.getCourseNo());
+                //available_session = loadTutorAvailabilityToString(tutorAvailablity_session);
+
+                //adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, available_session );
+                //remote_adapter_session = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, remote_available_session );
 //                        listView_session.setAdapter(adapter_session);
-                        listView_session.setAdapter(remote_adapter_session);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                //listView_session.setAdapter(remote_adapter_session);
+
 
                 popup.dismiss();
             }
@@ -1147,41 +1212,4 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
 }
 
-//public class ShowPopUp extends MainActivity {
-//    PopupWindow popUp;
-//    boolean click = true;
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        popUp = new PopupWindow(this);
-//        LinearLayout layout = new LinearLayout(this);
-//        LinearLayout mainLayout = new LinearLayout(this);
-//        TextView tv = new TextView(this);
-//        Button but = new Button(this);
-//        but.setText("Click Me");
-//        but.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (click) {
-//                    popUp.showAtLocation(layout, Gravity.BOTTOM, 10, 10);
-//                    popUp.update(50, 50, 300, 80);
-//                    click = false;
-//                } else {
-//                    popUp.dismiss();
-//                    click = true;
-//                }
-//            }
-//        });
-//
-//        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT);
-//        layout.setOrientation(LinearLayout.VERTICAL);
-//        tv.setText("Hi this is a sample text for popup window");
-//        layout.addView(tv, params);
-//        popUp.setContentView(layout);
-//        // popUp.showAtLocation(layout, Gravity.BOTTOM, 10, 10);
-//        mainLayout.addView(but, params);
-//        setContentView(mainLayout);
-//    }
-//}
+
