@@ -3,7 +3,6 @@
     <CLASSES>
       <root url="jar://D:/Android SDK/platforms/android-30/optional/org.apache.http.legacy.jar!/" />
       <root url="jar://$USER_HOME$/Library/Android/sdk/platforms/android-30/optional/org.apache.http.legacy.jar!/" />
-      <root url="jar://$USER_HOME$/AppData/Local/Android/Sdk/platforms/android-30/optional/org.apache.http.legacy.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
