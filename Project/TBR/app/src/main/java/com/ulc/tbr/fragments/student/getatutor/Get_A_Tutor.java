@@ -423,11 +423,11 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
             switch ( (String) spinner_subject.getSelectedItem() ) {
                 case "Select a Subject":
                     spinner_course.setAdapter(adapter_course_Default);
-                    System.out.println("adapter_course_Default");
+//                    System.out.println("adapter_course_Default");
                     spinner_course.setSelection(0);
                     break;
                 case "Electrical and Computer Engineering":
-                    System.out.println("adapter_course_ECE");
+//                    System.out.println("adapter_course_ECE");
                     available_courses_ECE = database.getAllCoursesBySubject("Electrical and Computer Engineering");
                     available_course_ECE = populateCourses(available_courses_ECE);
                     adapter_course_ECE = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, available_course_ECE);
@@ -435,14 +435,14 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
                     break;
                 case "Computer Science":
-                    System.out.println("adapter_course_CS");
+//                    System.out.println("adapter_course_CS");
                     available_courses_CS = database.getAllCoursesBySubject("Computer Science");
                     available_course_CS = populateCourses(available_courses_CS);
                     adapter_course_CS = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, available_course_CS);
                     spinner_course.setAdapter(adapter_course_CS);
                     break;
                 case "Mathematics":
-                    System.out.println("adapter_course_MATH");
+//                    System.out.println("adapter_course_MATH");
                     available_courses_MATH = database.getAllCoursesBySubject("Mathematics");
                     available_course_MATH = populateCourses(available_courses_MATH);
                     adapter_course_MATH = new ArrayAdapter<String>(getContext(), R.layout.support_simple_spinner_dropdown_item, available_course_MATH);
@@ -860,15 +860,14 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
     private void remoteGetTutorAvailability(String date, String subject, String courseNo){
 //        Log.i("Turtle", "HELL02");
-        remote_adapter_session.clear();
-        Log.i("Shit","Butt");
+//        remote_adapter_session.clear();
+//        Log.i("Shit","Butt");
 
         String url = "https://pistachio.khello.co/get_available_tutors.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-                    Log.i("Shitouttaluck", "bub");
                     JSONObject jsonObject = new JSONObject(response);
 //                    Log.i("Shit","Butt2");
                     JSONArray array = (JSONArray) jsonObject.get("Availability: ");
@@ -884,10 +883,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                                 Boolean.parseBoolean(String.valueOf(jsonArray.get("booked")))
                                 )
                         );
-//                        Log.i("Student",(String) jsonArray.get("student_id"));
-//                        Log.i("Session:",remote_adapter_session.getItem(i).toString());
-
+                        Log.i("ADAPTER",i + " " + remote_adapter_session.getItem(i).toString());
                     }
+                    Log.i("AFTER ADAPTER","ADAPTER");
                 } catch (JSONException e) {
                 }
 
@@ -895,15 +893,15 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("Shit","Fuck");
-                Log.i("Some sort of unique string identifier here",error.toString());
+//                Log.i("Shit","Fuck");
+//                Log.i("Some sort of unique string identifier here",error.toString());
                 user = null;
             }
         }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Log.i("Shit","Fuck2");
-                Log.i("date",date);
+//                Log.i("Shit","Fuck2");
+//                Log.i("date",date);
                 Map<String, String> Params = new HashMap<String, String>();
                 Params.put("date", date);
                 Params.put("subject", subject);
@@ -986,29 +984,29 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         String date_weekStart;
         String date;
 
-        System.out.println("Week = " + week);
-        System.out.println("Subject = " + subject);
-        System.out.println("Course = " + course);
+//        System.out.println("Week = " + week);
+//        System.out.println("Subject = " + subject);
+//        System.out.println("Course = " + course);
 
 
         result = new ArrayList<TutorAvailablity>();
         try {
             date_weekStart = week.split(" ", 2)[0];
-            System.out.println(date_weekStart);
+//            System.out.println(date_weekStart);
             String date_weekStart_MM = date_weekStart.split("/", 3)[0];
-            System.out.println(date_weekStart_MM);
+//            System.out.println(date_weekStart_MM);
             String date_weekStart_DD = date_weekStart.split("/", 3)[1];
-            System.out.println(date_weekStart_DD);
+//            System.out.println(date_weekStart_DD);
             String date_weekStart_YEAR = date_weekStart.split("/", 3)[2];
-            System.out.println(date_weekStart_YEAR);
+//            System.out.println(date_weekStart_YEAR);
 
 //            Log.i("Shit", date_weekStart_DD);
             int date_weekStart_MM_int = 0;
             int date_weekStart_DD_int = 0;
             date_weekStart_MM_int = Integer.parseInt(date_weekStart_MM);
             date_weekStart_DD_int = Integer.parseInt(date_weekStart_DD);
-            System.out.println("date_weekStart_MM_int = " + date_weekStart_MM_int);
-            System.out.println("date_weekStart_DD_int = " + date_weekStart_DD_int);
+//            System.out.println("date_weekStart_MM_int = " + date_weekStart_MM_int);
+//            System.out.println("date_weekStart_DD_int = " + date_weekStart_DD_int);
 
             // class variable that stores tutoravailability for selected week and subject|course
             this.tutorAvailablity_session = new ArrayList<TutorAvailablity>();
@@ -1016,8 +1014,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
             if (date_weekStart_DD_int < 23) { // no date month overflow conflict possible. february 22-28 worst case
                 for (int i = 0; i < 7; i++) {
                     date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
-                    System.out.println("Current Date = " + date);
+//                    System.out.println("Current Date = " + date);
 //                    temp = loadTutorAvailability(date, subject, course);
+                    Log.i("date a",date);
                     remoteGetTutorAvailability(date, subject, course);
 //                    for (int j = 0; j < temp.size(); j++) {
 //                        result.add(temp.get(j));
@@ -1031,8 +1030,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     int i = 0;
                     while (date_weekStart_DD_int < 29) { // TODO: iteration 1 so we're just gonna go ahead and assume leap year doesn't exist
                         date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
-                        System.out.println("Current Date = " + date);
+//                        System.out.println("Current Date = " + date);
 //                        temp = loadTutorAvailability(date, subject, course);
+                        Log.i("date b",date);
                         remoteGetTutorAvailability(date, subject, course);
 //                        for (int j = 0; j < temp.size(); j++) {
 //                            result.add(temp.get(j));
@@ -1046,8 +1046,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
                     while ( i < 7 ) {
                         date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
-                        System.out.println("Current Date = " + date);
+//                        System.out.println("Current Date = " + date);
 //                        temp = loadTutorAvailability(date, subject, course);
+                        Log.i("date c",date);
                         remoteGetTutorAvailability(date, subject, course);
 //                        for (int j = 0; j < temp.size(); j++) {
 //                            result.add(temp.get(j));
@@ -1060,8 +1061,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     int i = 0;
                     while (date_weekStart_DD_int < 32) { // TODO: iteration 1 so we're just gonna go ahead and assume leap year doesn't exist
                         date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
-                        System.out.println("Current Date = " + date);
+//                        System.out.println("Current Date = " + date);
 //                        temp = loadTutorAvailability(date, subject, course);
+                        Log.i("date d",date);
                         remoteGetTutorAvailability(date, subject, course);
 //                        for (int j = 0; j < temp.size(); j++) {
 //                            result.add(temp.get(j));
@@ -1075,8 +1077,9 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
                     while ( i < 7 ) {
                         date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
-                        System.out.println("Current Date = " + date);
+//                        System.out.println("Current Date = " + date);
 //                        temp = loadTutorAvailability(date, subject, course);
+                        Log.i("date e",date);
                         remoteGetTutorAvailability(date, subject, course);
 //                        for (int j = 0; j < temp.size(); j++) {
 //                            result.add(temp.get(j));
@@ -1089,11 +1092,12 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                     int i = 0;
                     while (date_weekStart_DD_int < 31) { // TODO: iteration 1 so we're just gonna go ahead and assume leap year doesn't exist
                         date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
-                        System.out.println("Current Date = " + date);
+//                        System.out.println("Current Date = " + date);
 //                        temp = loadTutorAvailability(date, subject, course);
 //                        for (int j = 0; j < temp.size(); j++) {
 //                            result.add(temp.get(j));
 //                        }
+                        Log.i("date",date);
                         remoteGetTutorAvailability(date, subject, course);
                         date_weekStart_DD_int++;
                         i++;
@@ -1104,11 +1108,12 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
 
                     while ( i < 7 ) {
                         date = "" + ( date_weekStart_MM_int < 10 ? "0" + date_weekStart_MM_int : date_weekStart_MM_int ) + "/" + ( date_weekStart_DD_int < 10 ? "0" + date_weekStart_DD_int : date_weekStart_DD_int ) + "/" + date_weekStart_YEAR;
-                        System.out.println("Current Date = " + date);
+//                        System.out.println("Current Date = " + date);
 //                        temp = loadTutorAvailability(date, subject, course);
 //                        for (int j = 0; j < temp.size(); j++) {
 //                            result.add(temp.get(j));
 //                        }
+                        Log.i("date f",date);
                         remoteGetTutorAvailability(date, subject, course);
                         date_weekStart_DD_int++;
                         i++;
@@ -1173,6 +1178,7 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+                remote_adapter_session.notifyDataSetChanged();
 
                 Log.d("E","it got here");
             }
@@ -1254,10 +1260,10 @@ public class Get_A_Tutor extends Fragment implements AdapterView.OnItemSelectedL
                 session.setDescription(description);
                 session.setLocation(location);
 
+
                 remoteAddSession(session);
                 updateAvailBookSession(session);
-                remote_adapter_session.clear();
-                populateSessionListView();
+//                remote_adapter_session.clear();
 
 
 
